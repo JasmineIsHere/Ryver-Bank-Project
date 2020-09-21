@@ -4,9 +4,9 @@ import java.util.List;
 
 public interface AccountService {
     List<Account> listAccounts();
-    Book getAccount(Long id);
+    Account getAccount(Long id);
 
-    //Book addAccount(Account account); //for manager //to be included for sprint 2
+    //Account addAccount(Account account); //for manager //to be included for sprint 2
 
     /**
      * Change method's signature: do not return a value for delete operation
