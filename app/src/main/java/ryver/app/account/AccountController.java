@@ -1,7 +1,7 @@
-//package empty;
 package ryver.app.account;
 
 import java.util.List;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,13 +14,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ryver.app.user.*;
+
 @RestController
 public class AccountController{
     private final AccountService accountService;
+    private final UserController userController;
 
     @Autowired
-    public AccountController(AccountService injectedAccountService){
+    public AccountController(AccountService injectedAccountService,UserController userController){
         this.accountService = injectedAccountService;
+        this.userController = userController;
     }
 
     //JOLENE:  we dont have SID anymore, and the book one had no UID
@@ -52,6 +56,11 @@ public class AccountController{
         Account account = accountService.getAccount(AID);
 
         return account.getBalance();
+    }
+
+    @PostMapping("/accounts")
+    public Account addAccount(long userId, long accountId, double balance, double availBalance){
+        return accountService.addAccount(userId,accountId,balance,availBalance);
     }
 
     // //JOLENE: is it accountService or transactionService, im for the latter

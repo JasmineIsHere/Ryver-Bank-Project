@@ -1,5 +1,5 @@
-// package csd.week5.user;
 package ryver.app.user;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.rmi.server.UID;
