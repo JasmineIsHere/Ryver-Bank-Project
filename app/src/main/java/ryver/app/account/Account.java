@@ -25,6 +25,9 @@ import ryver.app.user.*;
 public class Account {
     private @Id Long AID;
     /*@Id @GeneratedValue (strategy = GenerationType.IDENTITY)*/ 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
     private Long UID;
     private double balance;
     private double availBalance;
@@ -35,9 +38,8 @@ public class Account {
         this.balance = balance;
         this.availBalance = balance;
     }
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    
+    //private User user;
     // public Account getAccount() {
     //     return AID
     // }

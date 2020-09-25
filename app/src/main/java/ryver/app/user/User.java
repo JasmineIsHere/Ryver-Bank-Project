@@ -2,6 +2,7 @@
 package ryver.app.user;
 import java.util.Arrays;
 import java.util.Collection;
+import java.rmi.server.UID;
 import java.util.*;
 import javax.persistence.*;
 
@@ -34,8 +35,8 @@ e.g., what authorities (roles) are granted to the user and whether the account i
 public class User implements UserDetails{
 
     private static final long serialVersionUID = 1L;
-
-    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long UID;
+    //@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private  @Id Long UID;
     
     @NotNull(message = "Username should not be null")
     @Size(min = 5, max = 20, message = "Username should be between 5 and 20 characters")
@@ -46,7 +47,8 @@ public class User implements UserDetails{
     private String password;
 
     
-    public User(String username, String password, String authorities){
+    public User(long UID, String username, String password, String authorities){
+        this.UID = UID;
         this.username = username;
         this.password = password;
         // this.fullName = fullName;
@@ -58,7 +60,7 @@ public class User implements UserDetails{
     }
 
     
-    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Account> accounts;
     // @NotNull(message = "Full Name should not be null")
     // @Size(min = 5, max = 20, message = "Username should be between 5 and 20 characters")
