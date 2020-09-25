@@ -2,6 +2,8 @@
 package ryver.app.user;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.*;
+import javax.persistence.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +17,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.*;
+import ryver.app.account.*;
+
 
 @Entity
 @Getter
@@ -30,7 +34,7 @@ e.g., what authorities (roles) are granted to the user and whether the account i
 public class User implements UserDetails{
     private static final long serialVersionUID = 1L;
 
-    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long UID;
     
     @NotNull(message = "Username should not be null")
     @Size(min = 5, max = 20, message = "Username should be between 5 and 20 characters")
@@ -40,6 +44,8 @@ public class User implements UserDetails{
     @Size(min = 8, message = "Password should be at least 8 characters")
     private String password;
 
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Account> accounts;
     // @NotNull(message = "Full Name should not be null")
     // @Size(min = 5, max = 20, message = "Username should be between 5 and 20 characters")
     // private String fullName;

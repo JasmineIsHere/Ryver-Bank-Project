@@ -15,15 +15,15 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<Account> listAccounts() { //Account.java yet to be created
+    public List<Account> listAccounts(Long UID) { //Account.java yet to be created
         return accounts.findAll();
     }
 
     
     @Override
-    public Account getAccount(Long id){ //Account.java yet to be created
+    public Account getAccount(Long AID){ //Account.java yet to be created
         
-        return accounts.findById(id).map(account -> {
+        return accounts.findById(AID).map(account -> {
             return account;
         }).orElse(null);
 

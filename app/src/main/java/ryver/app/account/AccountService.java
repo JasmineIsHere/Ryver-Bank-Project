@@ -3,14 +3,14 @@ package ryver.app.account;
 import java.util.List;
 
 public interface AccountService {
-    List<Account> listAccounts();
-    Account getAccount(Long id);
+    List<Account> listAccounts(Long UID);
+    Account getAccount(Long AID);
 
     //Account addAccount(Account account); //for manager //to be included for sprint 2
 
     /**
      * Change method's signature: do not return a value for delete operation
-     * @param id
+     * @param AID
      */
     //void deleteAccount(Long id); //for manager // to be included for sprint 2
     

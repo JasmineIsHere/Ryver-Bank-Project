@@ -28,13 +28,13 @@ public class UserController {
     /**
      * Search for users with the given id
      * If there is no user with the given "id", throw a UserNotFoundException
-     * @param id
+     * @param UID
      * @return user with the given id
      */
-    @GetMapping("/users/{id}")
-    public Optional<User> getUser(@PathVariable Long id) {
-        Optional<User> user = users.findById(id);
-        if (user == null) throw new UserNotFoundException(id);
+    @GetMapping("/users/{UID}")
+    public Optional<User> getUser(@PathVariable Long UID) {
+        Optional<User> user = users.findById(UID);
+        if (user == null) throw new UserNotFoundException(UID);
 
         return user;
     }

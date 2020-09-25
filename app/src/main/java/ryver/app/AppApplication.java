@@ -25,8 +25,9 @@ public class AppApplication {
 		System.out.println("[Add user2]: " + users.save(new User("good_user_2", encoder.encode("02_user_02"), "ROLE_USER")).getUsername());
 		
 		AccountRepository accounts = ctx.getBean(AccountRepository.class);
-        System.out.println("[Add Account for user1]: " + accounts.save(new Account(123456,12345,50000.0)));
-        System.out.println("[Add Account for user2]: " + accounts.save(new Account(123457,12346,100000.0)));
+		
+        System.out.println("[Add Account for user1]: " + accounts.save(new Account(123456L,12345L,50000.0)));
+        //System.out.println("[Add Account for user2]: " + accounts.save(new Account(123457,12346,100000.0)));
 
        // RestTemplateClient client = ctx.getBean(RestTemplateClient.class);
 	}
