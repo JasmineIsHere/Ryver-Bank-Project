@@ -1,5 +1,5 @@
-// package csd.week5.book;
 package ryver.app.user;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 

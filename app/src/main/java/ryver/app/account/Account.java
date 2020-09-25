@@ -1,5 +1,5 @@
-// Package statement here
 package ryver.app.account;
+
 import java.util.*;
 
 import javax.persistence.CascadeType;
@@ -25,22 +25,18 @@ import ryver.app.user.*;
 public class Account {
     private @Id Long AID;
     /*@Id @GeneratedValue (strategy = GenerationType.IDENTITY)*/ 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-    private Long UID;
+    private long UID;
     private double balance;
     private double availBalance;
 
-    public Account(Long UID, Long AID, double balance) {
+    public Account(long UID, long AID, double balance) {
         this.UID = UID;
         this.AID = AID;
         this.balance = balance;
         this.availBalance = balance;
     }
     
-    //private User user;
-    // public Account getAccount() {
-    //     return AID
-    // }
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

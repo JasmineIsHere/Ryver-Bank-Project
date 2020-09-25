@@ -1,17 +1,20 @@
-//package csd.sprint1.account; //to be updated based on directory
 package ryver.app.account;
+
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
+import ryver.app.user.*;
 
 @Service
 public class AccountServiceImpl implements AccountService {
    
     private AccountRepository accounts; //AccountRepository.java yet to be created
-    
+    private UserController users;
 
-    public AccountServiceImpl(AccountRepository accounts){ //injection
+    public AccountServiceImpl(AccountRepository accounts,UserController users){ //injection
         this.accounts = accounts;
+        this.users = users;
     }
 
     @Override
@@ -29,14 +32,14 @@ public class AccountServiceImpl implements AccountService {
 
     }
     
-    //to be implemented in detail for sprint 2 (for managers)
-    // @Override
-    // public Book addAccount(Account account) {
-    //     return accounts.save(account);
-    // }
-    
-    // @Override
-    // public void deleteAccount(Long id){
-    //     accounts.deleteById(id);
-    // }
+    public Account addAccount(long userId, long accountId, double balance, double availBalance){
+        Account account = new Account();
+        account.setAID(accoundId);
+        account.setBalance(balance);
+        account.setAvailBalance(availBalance);
+        return users.getUser(userId).map(user ->{
+            account.setUser(user);
+            return accounts.save(account);
+        }).orElseThrow(() -> new ryver.app.account.AccountNotFoundException(accountId));
+    }
 }

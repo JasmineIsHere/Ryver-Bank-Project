@@ -1,5 +1,5 @@
-// package csd.week5.user;
 package ryver.app.user;
+
 import java.util.*;
 
 import javax.validation.Valid;
@@ -32,7 +32,7 @@ public class UserController {
      * @return user with the given id
      */
     @GetMapping("/users/{UID}")
-    public Optional<User> getUser(@PathVariable Long UID) {
+    public Optional<User> getUser(long UID) {
         Optional<User> user = users.findById(UID);
         if (user == null) throw new UserNotFoundException(UID);
 
