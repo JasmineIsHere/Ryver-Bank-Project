@@ -23,23 +23,22 @@ import ryver.app.user.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Account {
-    private @Id Long AID;
-    /*@Id @GeneratedValue (strategy = GenerationType.IDENTITY)*/ 
+    @Id @GeneratedValue (strategy = GenerationType.IDENTITY)
+    private Long AID;
+    
+    
+    private double balance;
+    private double availBalance;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    private Long UID;
-    private double balance;
-    private double availBalance;
 
-    public Account(Long UID, Long AID, double balance) {
-        this.UID = UID;
-        this.AID = AID;
+    public Account(double balance) {
+        System.out.println(AID);
         this.balance = balance;
         this.availBalance = balance;
     }
     
-    //private User user;
     // public Account getAccount() {
     //     return AID
     // }
