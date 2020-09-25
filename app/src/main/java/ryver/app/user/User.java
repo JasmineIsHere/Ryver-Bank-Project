@@ -32,6 +32,7 @@ import ryver.app.account.*;
 e.g., what authorities (roles) are granted to the user and whether the account is enabled or not
 */
 public class User implements UserDetails{
+
     private static final long serialVersionUID = 1L;
 
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long UID;
@@ -44,6 +45,19 @@ public class User implements UserDetails{
     @Size(min = 8, message = "Password should be at least 8 characters")
     private String password;
 
+    
+    public User(String username, String password, String authorities){
+        this.username = username;
+        this.password = password;
+        // this.fullName = fullName;
+        // this.nric = nric;
+        // this.phone = phone;
+        // this.address = address;
+        this.authorities = authorities;
+        // this.isActive = 1; // true (set to 1)
+    }
+
+    
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Account> accounts;
     // @NotNull(message = "Full Name should not be null")
@@ -68,16 +82,6 @@ public class User implements UserDetails{
     // We define three roles/authorities: ROLE_USER, ROLE_ANALYST, ROLE_MANAGER
     private String authorities;
 
-    public User(String username, String password, String authorities){
-        this.username = username;
-        this.password = password;
-        // this.fullName = fullName;
-        // this.nric = nric;
-        // this.phone = phone;
-        // this.address = address;
-        this.authorities = authorities;
-        // this.isActive = 1; // true (set to 1)
-    }
 
 
     /* Return a collection of authorities (roles) granted to the user.

@@ -23,7 +23,8 @@ import ryver.app.user.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Account {
-    private /*@Id @GeneratedValue (strategy = GenerationType.IDENTITY)*/ Long AID;
+    private @Id Long AID;
+    /*@Id @GeneratedValue (strategy = GenerationType.IDENTITY)*/ 
     private Long UID;
     private double balance;
     private double availBalance;
@@ -35,7 +36,7 @@ public class Account {
         this.availBalance = balance;
     }
     @ManyToOne
-    @JoinColumn(name = "UID", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
     // public Account getAccount() {
     //     return AID
