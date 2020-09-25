@@ -31,14 +31,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .passwordEncoder(encoder());
     }
 
-    /**
-     * User role: can add review.
-     * Admin role: can add/delete/update books/reviews, and add users
-     * Anyone can view book/review
-     * 
-     * Note: '*' matches zero or more characters, e.g., /books/* matches /books/20
-             '**' matches zero or more 'directories' in a path, e.g., /books/** matches /books/1/reviews 
-     */
+    // /**
+    //  * User role: can add review.
+    //  * Admin role: can add/delete/update books/reviews, and add users
+    //  * Anyone can view book/review
+    //  * 
+    //  * Note: '*' matches zero or more characters, e.g., /books/* matches /books/20
+    //          '**' matches zero or more 'directories' in a path, e.g., /books/** matches /books/1/reviews 
+    //  */
     // @Override
     // protected void configure(HttpSecurity http) throws Exception {
     //     http

@@ -1,5 +1,5 @@
-// package csd.week5.book;
 package ryver.app.user;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -8,8 +8,8 @@ public class UserNotFoundException extends RuntimeException{
 
     private static final long serialVersionUID = 1L;
 
-    public UserNotFoundException(Long UID) {
-        super("Could not find user " + UID);
+    public UserNotFoundException(Long id) {
+        super("Could not find user " + id);
     }
     
 }

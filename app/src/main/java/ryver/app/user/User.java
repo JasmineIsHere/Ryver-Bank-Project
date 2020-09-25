@@ -1,24 +1,27 @@
-// package csd.week5.user;
 package ryver.app.user;
+
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.*;
-import javax.persistence.*;
+import java.util.List;
+
+import ryver.app.account.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.*;
-import ryver.app.account.*;
-
 
 @Entity
 @Getter
@@ -32,11 +35,9 @@ import ryver.app.account.*;
 e.g., what authorities (roles) are granted to the user and whether the account is enabled or not
 */
 public class User implements UserDetails{
-
     private static final long serialVersionUID = 1L;
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long UID;
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
     
     @NotNull(message = "Username should not be null")
     @Size(min = 5, max = 20, message = "Username should be between 5 and 20 characters")
@@ -46,47 +47,24 @@ public class User implements UserDetails{
     @Size(min = 8, message = "Password should be at least 8 characters")
     private String password;
 
-    
-    public User(String username, String password, String authorities){
-        System.out.println("UserID: " + UID);
-        this.username = username;
-        this.password = password;
-        // this.fullName = fullName;
-        // this.nric = nric;
-        // this.phone = phone;
-        // this.address = address;
-        this.authorities = authorities;
-        // this.isActive = 1; // true (set to 1)
-    }
-
-    
-    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<Account> accounts;
-    // @NotNull(message = "Full Name should not be null")
-    // @Size(min = 5, max = 20, message = "Username should be between 5 and 20 characters")
-    // private String fullName;
-
-    // @NotNull(message = "NRIC should not be null")
-    // @Size(min = 9, max = 9, message = "NRIC should be 9 characters")
-    // private String nric;
-
-    // @NotNull(message = "Phone Number should not be null")
-    // @Size(min = 8, max = 8, message = "Phone Number should be between 8 characters")
-    // private String phone;
-
-    // @NotNull(message = "Address should not be null")
-    // @Size(min = 5, max = 200, message = "Username should be between 5 and 200 characters")
-    // private String address;
-
-    // private int isActive;
-
     @NotNull(message = "Authorities should not be null")
-    // We define three roles/authorities: ROLE_USER, ROLE_ANALYST, ROLE_MANAGER
+    // We define two roles/authorities: ROLE_USER or ROLE_ADMIN
     private String authorities;
 
+    @OneToMany(mappedBy = "user",
+    orphanRemoval = true,
+    cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Account> accounts;
+
+    public User(String username, String password, String authorities){
+        this.username = username;
+        this.password = password;
+        this.authorities = authorities;
+    }
 
 
-    /* Return a collection of authorities (roles) granted to the user.
+    /* Return a collection of authorities granted to the user.
     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -102,12 +80,12 @@ public class User implements UserDetails{
         return true;
     }
     @Override
-    public boolean isAccountNonLocked() {
-        return true;
+        public boolean isAccountNonLocked() {
+    return true;
     }
     @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
+        public boolean isCredentialsNonExpired() {
+    return true;
     }
     @Override
     public boolean isEnabled() {
