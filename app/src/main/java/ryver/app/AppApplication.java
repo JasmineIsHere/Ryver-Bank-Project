@@ -18,18 +18,17 @@ public class AppApplication {
 
         UserRepository users = ctx.getBean(UserRepository.class);
 		BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
-		System.out.println("[Add manager]: " + users.save(new User("manager_1", encoder.encode("01_manager_01"), "ROLE_ADMIN")).getUsername());
-		System.out.println("[Add analyst1]: " + users.save(new User("analyst_1", encoder.encode("01_analyst_01"), "ROLE_ANALYST")).getUsername());
+		System.out.println("[Add manager]: " + users.save(new User("manager_1", encoder.encode("01_manager_01"), "ROLE_ADMIN")));
+		System.out.println("[Add analyst1]: " + users.save(new User("analyst_1", encoder.encode("01_analyst_01"), "ROLE_ANALYST")));
 
 		System.out.println("[Add user1]: new userID = " + users.save(new User("good_user_1", encoder.encode("01_user_01"), "ROLE_USER")));
 
 		
-		// AccountController accounts = ctx.getBean(AccountController.class);
+		// AccountRepository accounts = ctx.getBean(AccountRepository.class);
 		
-		// System.out.println("[Add Account for user1]: new AccountID = " + accounts.addAccount(user1.getUID(),12345L,50000,5000));
-		// System.out.println("[Add Account for user2]: new AccountID = " + accounts.addAccount(user2.getUID(),12345L,50000,5000));
+		// System.out.println("[Add Account for user1]: new AccountID = " + accounts.save(user1.getUID(),12345L,50000,5000));
 
-       // RestTemplateClient client = ctx.getBean(RestTemplateClient.class);
+    	// RestTemplateClient client = ctx.getBean(RestTemplateClient.class);
 	}
 
 }

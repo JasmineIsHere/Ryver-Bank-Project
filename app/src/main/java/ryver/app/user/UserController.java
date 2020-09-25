@@ -29,7 +29,6 @@ public class UserController {
      */
     @PostMapping("/users")
     public User addUser(@Valid @RequestBody User user){
-        // your code here
         user.setPassword(encoder.encode(user.getPassword()));
         return users.save(user);
     }

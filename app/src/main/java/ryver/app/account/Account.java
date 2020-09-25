@@ -17,8 +17,7 @@ public class Account {
     private  @Id @GeneratedValue (strategy = GenerationType.IDENTITY) Long id;
     
     // null elements are considered valid, so we need a size constraints too
-    @NotNull(message = "Account should not be null")
-    private double Account;
+    private double account;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

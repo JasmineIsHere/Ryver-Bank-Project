@@ -1,81 +1,58 @@
-# GET http://localhost:8080/users
-# Accept: application/json
+GET http://localhost:8080/users
+Accept: application/json
+Authorization: Basic manager_1 01_manager_01
+#Validation pass - Valid managers can view list of all users
 
-# GET http://localhost:8080/users/1/accounts
+###
+GET http://localhost:8080/users
+Accept: application/json
+Authorization: Basic bad_admin 01_manager_01
+#Validation fail - Invalid managers (wrong username) cannot view list of all users
 
-
-
-# POST http://localhost:8080/books
-# Content-Type: application/json
-# Authorization: Basic admin goodpassword
-
-# {
-#     "title": "The Great Ideas"
-# }
-# ###
-# POST http://localhost:8080/books
-# Content-Type: application/json
-# # Validation failed - book title is null
-
-# {
-#     "name": "I, Robot"
-# }
-# ###
-# PUT http://localhost:8080/books/1
-# Content-Type: application/json
-# # Wrong username
-# Authorization: Basic dt goodpassword
-
-# {
-#     "title": "The Return of the King"
-# }
-
-# ###
-# GET http://localhost:8080/books/2/reviews
+###
+GET http://localhost:8080/users
+Accept: application/json
+Authorization: Basic good_user_1 01_user_01
+#Validation fail - users cannot view list of all users
 
 
-# ###
-# POST http://localhost:8080/books/2/reviews
-# Content-Type: application/json
-# # User role
-# Authorization: Basic gooduser goodpassword
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+#Validation pass - Valid managers can add new users
 
-# {
-#     "review": "Terrible book"
-# }
+{
+    "username": "newUserClient",
+    "password": "02_user_02",
+    "authorities": "ROLE_USER"
+}
 
-# ###
-# PUT http://localhost:8080/books/2/reviews/1
-# Content-Type: application/json
 
-# {
-#     "review": "Should be bad!"
-# }
+###
+POST http://localhost:8080/users/3/accounts
+Content-Type: application/json
+Authorization: Basic manager_1 01_manager_01
+# Validation pass - Valid managers can create new accoutns
 
-# ###
-# DELETE http://localhost:8080/books/1/reviews/5
+{
+    "account": 2000.00
+}
 
-# ###
-# GET http://localhost:8080/users
+###
+GET http://localhost:8080/users/3/accounts
+Accept: application/json
+Authorization: Basic manager_1 01_manager_01
+#Validation pass - Valid managers can view list of all accounts of 1 user
 
-# ###
-# POST http://localhost:8080/users
-# Content-Type: application/json
+###
+GET http://localhost:8080/users/3/accounts
+Accept: application/json
+Authorization: Basic good_user_1 01_user_01
+#Validation pass - User can view all their OWN accounts
 
-# {
-#     "username": "donta",
-#     "password": "goodpassword",
-#     "authorities": "ROLE_ADMIN"
-# }
-
-# ###
-# POST http://localhost:8080/users
-# Content-Type: application/json
-# Authorization: Basic admin goodpassword
-
-# {
-#     "username": "gooduser",
-#     "password": "goodpassword",
-#     "authorities": "ROLE_USER"
-# }
+###
+GET http://localhost:8080/users/4/accounts
+Accept: application/json
+Authorization: Basic good_user_1 01_user_01
+#Validation fail - User cannot view other user's accounts
 
