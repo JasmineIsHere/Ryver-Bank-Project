@@ -31,35 +31,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .passwordEncoder(encoder());
     }
 
-    // /**
-    //  * User role: can add review.
-    //  * Admin role: can add/delete/update books/reviews, and add users
-    //  * Anyone can view book/review
-    //  * 
-    //  * Note: '*' matches zero or more characters, e.g., /books/* matches /books/20
-    //          '**' matches zero or more 'directories' in a path, e.g., /books/** matches /books/1/reviews 
-    //  */
-    // @Override
-    // protected void configure(HttpSecurity http) throws Exception {
-    //     http
-    //     .httpBasic()
-    //         .and() //  "and()"" method allows us to continue configuring the parent
-    //     .authorizeRequests()
-    //         .antMatchers(HttpMethod.POST, "/books").hasRole("ADMIN")
-    //         .antMatchers(HttpMethod.PUT, "/books/*").hasRole("ADMIN")
-    //         .antMatchers(HttpMethod.DELETE, "/books/*").hasRole("ADMIN")
-    //         // your code here
-    //         .antMatchers(HttpMethod.POST, "/books/*/reviews").hasAnyRole("ADMIN", "USER")
-    //         .antMatchers(HttpMethod.PUT, "/books/*/reviews/*").hasRole("ADMIN")
-    //         .antMatchers(HttpMethod.DELETE, "/books/*/reviews/*").hasRole("ADMIN")
-    //         .antMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
-    //         .antMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
-    //         .and()
-    //     .csrf().disable() // CSRF protection is needed only for browser based attacks
-    //     .formLogin().disable()
-    //     .headers().disable()
-    //     ;
-    // }
+    /**
+     * User role: can view their own accounts
+     * Admin role: can add/delete/update users/accounts, and add users; can view all users/accounts
+     * Anyone can view book/review
+     * 
+     * */
+  
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+        .httpBasic()
+            .and() 
+        .authorizeRequests()
+            .antMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
+            .antMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
+
+            .antMatchers(HttpMethod.POST, "/users/*/accounts").hasRole("ADMIN")
+            .antMatchers(HttpMethod.GET, "/users/*/accounts").hasRole("ADMIN")
+
+            .antMatchers(HttpMethod.GET, "/users/?/accounts").hasRole("USER")
+            .and()
+        .csrf().disable() // CSRF protection is needed only for browser based attacks
+        .formLogin().disable()
+        .headers().disable()
+        ;
+    }
 
     /**
      * @Bean annotation is used to declare a PasswordEncoder bean in the Spring application context. 

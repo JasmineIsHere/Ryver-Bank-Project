@@ -1,0 +1,81 @@
+# GET http://localhost:8080/users
+# Accept: application/json
+
+# GET http://localhost:8080/users/1/accounts
+
+
+
+# POST http://localhost:8080/books
+# Content-Type: application/json
+# Authorization: Basic admin goodpassword
+
+# {
+#     "title": "The Great Ideas"
+# }
+# ###
+# POST http://localhost:8080/books
+# Content-Type: application/json
+# # Validation failed - book title is null
+
+# {
+#     "name": "I, Robot"
+# }
+# ###
+# PUT http://localhost:8080/books/1
+# Content-Type: application/json
+# # Wrong username
+# Authorization: Basic dt goodpassword
+
+# {
+#     "title": "The Return of the King"
+# }
+
+# ###
+# GET http://localhost:8080/books/2/reviews
+
+
+# ###
+# POST http://localhost:8080/books/2/reviews
+# Content-Type: application/json
+# # User role
+# Authorization: Basic gooduser goodpassword
+
+# {
+#     "review": "Terrible book"
+# }
+
+# ###
+# PUT http://localhost:8080/books/2/reviews/1
+# Content-Type: application/json
+
+# {
+#     "review": "Should be bad!"
+# }
+
+# ###
+# DELETE http://localhost:8080/books/1/reviews/5
+
+# ###
+# GET http://localhost:8080/users
+
+# ###
+# POST http://localhost:8080/users
+# Content-Type: application/json
+
+# {
+#     "username": "donta",
+#     "password": "goodpassword",
+#     "authorities": "ROLE_ADMIN"
+# }
+
+# ###
+# POST http://localhost:8080/users
+# Content-Type: application/json
+# Authorization: Basic admin goodpassword
+
+# {
+#     "username": "gooduser",
+#     "password": "goodpassword",
+#     "authorities": "ROLE_USER"
+# }
+

@@ -20,10 +20,9 @@ public class AppApplication {
 		BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
 		System.out.println("[Add manager]: " + users.save(new User("manager_1", encoder.encode("01_manager_01"), "ROLE_ADMIN")).getUsername());
 		System.out.println("[Add analyst1]: " + users.save(new User("analyst_1", encoder.encode("01_analyst_01"), "ROLE_ANALYST")).getUsername());
-        System.out.println("[Add analyst2]: " + users.save(new User("analyst_2", encoder.encode("02_analyst_02"), "ROLE_ANALYST")).getUsername());
 
 		System.out.println("[Add user1]: new userID = " + users.save(new User("good_user_1", encoder.encode("01_user_01"), "ROLE_USER")));
-		System.out.println("[Add user2]: new userID = " + users.save(new User("good_user_2", encoder.encode("02_user_02"), "ROLE_USER")));
+
 		
 		// AccountController accounts = ctx.getBean(AccountController.class);
 		
