@@ -3,7 +3,7 @@ package ryver.app.account;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
-import ryver.app.user.*;
+import ryver.app.customer.*;
 import lombok.*;
 
 @Entity
@@ -17,9 +17,11 @@ public class Account {
     private  @Id @GeneratedValue (strategy = GenerationType.IDENTITY) Long id;
     
     // null elements are considered valid, so we need a size constraints too
-    private double account;
+    // primitive types can't have null, so it's auto 0.0
+    private double balance;
+    private double available_balance;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 }

@@ -1,58 +1,84 @@
-GET http://localhost:8080/users
-Accept: application/json
+POST http://localhost:8080/customers
+Content-Type: application/json
 Authorization: Basic manager_1 01_manager_01
-#Validation pass - Valid managers can view list of all users
+#Validation pass - Valid managers can add new customers
+
+{
+    "username": "good_user_1",
+    "password": "01_user_01",
+    "authorities": "ROLE_USER"
+}
+
 
 ###
-GET http://localhost:8080/users
+GET http://localhost:8080/customers
+Accept: application/json
+Authorization: Basic manager_1 01_manager_01
+#Validation pass - Valid managers can view list of all customers
+
+###
+GET http://localhost:8080/customers
 Accept: application/json
 Authorization: Basic bad_admin 01_manager_01
 #Validation fail - Invalid managers (wrong username) cannot view list of all users
 
 ###
-GET http://localhost:8080/users
+GET http://localhost:8080/customers
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
-#Validation fail - users cannot view list of all users
+#Validation fail - Customers cannot view list of all customers
 
 
 ###
-POST http://localhost:8080/users
+POST http://localhost:8080/customers
 Content-Type: application/json
-#Validation pass - Valid managers can add new users
+Authorization: Basic manager_1 01_manager_01
+#Validation pass - Valid managers can add new customers
 
 {
-    "username": "newUserClient",
+    "username": "good_user_2",
     "password": "02_user_02",
     "authorities": "ROLE_USER"
 }
 
 
 ###
-POST http://localhost:8080/users/3/accounts
+POST http://localhost:8080/customers/3/accounts
 Content-Type: application/json
 Authorization: Basic manager_1 01_manager_01
-# Validation pass - Valid managers can create new accoutns
+# Validation pass - Valid managers can create new accounts
 
 {
-    "account": 2000.00
+    "balance": 50000.0,
+    "available_balance": 50000.0
 }
 
 ###
-GET http://localhost:8080/users/3/accounts
+POST http://localhost:8080/customers/4/accounts
+Content-Type: application/json
+Authorization: Basic manager_1 01_manager_01
+# Validation pass - Valid managers can create new accounts
+
+{
+    "balance": 100000.0,
+    "available_balance": 100000.0
+}
+
+###
+GET http://localhost:8080/customers/3/accounts
 Accept: application/json
 Authorization: Basic manager_1 01_manager_01
-#Validation pass - Valid managers can view list of all accounts of 1 user
+#Validation pass - Valid managers can view list of all accounts of 1 customer
 
 ###
-GET http://localhost:8080/users/3/accounts
+GET http://localhost:8080/customers/3/accounts
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
-#Validation pass - User can view all their OWN accounts
+#Validation pass - Customer can view all their OWN accounts
 
 ###
-GET http://localhost:8080/users/4/accounts
+GET http://localhost:8080/customers/4/accounts
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
-#Validation fail - User cannot view other user's accounts
+#Validation fail - Customers cannot view other customer's accounts
 

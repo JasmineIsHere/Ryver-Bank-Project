@@ -8,44 +8,45 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.*;
 
-import ryver.app.user.UserRepository;
-import ryver.app.user.UserNotFoundException;
+import ryver.app.customer.CustomerRepository;
+import ryver.app.customer.CustomerNotFoundException;
 
 @RestController
 public class AccountController {
     private AccountRepository accounts;
-    private UserRepository users;
+    private CustomerRepository customers;
 
-    public AccountController(AccountRepository accounts, UserRepository users){
+    public AccountController(AccountRepository accounts, CustomerRepository customers){
         this.accounts = accounts;
-        this.users = users;
+        this.customers = customers;
     }
-
-    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.id")
-    @GetMapping("/users/{userId}/accounts")
-    public List<Account> getAllAccountsByUserId(@PathVariable (value = "userId") Long userId) {
-        if(!users.existsById(userId)) {
-            throw new UserNotFoundException(userId);
+    
+    // Authentication for ROLE_ADMIN or ROLE_USER to access his own accounts
+    @PreAuthorize("hasRole('ADMIN') or #customerId == authentication.principal.id")
+    @GetMapping("/customers/{customerId}/accounts")
+    public List<Account> getAllAccountsByCustomerId(@PathVariable (value = "customerId") Long customerId) {
+        if(!customers.existsById(customerId)) {
+            throw new CustomerNotFoundException(customerId);
         }
-        return accounts.findByUserId(userId);
+        return accounts.findByCustomerId(customerId);
     }
 
-    @GetMapping("/users/{userId}/accounts/{accountId}")
-    public Account getAccountByAccountIdAndUserId(@PathVariable (value = "accountId") Long accountId, 
-        @PathVariable (value = "userId") Long userId) {
+    @GetMapping("/customers/{customerId}/accounts/{accountId}")
+    public Account getAccountByAccountIdAndCustomerId(@PathVariable (value = "accountId") Long accountId, 
+        @PathVariable (value = "customerId") Long customerId) {
         
-        if(!users.existsById(userId)) {
-            throw new UserNotFoundException(userId);
+        if(!customers.existsById(customerId)) {
+            throw new CustomerNotFoundException(customerId);
         }
-        return accounts.findByIdAndUserId(accountId, userId).orElseThrow(() -> new AccountNotFoundException(accountId));
+        return accounts.findByIdAndCustomerId(accountId, customerId).orElseThrow(() -> new AccountNotFoundException(accountId));
     }
 
-    @PostMapping("/users/{userId}/accounts")
-    public Account addAccount (@PathVariable (value = "userId") Long userId, @Valid @RequestBody Account account) {
-        return users.findById(userId).map(user ->{
-            account.setUser(user);
+    @PostMapping("/customers/{customerId}/accounts")
+    public Account addAccount (@PathVariable (value = "customerId") Long customerId, @Valid @RequestBody Account account) {
+        return customers.findById(customerId).map(customer ->{
+            account.setCustomer(customer);
             return accounts.save(account);
-        }).orElseThrow(() -> new UserNotFoundException(userId));
+        }).orElseThrow(() -> new CustomerNotFoundException(customerId));
     }
 
 }

@@ -1,4 +1,4 @@
-package ryver.app.user;
+package ryver.app.customer;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,9 +32,9 @@ import lombok.*;
 @EqualsAndHashCode
 
 /* Implementations of UserDetails to provide user information to Spring Security, 
-e.g., what authorities (roles) are granted to the user and whether the account is enabled or not
+e.g., what authorities (roles) are granted to the customer and whether the account is enabled or not
 */
-public class User implements UserDetails{
+public class Customer implements UserDetails{
     private static final long serialVersionUID = 1L;
 
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
@@ -48,16 +48,16 @@ public class User implements UserDetails{
     private String password;
 
     @NotNull(message = "Authorities should not be null")
-    // We define two roles/authorities: ROLE_USER or ROLE_ADMIN
+    // We define two roles/authorities: ROLE_USER, ROLE_ADMIN or ROLE_ANALYST
     private String authorities;
 
-    @OneToMany(mappedBy = "user",
+    @OneToMany(mappedBy = "customer",
     orphanRemoval = true,
     cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Account> accounts;
 
-    public User(String username, String password, String authorities){
+    public Customer(String username, String password, String authorities){
         this.username = username;
         this.password = password;
         this.authorities = authorities;

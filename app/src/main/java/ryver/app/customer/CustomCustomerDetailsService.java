@@ -1,4 +1,4 @@
-package ryver.app.user;
+package ryver.app.customer;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -6,11 +6,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService {
-    private UserRepository users;
+public class CustomCustomerDetailsService implements UserDetailsService {
+    private CustomerRepository customers;
     
-    public CustomUserDetailsService(UserRepository users) {
-        this.users = users;
+    public CustomCustomerDetailsService(CustomerRepository customers) {
+        this.customers = customers;
     }
     @Override
     /** To return a UserDetails for Spring Security 
@@ -18,7 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         The UserDetails interface has methods to get the password.
     */
     public UserDetails loadUserByUsername(String username)  throws UsernameNotFoundException {
-        return users.findByUsername(username)
+        return customers.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' not found"));
     }
     
