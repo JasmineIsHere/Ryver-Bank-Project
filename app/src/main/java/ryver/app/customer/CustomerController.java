@@ -19,7 +19,7 @@ public class CustomerController {
 
     @GetMapping("/customers")
     public List<Customer> getCustomers() {
-        return customers.findByAuthorities("ROLE_USER");
+        return customers.findAll();
     }
 
     /**

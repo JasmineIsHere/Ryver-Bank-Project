@@ -34,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * Customer role: can view their own accounts;
+     * Customer role: can view their own accounts; can update own phone number, password and address
      * Admin role: can add/delete/update customers/accounts, and add customers; can view all customers/accounts
      * 
      * 
