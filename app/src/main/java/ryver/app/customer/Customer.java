@@ -38,7 +38,7 @@ public class Customer implements UserDetails{
     private static final long serialVersionUID = 1L;
 
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
-    
+
     @NotNull(message = "Username should not be null")
     @Size(min = 5, max = 20, message = "Username should be between 5 and 20 characters")
     private String username;
@@ -51,16 +51,41 @@ public class Customer implements UserDetails{
     // We define two roles/authorities: ROLE_USER, ROLE_ADMIN or ROLE_ANALYST
     private String authorities;
 
+    @NotNull(message = "Full Name should not be null")
+    @Size(min = 5, max = 20, message = "Username should be between 5 and 20 characters")
+    private String fullName;
+
+    @NotNull(message = "NRIC should not be null")
+    @Size(min = 9, max = 9, message = "NRIC should be 9 characters")
+    private String nric;
+
+    @NotNull(message = "Phone Number should not be null")
+    @Size(min = 8, max = 8, message = "Phone Number should be between 8 characters")
+    private String phone;
+
+    @NotNull(message = "Address should not be null")
+    @Size(min = 5, max = 200, message = "Address should be between 5 and 200 characters")
+    private String address;
+
+    private int active;
+
+
     @OneToMany(mappedBy = "customer",
     orphanRemoval = true,
     cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Account> accounts;
 
-    public Customer(String username, String password, String authorities){
+    public Customer(String username, String password, String authorities, String fullName, String nric, String phone, String address, int active){
         this.username = username;
         this.password = password;
         this.authorities = authorities;
+
+        this.fullName = fullName;
+        this.nric = nric;
+        this.phone = phone;
+        this.address = address;
+        this.active = active;
     }
 
 

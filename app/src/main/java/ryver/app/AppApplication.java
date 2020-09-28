@@ -18,15 +18,8 @@ public class AppApplication {
 
         CustomerRepository customers = ctx.getBean(CustomerRepository.class);
 		BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
-		System.out.println("[Add manager1]: " + customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_ADMIN")));
-		System.out.println("[Add analyst1]: " + customers.save(new Customer("analyst_1", encoder.encode("01_analyst_01"), "ROLE_ANALYST")));
-
-		// customer should be added in restClient
-		// System.out.println("[Add customer1]: " + customers.save(new Customer("good_user_1", encoder.encode("01_user_01"), "ROLE_USER")));
-
-		
-		// AccountRepository accounts = ctx.getBean(AccountRepository.class);
-		// System.out.println("[Add Account for customer1]: new AccountID = " + accounts.save(customer1.getUID(),12345L,50000,5000));
+		System.out.println("[Add manager1]: " + customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_ADMIN", "Admin One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", 1)));
+		System.out.println("[Add analyst1]: " + customers.save(new Customer("analyst_1", encoder.encode("01_analyst_01"), "ROLE_ANALYST", "Analyst One", "S8098765B", "99876543", "456 Clementi Road S987456", 1)));
 
     	// RestTemplateClient client = ctx.getBean(RestTemplateClient.class);
 	}

@@ -6,7 +6,47 @@ Authorization: Basic manager_1 01_manager_01
 {
     "username": "good_user_1",
     "password": "01_user_01",
-    "authorities": "ROLE_USER"
+    "authorities": "ROLE_USER",
+    "fullName": "User One",
+    "nric": "S8956789B",
+    "phone": "90123456",
+    "address": "999 Tampines Road S999999",
+    "active": 1
+}
+
+###
+PUT http://localhost:8080/customers/3
+Content-Type: application/json
+Authorization: Basic manager_1 01_manager_01
+#Validation pass - Valid managers can update customers (can't update if some fields are null)
+
+{
+    "username": "good_user_1",
+    "password": "01_user_01",
+    "authorities": "ROLE_USER",
+    "fullName": "Updated User One",
+    "nric": "S9111111B",
+    "phone": "91111111",
+    "address": "111 Tampines Road S111111",
+    "active": 1
+}
+
+
+###
+PUT http://localhost:8080/customers/3
+Content-Type: application/json
+Authorization: Basic good_user_1 01_user_01
+#Validation pass - Customer can update his OWN phone, address, password (other fields will get ignored)
+
+{
+    "username": "Cant Update",
+    "password": "01_user_01",
+    "authorities": "ROLE_USER",
+    "fullName": "Cant Update",
+    "nric": "S9999999Z",
+    "phone": "91234246",
+    "address": "1 Tampines Road S111001",
+    "active": 0
 }
 
 
@@ -20,7 +60,7 @@ Authorization: Basic manager_1 01_manager_01
 GET http://localhost:8080/customers
 Accept: application/json
 Authorization: Basic bad_admin 01_manager_01
-#Validation fail - Invalid managers (wrong username) cannot view list of all users
+#Validation fail - Invalid managers (wrong username) cannot view list of all customers
 
 ###
 GET http://localhost:8080/customers
@@ -38,7 +78,12 @@ Authorization: Basic manager_1 01_manager_01
 {
     "username": "good_user_2",
     "password": "02_user_02",
-    "authorities": "ROLE_USER"
+    "authorities": "ROLE_USER",
+    "fullName": "User Two",
+    "nric": "S8252782E",
+    "phone": "92123262",
+    "address": "222 Paya Lebar Road S222222",
+    "active": 1
 }
 
 
@@ -82,3 +127,20 @@ Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 #Validation fail - Customers cannot view other customer's accounts
 
+###
+POST http://localhost:8080/customers/3/accounts/2/transactions
+Content-Type: application/json
+Authorization: Basic good_user_1 01_user_01
+#Validation pass - Customers can create new transactions
+
+{
+    "sender": 1,
+    "receiver": 2,
+    "amount": 5167.0
+}
+
+###
+GET http://localhost:8080/customers/3/accounts/3/transactions
+Accept: application/json
+Authorization: Basic good_user_1 01_user_01
+#Validation pass - Customers can view own account's transactions
