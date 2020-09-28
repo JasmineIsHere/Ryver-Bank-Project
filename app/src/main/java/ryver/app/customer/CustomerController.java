@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import org.springframework.http.HttpStatus;
 
 @RestController
 public class CustomerController {
@@ -58,6 +59,7 @@ public class CustomerController {
     * @param customer
      * @return
      */
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/customers")
     public Customer addCustomer(@Valid @RequestBody Customer customer){
         customer.setPassword(encoder.encode(customer.getPassword()));
