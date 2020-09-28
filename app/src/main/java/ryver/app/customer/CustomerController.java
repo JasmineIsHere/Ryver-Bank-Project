@@ -29,7 +29,7 @@ public class CustomerController {
     }
 
     // Managers can update customers information, customer can update OWN information (phone, address, password)
-    @PreAuthorize("hasRole('ADMIN') or #customerId == authentication.principal.id")
+    @PreAuthorize("hasRole('MANAGER') or #customerId == authentication.principal.id")
     @PutMapping("/customers/{customerId}")
     public Customer updateCustomer(@PathVariable (value = "customerId") Long customerId, @Valid @RequestBody Customer updatedCustomerInfo){
         
@@ -44,7 +44,7 @@ public class CustomerController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         
         // fields which only managers can update
-        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"))) {
             customer.setUsername(updatedCustomerInfo.getUsername());
             customer.setFullName(updatedCustomerInfo.getFullName());
             customer.setNric(updatedCustomerInfo.getNric());
