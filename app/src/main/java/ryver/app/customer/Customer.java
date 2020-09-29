@@ -48,7 +48,7 @@ public class Customer implements UserDetails{
     private String password;
 
     @NotNull(message = "Authorities should not be null")
-    // We define two roles/authorities: ROLE_USER, ROLE_ADMIN or ROLE_ANALYST
+    // We define two roles/authorities: ROLE_USER, ROLE_MANAGER or ROLE_ANALYST
     private String authorities;
 
     @NotNull(message = "Full Name should not be null")
