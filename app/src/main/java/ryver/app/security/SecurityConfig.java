@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Customer role: can view their own accounts; can update own phone number, password and address
-     * Admin role: can add/delete/update customers/accounts, and add customers; can view all customers/accounts
+     * Manager role: can add/delete/update customers/accounts, and add customers; can view all customers/accounts
      * 
      * 
      * */
@@ -46,11 +46,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .httpBasic()
             .and() 
         .authorizeRequests()
-            .antMatchers(HttpMethod.GET, "/customers").hasRole("ADMIN")
-            .antMatchers(HttpMethod.POST, "/customers").hasRole("ADMIN")
+            .antMatchers(HttpMethod.GET, "/customers").hasRole("MANAGER")
+            .antMatchers(HttpMethod.POST, "/customers").hasRole("MANAGER")
 
-            .antMatchers(HttpMethod.GET, "/customers/*/accounts").hasAnyRole("ADMIN", "USER")
-            .antMatchers(HttpMethod.POST, "/customers/*/accounts").hasRole("ADMIN")
+            .antMatchers(HttpMethod.GET, "/customers/*/accounts").hasAnyRole("MANAGER", "USER")
+            .antMatchers(HttpMethod.POST, "/customers/*/accounts").hasRole("MANAGER")
             .and()
         .csrf().disable() // CSRF protection is needed only for browser based attacks
         .formLogin().disable()

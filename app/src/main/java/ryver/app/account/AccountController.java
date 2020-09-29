@@ -23,8 +23,8 @@ public class AccountController {
         this.customers = customers;
     }
     
-    // Authentication for ROLE_ADMIN or ROLE_USER to access his own accounts
-    @PreAuthorize("hasRole('ADMIN') or #customerId == authentication.principal.id")
+    // Authentication for ROLE_MANAGER or ROLE_USER to access his own accounts
+    @PreAuthorize("hasRole('MANAGER') or #customerId == authentication.principal.id")
     @GetMapping("/customers/{customerId}/accounts")
     public List<Account> getAllAccountsByCustomerId(@PathVariable (value = "customerId") Long customerId) {
         if(!customers.existsById(customerId)) {
