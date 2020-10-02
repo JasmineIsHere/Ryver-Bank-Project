@@ -28,27 +28,27 @@ public class CustomerController {
         return customers.findByAuthorities("ROLE_USER");
     }
 
-    // Managers can update customers information, customer can update OWN information (phone, address, password)
-    @PreAuthorize("hasRole('MANAGER') or #customerId == authentication.principal.id")
+    // Managers can update (active or not active) customers information (phone, address, password, active)
+    // Active customer can update OWN information (phone, address, password)
+    // Deactivated customer cannot update OWN information
+    @PreAuthorize("authentication.principal.active == true and (hasRole('MANAGER') or #customerId == authentication.principal.id)")
     @PutMapping("/customers/{customerId}")
     public Customer updateCustomer(@PathVariable (value = "customerId") Long customerId, @Valid @RequestBody Customer updatedCustomerInfo){
         
         Customer customer = customers.findById(customerId)
             .orElseThrow(() -> new CustomerNotFoundException(customerId));
 
-        // fields which customers and managers can update
+
+        // fields which customers and managers can update - password, phone, address
         customer.setPassword(encoder.encode(updatedCustomerInfo.getPassword()));
         customer.setPhone(updatedCustomerInfo.getPhone());
         customer.setAddress(updatedCustomerInfo.getAddress());
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         
-        // fields which only managers can update
+        // fields which only managers can update - active
         if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"))) {
-            customer.setUsername(updatedCustomerInfo.getUsername());
-            customer.setFullName(updatedCustomerInfo.getFullName());
-            customer.setNric(updatedCustomerInfo.getNric());
-            customer.setActive(updatedCustomerInfo.getActive());
+            customer.setActive(updatedCustomerInfo.isActive());
         }
 
         return customers.save(customer);

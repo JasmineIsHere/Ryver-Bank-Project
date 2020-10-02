@@ -44,7 +44,7 @@ public class Customer implements UserDetails{
     private String username;
     
     @NotNull(message = "Password should not be null")
-    @Size(min = 8, message = "Password should be at least 8 characters")
+    @Size(min = 8, message = "Password should be at least 8 characters. ")
     private String password;
 
     @NotNull(message = "Authorities should not be null")
@@ -52,22 +52,22 @@ public class Customer implements UserDetails{
     private String authorities;
 
     @NotNull(message = "Full Name should not be null")
-    @Size(min = 5, max = 20, message = "Username should be between 5 and 20 characters")
+    @Size(min = 5, max = 20, message = "Username should be between 5 and 20 characters. ")
     private String fullName;
 
     @NotNull(message = "NRIC should not be null")
-    @Size(min = 9, max = 9, message = "NRIC should be 9 characters")
+    @Size(min = 9, max = 9, message = "NRIC should be 9 characters. ")
     private String nric;
 
     @NotNull(message = "Phone Number should not be null")
-    @Size(min = 8, max = 8, message = "Phone Number should be between 8 characters")
+    @Size(min = 8, max = 8, message = "Phone Number should be 8 characters. ")
     private String phone;
 
     @NotNull(message = "Address should not be null")
-    @Size(min = 5, max = 200, message = "Address should be between 5 and 200 characters")
+    @Size(min = 5, max = 200, message = "Address should be between 5 and 200 characters. ")
     private String address;
 
-    private int active;
+    private boolean active;
 
 
     @OneToMany(mappedBy = "customer",
@@ -76,7 +76,7 @@ public class Customer implements UserDetails{
     @JsonIgnore
     private List<Account> accounts;
 
-    public Customer(String username, String password, String authorities, String fullName, String nric, String phone, String address, int active){
+    public Customer(String username, String password, String authorities, String fullName, String nric, String phone, String address, boolean active){
         this.username = username;
         this.password = password;
         this.authorities = authorities;

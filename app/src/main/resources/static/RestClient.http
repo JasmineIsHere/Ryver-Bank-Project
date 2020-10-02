@@ -11,24 +11,25 @@ Authorization: Basic manager_1 01_manager_01
     "nric": "S8956789B",
     "phone": "90123456",
     "address": "999 Tampines Road S999999",
-    "active": 1
+    "active": true
 }
 
 ###
 PUT http://localhost:8080/customers/3
 Content-Type: application/json
 Authorization: Basic manager_1 01_manager_01
-#Validation pass - Valid managers can update customers (can't update if some fields are null)
+#Validation pass - Valid managers can update customers 
+#(phone, password, address, active)
 
 {
-    "username": "good_user_1",
+    "username": "Cant Update",
     "password": "01_user_01",
     "authorities": "ROLE_USER",
-    "fullName": "Updated User One",
+    "fullName": "Cant Update",
     "nric": "S9111111B",
     "phone": "91111111",
     "address": "111 Tampines Road S111111",
-    "active": 1
+    "active": false
 }
 
 
@@ -46,7 +47,7 @@ Authorization: Basic good_user_1 01_user_01
     "nric": "S9999999Z",
     "phone": "91234246",
     "address": "1 Tampines Road S111001",
-    "active": 0
+    "active": false
 }
 
 
@@ -83,7 +84,7 @@ Authorization: Basic manager_1 01_manager_01
     "nric": "S8252782E",
     "phone": "92123262",
     "address": "222 Paya Lebar Road S222222",
-    "active": 1
+    "active": true
 }
 
 
