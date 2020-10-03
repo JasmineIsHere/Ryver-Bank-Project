@@ -20,8 +20,9 @@ public class Account {
     // primitive types can't have null, so it's auto 0.0
     private double balance;
     private double available_balance;
+    private long customer_id;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer", nullable = false)
     private Customer customer;
 }

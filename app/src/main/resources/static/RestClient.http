@@ -88,23 +88,25 @@ Authorization: Basic manager_1 01_manager_01
 
 
 ###
-POST http://localhost:8080/customers/3/accounts
+POST http://localhost:8080/accounts
 Content-Type: application/json
 Authorization: Basic manager_1 01_manager_01
 # Validation pass - Valid managers can create new accounts
 
 {
-    "balance": 50000.0,
-    "available_balance": 50000.0
+    "customer_id": 3,
+    "balance": 100.0,
+    "available_balance": 100.0
 }
 
 ###
-POST http://localhost:8080/customers/4/accounts
+POST http://localhost:8080/accounts
 Content-Type: application/json
 Authorization: Basic manager_1 01_manager_01
 # Validation pass - Valid managers can create new accounts
 
 {
+    "customer_id": 4,
     "balance": 100000.0,
     "available_balance": 100000.0
 }
