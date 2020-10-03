@@ -66,7 +66,7 @@ public class CustomerController {
         if (validateNric(customer.getNric()))
             return customers.save(customer);
         else
-            return false;
+            throw new CustomerNotFoundException(customer.getId());
     }
 
     public static boolean validateNric(String nric){
