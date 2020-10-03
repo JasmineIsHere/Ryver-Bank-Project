@@ -59,14 +59,13 @@ public class AccountController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/customers/{customerId}/accounts")
-    public Account addAccount (@PathVariable (value = "customerId") Long customerId, @Valid @RequestBody Account account) {
+    @PostMapping("/accounts")
+    public Account addAccount (@Valid @RequestBody Account account) {
+        Customer customer = customers.findById(account.getCustomer_id())
+            .orElseThrow(() -> new CustomerNotFoundException(account.getCustomer_id()));
 
-        Customer customer = customers.findById(customerId)
-            .orElseThrow(() -> new CustomerNotFoundException(customerId));
-
-        // if customer is deactivated, return 403 forbidden
-        if (!customer.isActive()) {
+        //if customer is deactivated, return 403 forbidden
+        if (!account.getCustomer.isActive()) {
             throw new AccessDeniedException("403 returned");
         }
 
