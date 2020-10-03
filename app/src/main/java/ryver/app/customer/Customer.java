@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -55,12 +56,13 @@ public class Customer implements UserDetails{
     @Size(min = 5, max = 20, message = "Username should be between 5 and 20 characters. ")
     private String fullName;
 
+    
     @NotNull(message = "NRIC should not be null")
-    @Size(min = 9, max = 9, message = "NRIC should be 9 characters. ")
+    @Size(min = 9, max = 9, message = "NRIC must be valid. ")
     private String nric;
 
     @NotNull(message = "Phone Number should not be null")
-    @Size(min = 8, max = 8, message = "Phone Number should be 8 characters. ")
+    @Pattern(regexp = "[689][0-9]{7}", message = "Phone number must be valid. ")
     private String phone;
 
     @NotNull(message = "Address should not be null")

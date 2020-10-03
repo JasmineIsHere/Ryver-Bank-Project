@@ -1,13 +1,15 @@
+###
 POST http://localhost:8080/customers
 Content-Type: application/json
 Authorization: Basic manager_1 01_manager_01
 #Validation pass - Valid managers can add new customers
+
 {
     "username": "good_user_1",
     "password": "01_user_01",
     "authorities": "ROLE_USER",
     "fullName": "User One",
-    "nric": "S8956789B",
+    "nric": "S9942296C",
     "phone": "90123456",
     "address": "999 Tampines Road S999999",
     "active": true
@@ -80,7 +82,7 @@ Authorization: Basic manager_1 01_manager_01
     "password": "02_user_02",
     "authorities": "ROLE_USER",
     "fullName": "User Two",
-    "nric": "S8252782E",
+    "nric": "T0046822Z",
     "phone": "92123262",
     "address": "222 Paya Lebar Road S222222",
     "active": true

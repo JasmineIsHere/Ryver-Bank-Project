@@ -65,7 +65,7 @@ public class AccountController {
             .orElseThrow(() -> new CustomerNotFoundException(account.getCustomer_id()));
 
         //if customer is deactivated, return 403 forbidden
-        if (!account.getCustomer.isActive()) {
+        if (!customer.isActive()) {
             throw new AccessDeniedException("403 returned");
         }
 

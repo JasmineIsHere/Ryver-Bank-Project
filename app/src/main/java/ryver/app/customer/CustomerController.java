@@ -63,10 +63,10 @@ public class CustomerController {
     @PostMapping("/customers")
     public Customer addCustomer(@Valid @RequestBody Customer customer){
         customer.setPassword(encoder.encode(customer.getPassword()));
-        if (validateNric(customer.getNric()))
-            return customers.save(customer);
-        else
-            throw new CustomerNotFoundException(customer.getId());
+        if (!validateNric(customer.getNric()))
+            throw new InvalidNricException();
+
+        return customers.save(customer);
     }
 
     public static boolean validateNric(String nric){
