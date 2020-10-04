@@ -1,9 +1,16 @@
 package ryver.app.account;
 
+import ryver.app.customer.*;
+import ryver.app.transaction.*;
+
+import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
-import ryver.app.customer.*;
+import java.lang.Object;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.*;
 
 @Entity
@@ -16,8 +23,6 @@ import lombok.*;
 public class Account {
     private  @Id @GeneratedValue (strategy = GenerationType.IDENTITY) Long id;
     
-    // null elements are considered valid, so we need a size constraints too
-    // primitive types can't have null, so it's auto 0.0
     private double balance;
     private double available_balance;
     private long customer_id;
@@ -25,4 +30,15 @@ public class Account {
     @ManyToOne
     @JoinColumn(name = "customer", nullable = false)
     private Customer customer;
+
+    @ManyToMany(mappedBy = "account")
+    // @Fetch(value=FetchMode.SELECT)
+    // @JsonIgnore
+    private Set<Transaction> transactions;
+
+    // @OneToMany(mappedBy = "account",
+    // orphanRemoval = true,
+    // cascade = CascadeType.ALL)
+    // @JsonIgnore
+    // private List<Transaction> transactions;
 }

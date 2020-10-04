@@ -10,4 +10,5 @@ public interface AccountRepository extends JpaRepository<Account, Long>{
     // start the derived query with "findBy", then reference the entity attributes you want to filter
     List<Account> findByCustomerId(Long customerId);
     Optional<Account> findByIdAndCustomerId(Long accountId, Long customerId);
+    Optional<Account> findById(Long accountId);
 }
