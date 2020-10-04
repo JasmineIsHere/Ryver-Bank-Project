@@ -11,5 +11,8 @@ public class CustomerNotFoundException extends RuntimeException{
     public CustomerNotFoundException(Long customerId) {
         super("Could not find customer " + customerId);
     }
+    public CustomerNotFoundException(String customerName) {
+        super("Could not find customer " + customerName);
+    }
     
 }
