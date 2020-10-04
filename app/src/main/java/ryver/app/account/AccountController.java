@@ -50,7 +50,6 @@ public class AccountController {
         } else{
             return accounts.findByCustomerId(customerId);
         }
-        
     }
 
     // Deactivated customer returns 403 forbidden
@@ -85,9 +84,7 @@ public class AccountController {
         }
 
         account.setCustomer(customer);
-        return accounts.save(account);
-
-        
+        return accounts.save(account);        
     }
 
 }
