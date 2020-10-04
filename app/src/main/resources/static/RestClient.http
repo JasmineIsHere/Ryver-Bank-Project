@@ -114,22 +114,22 @@ Authorization: Basic manager_1 01_manager_01
 }
 
 ###
-GET http://localhost:8080/customers/3/accounts
+GET http://localhost:8080/accounts
 Accept: application/json
 Authorization: Basic manager_1 01_manager_01
-#Validation pass - Valid managers can view list of all accounts of 1 customer
+#Validation pass - Valid managers can view list of all accounts of customer
 
 ###
-GET http://localhost:8080/customers/3/accounts
+GET http://localhost:8080/accounts
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 #Validation pass - Customer can view all their OWN accounts
 
-###
-GET http://localhost:8080/customers/4/accounts
-Accept: application/json
-Authorization: Basic good_user_1 01_user_01
-#Validation fail - Customers cannot view other customer's accounts
+# ###
+# GET http://localhost:8080/customers/4/accounts
+# Accept: application/json
+# Authorization: Basic good_user_1 01_user_01
+# #Validation fail - Customers cannot view other customer's accounts
 
 ###
 POST http://localhost:8080/customers/3/accounts/2/transactions

@@ -14,6 +14,8 @@ import ryver.app.customer.CustomerNotFoundException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
 
 @RestController
 public class AccountController {
@@ -25,31 +27,44 @@ public class AccountController {
         this.customers = customers;
     }
     
-    // Authentication for ROLE_MANAGER or ROLE_USER to access his own accounts
+  
     // Deactivated customer returns 403 forbidden
-    @PreAuthorize("hasRole('MANAGER') || #customerId == authentication.principal.id")
-    @GetMapping("/customers/{customerId}/accounts")
-    public List<Account> getAllAccountsByCustomerId(@PathVariable (value = "customerId") Long customerId) {
-        Customer customer = customers.findById(customerId)
-            .orElseThrow(() -> new CustomerNotFoundException(customerId));
+    @PreAuthorize("authentication.principal.active == true")
+    @GetMapping("/accounts")
+    public List<Account> getAllAccountsByCustomerId() {
+        //source:https://www.baeldung.com/get-user-in-spring-security
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String customer_name = authentication.getName();
+        
+        Customer customer = customers.findByUsername(customer_name)
+            .orElseThrow(() -> new CustomerNotFoundException(customer_name));
 
+        long customerId = customer.getId();
         // if customer is deactivated, return 403 forbidden
         if (!customer.isActive()) {
             throw new AccessDeniedException("403 returned");
         }
-
-        return accounts.findByCustomerId(customerId);
+        
+        if (customer.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"))){
+            return accounts.findAll();
+        } else{
+            return accounts.findByCustomerId(customerId);
+        }
+        
     }
 
     // Deactivated customer returns 403 forbidden
     @PreAuthorize("authentication.principal.active == true")
-    @GetMapping("/customers/{customerId}/accounts/{accountId}")
-    public Account getAccountByAccountIdAndCustomerId(@PathVariable (value = "accountId") Long accountId, 
-        @PathVariable (value = "customerId") Long customerId) {
+    @GetMapping("/accounts/{accountId}")
+    public Account getAccountByAccountIdAndCustomerId(@PathVariable (value = "accountId") Long accountId) {
+        //source:https://www.baeldung.com/get-user-in-spring-security
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String customer_name = authentication.getName();
         
-        Customer customer = customers.findById(customerId)
-            .orElseThrow(() -> new CustomerNotFoundException(customerId));
+        Customer customer = customers.findByUsername(customer_name)
+            .orElseThrow(() -> new CustomerNotFoundException(customer_name));
 
+        long customerId = customer.getId();
         // if customer is deactivated, return 403 forbidden
         if (!customer.isActive()) {
             throw new AccessDeniedException("403 returned");
