@@ -148,3 +148,124 @@ GET http://localhost:8080/customers/3/accounts/3/transactions
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 #Validation pass - Customers can view own account's transactions
+
+
+###
+POST http://localhost:8080/content
+Content-Type: application/json
+Authorization: Basic good_user_1 01_user_01
+#Validation fail - Users cannot add new content
+
+{
+    "title":"The title of the advisory or news",
+    "summary":"The short summary of the content item",
+    "content": "The text of the content item",
+    "link":"https://link.to.externalcontent"
+
+}
+
+###
+POST http://localhost:8080/content
+Content-Type: application/json
+Authorization: Basic analyst_1 01_analyst_01
+#Validation pass - Valid analysts can add new content
+
+{
+    "title":"The title of the advisory or news",
+    "summary":"The short summary of the content item",
+    "content": "The text of the content item",
+    "link":"https://link.to.externalcontent"
+
+}
+
+###
+POST http://localhost:8080/content
+Content-Type: application/json
+Authorization: Basic manager_1 01_manager_01
+#Validation pass - Valid managers can add new content
+
+{
+    "title":"The title of the advisory or news",
+    "summary":"The short summary of the content item",
+    "content": "The text of the content item",
+    "link":"https://link.to.externalcontent"
+
+}
+
+###
+GET http://localhost:8080/content
+Accept: application/json
+Authorization: Basic good_user_1 01_user_01
+#Validation pass - Customers can view only approved content
+
+###
+GET http://localhost:8080/content
+Accept: application/json
+Authorization: Basic analyst_1 01_analyst_01
+#Validation pass - Analysts can view all content
+
+###
+GET http://localhost:8080/content
+Accept: application/json
+Authorization: Basic manager_1 01_manager_01
+#Validation pass - Managers can view all content
+
+###
+PUT http://localhost:8080/content/1
+Content-Type: application/json
+Authorization: Basic good_user_1 01_user_01
+#Validation pass - Users cannot update content
+
+{
+    "title":"Title Not Updated",
+    "summary":"Summary Not Updated",
+    "content": "Goodbye",
+    "link":"https://google.com",
+    "approved": true
+}
+
+###
+PUT http://localhost:8080/content/1
+Content-Type: application/json
+Authorization: Basic analyst_1 01_analyst_01
+#Validation pass - Analysts can update everything but cannot approve content
+
+{
+    "title":"Title Changed",
+    "summary":"Summary Changed",
+    "content": "Hello",
+    "link":"https://google.com",
+    "approved": true
+}
+
+###
+PUT http://localhost:8080/content/1
+Content-Type: application/json
+Authorization: Basic manager_1 01_manager_01
+#Validation pass - Managers can update everything and can approve content
+
+{
+    "title":"Title Changed Again",
+    "summary":"Summary Changed Again",
+    "content": "Hello Again",
+    "link":"http://nooooooooooooooo.com",
+    "approved": true
+}
+
+###
+DELETE http://localhost:8080/content/1
+Content-Type: application/json
+Authorization: Basic good_user_1 01_user_01
+#Validation pass - Users cannot delete content
+
+###
+DELETE http://localhost:8080/content/1
+Content-Type: application/json
+Authorization: Basic analyst_1 01_analyst_01
+#Validation pass - Valid analysts can delete content
+
+###
+DELETE http://localhost:8080/content/1
+Content-Type: application/json
+Authorization: Basic manager_1 01_manager_01
+#Validation pass - Valid managers can delete content
