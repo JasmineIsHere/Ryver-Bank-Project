@@ -108,7 +108,7 @@ public class Customer implements UserDetails{
     }
     @Override
         public boolean isAccountNonLocked() {
-    return true;
+    return true; 
     }
     @Override
         public boolean isCredentialsNonExpired() {
