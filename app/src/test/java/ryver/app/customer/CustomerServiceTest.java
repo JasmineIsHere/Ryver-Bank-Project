@@ -77,7 +77,7 @@
 //     void addCustomer_NewCustomerWithInvalidNric_ReturnNull(){
 //         //arrange
 //         Customer manager = new Customer(
-//             "Jolene", "password", "manager", "Jolene Loh", "T1234567Z", "12345678", "address", true);
+            // "Jolene", "password", "manager", "Jolene Loh", "T1234567Z", "12345678", "address", true);
 //             when(customers.save(any(Customer.class))).thenReturn(manager);
 //         //act
 //         Customer savedManager = customerController.addCustomer(manager);
