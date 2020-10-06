@@ -48,7 +48,7 @@
 //     void updateCustomer_notROLEManager_ReturnSavedCustomer(){
 //         //arrange
 //         Customer customer = new Customer(
-//             "Jerry", "password", "customer", "Jerry Loh", "T0046822Z", "12345678", "address", false);
+//             "Jerry", "password", "customer", "Jerry Loh", "T0046822Z", "12345678", "address", true);
 //         Long customerId = 10L;
 //         when(customers.findById(customerId)).thenReturn(Optional.empty());
 //         when(customers.findByAuthorities(any(String.class))).thenReturn(new List<Customer>());
@@ -94,14 +94,14 @@
 //         //act
 //         boolean validNric = validateNric(manager.getNric());
 //         //assert
-//         assertTrue(validateNric);
+//         assertTrue(validNric);
 //     }
 
 //     @Test
 //     void validateNric_InvalidNric_ReturnFalse(){
 //         //arrange
 //         Customer customer = new Customer(
-//             "Jerry", "password", "customer", "Jerry Loh", "T0046822Z", "12345678", "address", false);
+//             "Jerry", "password", "customer", "Jerry Loh", "T0046822Z", "12345678", "address", true);
 //         //act
 //         boolean invalidNric = validateNric(customer.getNric());
 //        //assert
