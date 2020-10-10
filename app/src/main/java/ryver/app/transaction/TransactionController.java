@@ -33,10 +33,10 @@ public class TransactionController {
         this.customers = customers;
     }
     
-    // Deactivated customer returns 403 forbidden
     @PreAuthorize("authentication.principal.active == true")
     @GetMapping("/accounts/{accountId}/transactions")
-    public List<Transaction> getAllTransactionsByAccountIdAndCustomerId(@PathVariable (value = "accountId") Long accountId) {
+    public List<Transaction> getAllTransactionsByAccountId(@PathVariable (value = "accountId") Long accountId) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String customerUsername = authentication.getName();
 
@@ -48,67 +48,135 @@ public class TransactionController {
         Account account =  accounts.findByIdAndCustomerId(accountId, customerId)
             .orElseThrow(() -> new AccountNotFoundException(accountId));
 
-        List<Transaction> transaction = transactions.findByAccountId(accountId);
-
-        for (Transaction t : transaction) {
-            System.out.println(t.getAccount());
-
-            // account is garbage collected?!?!?!?!
-        }
-
-        System.out.println(transaction);
-
-        return transaction;
-        // return transactions.findByAccountIdAndCustomerId(accountId, customerId);
+        // return transactions.findByAccountId(accountId);
+        return transactions.findByAccountId(accountId);
         
     }
 
-    // Deactivated customer returns 403 forbidden
-    @PreAuthorize("authentication.principal.active == true")
-    @ResponseStatus(HttpStatus.CREATED)
+    // @GetMapping("/customers/{customerId}/accounts/{accountId}")
+    // public Account getAccountByAccountIdAndCustomerId(@PathVariable (value = "accountId") Long accountId, 
+    //     @PathVariable (value = "customerId") Long customerId) {
+        
+    //     if(!customers.existsById(customerId)) {
+    //         throw new CustomerNotFoundException(customerId);
+    //     }
+    //     return accounts.findByIdAndCustomerId(accountId, customerId).orElseThrow(() -> new AccountNotFoundException(accountId));
+    // }
+
     @PostMapping("/accounts/{accountId}/transactions")
     public Transaction addTransaction (@PathVariable (value = "accountId") Long accountId, @Valid @RequestBody Transaction transaction) {
-        
-        Set<Account> accountSet = new HashSet<>();
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        //will always be the sender that post a transfer request
-        
-        String customerUsername = authentication.getName(); // good_user_1
+        String customerUsername = authentication.getName();
 
-        //System.out.println(customerUsername);
-        //SENDER STUFF
         Customer customer = customers.findByUsername(customerUsername)
             .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
 
         Long customerId = customer.getId();
 
-        Account senderAccount =  accounts.findByIdAndCustomerId(accountId, customerId)
+        Account account =  accounts.findByIdAndCustomerId(accountId, customerId)
             .orElseThrow(() -> new AccountNotFoundException(accountId));
-
-        //RECEIVER STUFF
-        Long receiverAccountId = transaction.getReceiver();
-
-        Account receiverAccount =  accounts.findById(receiverAccountId)
-            .orElseThrow(() -> new AccountNotFoundException(receiverAccountId));
-
-        //System.out.println("receiverAcc = " + accounts.findById(receiverAccountId));
-
-        senderAccount.setBalance(senderAccount.getBalance() - transaction.getAmount());
-        senderAccount.setAvailable_balance(senderAccount.getAvailable_balance() - transaction.getAmount());
-
-        receiverAccount.setBalance(receiverAccount.getBalance() + transaction.getAmount());
-        receiverAccount.setAvailable_balance(receiverAccount.getAvailable_balance() + transaction.getAmount());
- 
-        //something wrong here
-        accountSet.add(senderAccount);
-        accountSet.add(receiverAccount);
-        // problem is with the accounts ^^^^ when second posting of transaction
-
-        transaction.setAccount(accountSet);
-
+        
+        transaction.setAccount(account);
         return transactions.save(transaction);
 
+
+        // return customers.findById(customerId).map(customer ->{
+        //     account.setCustomer(customer);
+        //     return accounts.save(account);
+        // }).orElseThrow(() -> new CustomerNotFoundException(customerId));
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // MANY TO MANY STUFF
+    // // Deactivated customer returns 403 forbidden
+    // @PreAuthorize("authentication.principal.active == true")
+    // @GetMapping("/accounts/{accountId}/transactions")
+    // public List<Transaction> getAllTransactionsByAccountIdAndCustomerId(@PathVariable (value = "accountId") Long accountId) {
+    //     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    //     String customerUsername = authentication.getName();
+
+    //     Customer customer = customers.findByUsername(customerUsername)
+    //         .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
+
+    //     Long customerId = customer.getId();
+
+    //     Account account =  accounts.findByIdAndCustomerId(accountId, customerId)
+    //         .orElseThrow(() -> new AccountNotFoundException(accountId));
+
+    //     List<Transaction> transaction = transactions.findByAccountId(accountId);
+
+    //     for (Transaction t : transaction) {
+    //         System.out.println(t.getAccount());
+
+    //         // account is garbage collected?!?!?!?!
+    //     }
+
+    //     System.out.println(transaction);
+
+    //     return transaction;
+    //     // return transactions.findByAccountIdAndCustomerId(accountId, customerId);
+        
+    // }
+
+    // // Deactivated customer returns 403 forbidden
+    // @PreAuthorize("authentication.principal.active == true")
+    // @ResponseStatus(HttpStatus.CREATED)
+    // @PostMapping("/accounts/{accountId}/transactions")
+    // public Transaction addTransaction (@PathVariable (value = "accountId") Long accountId, @Valid @RequestBody Transaction transaction) {
+        
+    //     Set<Account> accountSet = new HashSet<>();
+
+    //     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    //     //will always be the sender that post a transfer request
+        
+    //     String customerUsername = authentication.getName(); // good_user_1
+
+    //     //System.out.println(customerUsername);
+    //     //SENDER STUFF
+    //     Customer customer = customers.findByUsername(customerUsername)
+    //         .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
+
+    //     Long customerId = customer.getId();
+
+    //     Account senderAccount =  accounts.findByIdAndCustomerId(accountId, customerId)
+    //         .orElseThrow(() -> new AccountNotFoundException(accountId));
+
+    //     //RECEIVER STUFF
+    //     Long receiverAccountId = transaction.getReceiver();
+
+    //     Account receiverAccount =  accounts.findById(receiverAccountId)
+    //         .orElseThrow(() -> new AccountNotFoundException(receiverAccountId));
+
+    //     //System.out.println("receiverAcc = " + accounts.findById(receiverAccountId));
+
+    //     senderAccount.setBalance(senderAccount.getBalance() - transaction.getAmount());
+    //     senderAccount.setAvailable_balance(senderAccount.getAvailable_balance() - transaction.getAmount());
+
+    //     receiverAccount.setBalance(receiverAccount.getBalance() + transaction.getAmount());
+    //     receiverAccount.setAvailable_balance(receiverAccount.getAvailable_balance() + transaction.getAmount());
+ 
+    //     //something wrong here
+    //     accountSet.add(senderAccount);
+    //     accountSet.add(receiverAccount);
+    //     // problem is with the accounts ^^^^ when second posting of transaction
+
+    //     transaction.setAccount(accountSet);
+
+    //     return transactions.save(transaction);
+
+    // }
 
 }

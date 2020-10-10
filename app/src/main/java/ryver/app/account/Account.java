@@ -31,14 +31,14 @@ public class Account {
     @JoinColumn(name = "customer", nullable = false)
     private Customer customer;
 
-    @ManyToMany(mappedBy = "account")
-    // @Fetch(value=FetchMode.SELECT)
-    // @JsonIgnore
-    private Set<Transaction> transactions;
+    // @ManyToMany(mappedBy = "account")
+    // // @Fetch(value=FetchMode.SELECT)
+    // // @JsonIgnore
+    // private Set<Transaction> transactions;
 
-    // @OneToMany(mappedBy = "account",
-    // orphanRemoval = true,
-    // cascade = CascadeType.ALL)
-    // @JsonIgnore
-    // private List<Transaction> transactions;
+    @OneToMany(mappedBy = "account",
+    orphanRemoval = true,
+    cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Transaction> transactions;
 }

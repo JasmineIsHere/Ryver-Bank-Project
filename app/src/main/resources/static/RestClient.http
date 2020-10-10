@@ -146,7 +146,7 @@ Authorization: Basic good_user_1 01_user_01
 {
     "sender": 1,
     "receiver": 2,
-    "amount": 111.0
+    "amount": 12345.0
 }
 
 ###
