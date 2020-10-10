@@ -132,6 +132,12 @@ Authorization: Basic good_user_1 01_user_01
 #Validation pass - Customer can view their OWN specific account using accountId
 
 ###
+GET http://localhost:8080/accounts/2
+Accept: application/json
+Authorization: Basic good_user_1 01_user_01
+#Validation fail - Customer cannot view other people's accounts
+
+###
 POST http://localhost:8080/accounts/1/transactions
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
@@ -140,7 +146,31 @@ Authorization: Basic good_user_1 01_user_01
 {
     "sender": 1,
     "receiver": 2,
-    "amount": 12345.0
+    "amount": 2.0
+}
+
+###
+POST http://localhost:8080/accounts/1/transactions
+Content-Type: application/json
+Authorization: Basic good_user_1 01_user_01
+#Validation fail - Insufficient amount in account 1
+
+{
+    "sender": 1,
+    "receiver": 2,
+    "amount": 1234567.0
+}
+
+###
+POST http://localhost:8080/accounts/1/transactions
+Content-Type: application/json
+Authorization: Basic good_user_1 01_user_01
+#Validation fail - No account 3
+
+{
+    "sender": 1,
+    "receiver": 3,
+    "amount": 1234567.0
 }
 
 ###
@@ -220,7 +250,7 @@ Authorization: Basic manager_1 01_manager_01
 PUT http://localhost:8080/content/1
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
-#Validation pass - Users cannot update content
+#Validation fail - Users cannot update content
 
 {
     "title":"Title Not Updated",
@@ -262,7 +292,7 @@ Authorization: Basic manager_1 01_manager_01
 DELETE http://localhost:8080/content/1
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
-#Validation pass - Users cannot delete content
+#Validation fail - Users cannot delete content
 
 ###
 DELETE http://localhost:8080/content/1
@@ -271,7 +301,7 @@ Authorization: Basic analyst_1 01_analyst_01
 #Validation pass - Valid analysts can delete content
 
 ###
-DELETE http://localhost:8080/content/1
+DELETE http://localhost:8080/content/2
 Content-Type: application/json
 Authorization: Basic manager_1 01_manager_01
 #Validation pass - Valid managers can delete content
