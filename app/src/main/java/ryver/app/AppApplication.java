@@ -21,7 +21,7 @@ public class AppApplication {
 		System.out.println("[Add manager1]: " + customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "Manager One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)));
 		System.out.println("[Add analyst1]: " + customers.save(new Customer("analyst_1", encoder.encode("01_analyst_01"), "ROLE_ANALYST", "Analyst One", "S8098765B", "99876543", "456 Clementi Road S987456", true)));
 
-    	// RestTemplateClient client = ctx.getBean(RestTemplateClient.class);
+		// RestTemplateClient client = ctx.getBean(RestTemplateClient.class);
 	}
 
 }

@@ -1,6 +1,10 @@
-// package ryver.app;
+// package test.java.ryver.app;
 
 // import static org.junit.jupiter.api.Assertions.*;
+// import ryver.app.customer.*;
+// import ryver.app.account.*;
+// import ryver.app.customer.Customer.*;
+// import ryver.app.account.Account.*;
 
 // import java.net.URI;
 // import java.util.Optional;
@@ -16,9 +20,6 @@
 // import org.springframework.http.HttpMethod;
 // import org.springframework.http.ResponseEntity;
 // import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-// import csd.week6.user.User;
-// import csd.week6.user.UserRepository;
 
 // /** Start an actual HTTP server listening at a random port*/
 // @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)

@@ -1,6 +1,15 @@
 // package test.java.ryver.app;
 
+// import ryver.app.customer.*;
+// import ryver.app.account.*;
+// import ryver.app.customer.Customer.*;
+// import ryver.app.account.Account.*;
+
 // import org.springframework.boot.test.context.SpringBootTest;
+// import org.springframework.boot.SpringApplication;
+// import org.springframework.boot.autoconfigure.SpringBootApplication;
+// import org.springframework.context.ApplicationContext;
+// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 // import static org.junit.jupiter.api.Assertions.assertEquals;
 // import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -26,6 +35,8 @@
 //     // findByCustomerId(Long customerId);
 //     // findByIdAndCustomerId(Long accountId, Long customerId);
 
+//     @Mock
+//     BCryptPasswordEncoder encoder;
 
 //     @InjectMocks
 //     private AccountController accountController;
@@ -34,22 +45,43 @@
 //     // @Test
 //     // void getAllAccountsByCustomerId_ROLECustomer_ReturnListOfAccounts(){
 //     //     //arrange
-//     //     Account account = new Account();
+//     //     Customer customer = new Customer(
+//     //         "customer_1", encoder.encode("01_customer_01"), "ROLE_USER", "Customer One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
+//     //     Account account = new Account(400, 400, 1L);
+//     //     when(customers.findByAuthorities(any(String.class))).thenReturn(new ArrayList<Customer>());
 //     //     //act
-//     //     Account listOfAccounts = 
+//     //     Account listOfAccounts = accountController.getAllAccountsByCustomerId(1L); 
 //     //     //assert
+//     //     assertNotNull(listOfAccounts);
+//     //     verify(customers).findByAuthorities("ROLE_USER");
 //     // }
+
 //     // @Test
 //     // void getAllAccountsByCustomerId_ROLEManager_ReturnListOfAccounts(){
-//     //     //arrange
-//     //     //act
 //     //     //assert
+//     //     Customer customer = new Customer(
+//     //         "customer_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "manager One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
+//     //     Account account = new Account(400, 400, 1L);
+//     //     when(customers.findByAuthorities(any(String.class))).thenReturn(new ArrayList<Customer>());
+//     //     //act
+//     //     Account listOfAccounts = accountController.getAllAccountsByCustomerId(1L); 
+//     //     //assert
+//     //     assertNotNull(listOfAccounts);
+//     //     verify(customers).findByAuthorities("ROLE_MANAGER");
 //     // }
-//     // @Test
+
+//     // @Test //how to getaccountID
 //     // void getAllAccountsByCustomerId_CustomerInactive_ReturnListOfAccounts(){
-//     //     //arrange
-//     //     //act
 //     //     //assert
+//     //     Customer manager = new Customer(
+//     //         "customer_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "manager One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
+//     //     Account account = new Account(400, 400, 1L);
+//     //     when(customers.findByAuthorities(any(String.class))).thenReturn(new ArrayList<Customer>());
+//     //     //act
+//     //     Account listOfAccounts = accountController.getAllAccountsByCustomerId(1L); 
+//     //     //assert
+//     //     assertNotNull(listOfAccounts);
+//     //     verify(customers).findByAuthorities("ROLE_MANAGER");
 //     // }
 
 //     @Test
@@ -57,7 +89,7 @@
 //         //arrange
 //         Customer manager = new Customer(
 //         "Jolene", "password", "manager", "Jolene Loh", "T0046822Z", "12345678", "address", true);
-//         Account account = new Account();
+//         Account account = new Account(1L, 400.0, 400.0);
 //         Long accountId = 22L;
 //         //act
 //         Account returnAccount = account.getAccountByAccountIdAndCustomerId(accountId);
@@ -70,7 +102,7 @@
 //         //arrange
 //         Customer customer = new Customer(
 //             "Jerry", "password", "customer", "Jerry Loh", "T0046822Z", "12345678", "address", false);
-//         Account account = new Account();
+//         Account account = new Account(400.0, 400.0, 1L);
 //         Long accountId = 22L;
 //         //act
 //         Account returnAccount = account.getAccountByAccountIdAndCustomerId(accountId);
@@ -83,7 +115,7 @@
 //         //arrange
 //         Customer manager = new Customer(
 //             "Jolene", "password", "manager", "Jolene Loh", "T0046822Z", "12345678", "address", true);
-//         Account account = new Account();
+//         Account account = new Account(400.0, 400.0, 1L);
 //         when(books.findByIdAndCustomerId(any(String.class))).thenReturn(new ArrayList<Account>());
 //         when(accounts.save(any(Account.class))).thenReturn(account);
 //         //act
