@@ -2,6 +2,7 @@ package ryver.app.account;
 
 import ryver.app.customer.*;
 import ryver.app.transaction.*;
+import ryver.app.trade.*;
 
 import java.util.*;
 import javax.persistence.*;
@@ -41,4 +42,9 @@ public class Account {
     cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Transaction> transactions;
+
+    @OneToMany(mappedBy = "account",
+    orphanRemoval = true,
+    cascade = CascadeType.ALL)
+    private List<Trade> trades;
 }
