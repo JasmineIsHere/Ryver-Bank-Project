@@ -1,4 +1,4 @@
-// package ryver.app;
+// package test.java.ryver.app;
 
 // import org.springframework.boot.test.context.SpringBootTest;
 

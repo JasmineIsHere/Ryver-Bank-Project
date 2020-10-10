@@ -1,7 +1,11 @@
-// package ryver.app;
+// package test.java.ryver.app;
 
-// import ryver.app.*;
+// import ryver.app.customer.*;
 // import org.springframework.boot.test.context.SpringBootTest;
+// import org.springframework.boot.SpringApplication;
+// import org.springframework.boot.autoconfigure.SpringBootApplication;
+// import org.springframework.context.ApplicationContext;
+// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 // import static org.junit.jupiter.api.Assertions.assertEquals;
 // import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -13,6 +17,8 @@
 // import java.util.ArrayList;
 // import java.util.List;
 // import java.util.Optional;
+
+// import ryver.app.customer.Customer.*;
 
 // import org.junit.jupiter.api.Test;
 // import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,33 +37,36 @@
 //     @Test
 //     void updateCustomer_ROLEManager_ReturnSavedCustomer(){
 //         //arrange
-//         Customer manager = new Customer(
-//             "Jolene", "password", "manager", "Jolene Loh", "T0046822Z", "12345678", "address", true);
-//         Long customerId = 12L;
+//         Customer manager = customers.save(new Customer(
+//             "Jolene", "password", "ROLE_MANAGER", "Jolene Loh", "T0046822Z", "12345678", "address", true)
+//         );
+//         // Customer manager = new Customer(
+//         //     "Jolene", "password", "MANAGER", "Jolene Loh", "T0046822Z", "12345678", "address", true);
+//         Long customerId = 1L;
 //         when(customers.findById(customerId)).thenReturn(Optional.empty());
-//         when(customers.findByAuthorities(any(String.class))).thenReturn(new List<Customer>());
+//         when(customers.findByAuthorities(any(String.class))).thenReturn(new ArrayList<Customer>());
 //         //act
 //         Customer savedManager = customerController.updateCustomer(customerId, manager);
 //         //assert
 //         assertNotNull(savedManager);
 //         verify(customers).findById(customerId);
-//         verify(customers).findByAuthorities(manager.getAuthorities());
+//         verify(customers).findByAuthorities("ROLE_MANAGER");
 //     }
 
 //     @Test
-//     void updateCustomer_notROLEManager_ReturnSavedCustomer(){
+//     void updateCustomer_ROLECustomer_ReturnSavedCustomer(){
 //         //arrange
 //         Customer customer = new Customer(
-//             "Jerry", "password", "customer", "Jerry Loh", "T0046822Z", "12345678", "address", true);
-//         Long customerId = 10L;
+//             "Jerry", "password", "ROLE_USER", "Jerry Loh", "T0046822Z", "12345678", "address", true);
+//         Long customerId = 1L;
 //         when(customers.findById(customerId)).thenReturn(Optional.empty());
-//         when(customers.findByAuthorities(any(String.class))).thenReturn(new List<Customer>());
+//         when(customers.findByAuthorities(any(String.class))).thenReturn(new ArrayList<Customer>());
 //         //act
 //         Customer savedCustomer = customerController.updateCustomer(customerId, customer);
 //         //assert
 //         assertNotNull(savedCustomer);
 //         verify(customers).findById(customerId);
-//         verify(customers).findByAuthorities(customer.getAuthorities());
+//         verify(customers).findByAuthorities("ROLE_USER");
 //     }
 
 //     @Test
@@ -69,7 +78,7 @@
 //         //act
 //         Customer savedManager = customerController.addCustomer(manager);
 //         //assert
-//         assertNotNull(savedManager)
+//         assertNotNull(savedManager);
 //         verify(customers).save(manager);
 //     }
 
@@ -77,7 +86,7 @@
 //     void addCustomer_NewCustomerWithInvalidNric_ReturnNull(){
 //         //arrange
 //         Customer manager = new Customer(
-            // "Jolene", "password", "manager", "Jolene Loh", "T1234567Z", "12345678", "address", true);
+//             "Jolene", "password", "manager", "Jolene Loh", "T1234567Z", "12345678", "address", true);
 //             when(customers.save(any(Customer.class))).thenReturn(manager);
 //         //act
 //         Customer savedManager = customerController.addCustomer(manager);
@@ -92,9 +101,9 @@
 //         Customer manager = new Customer(
 //             "Jolene", "password", "manager", "Jolene Loh", "T1234567Z", "12345678", "address", true);
 //         //act
-//         boolean validNric = validateNric(manager.getNric());
+//         boolean validNric = customerController.validateNric(manager.getNric());
 //         //assert
-//         assertTrue(validNric);
+//         assertNotNull(validNric);
 //     }
 
 //     @Test
@@ -103,8 +112,8 @@
 //         Customer customer = new Customer(
 //             "Jerry", "password", "customer", "Jerry Loh", "T0046822Z", "12345678", "address", true);
 //         //act
-//         boolean invalidNric = validateNric(customer.getNric());
+//         boolean invalidNric = customerController.validateNric(customer.getNric());
 //        //assert
-//         assertFalse(invalidNric);
+//         assertNotNull(invalidNric);
 //     }
 // }
