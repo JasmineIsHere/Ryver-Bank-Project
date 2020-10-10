@@ -32,22 +32,20 @@ public class AccountController {
     @PreAuthorize("authentication.principal.active == true")
     @GetMapping("/accounts")
     public List<Account> getAllAccountsByCustomerId() {
-        //source:https://www.baeldung.com/get-user-in-spring-security
+        // source:https://www.baeldung.com/get-user-in-spring-security
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String customer_name = authentication.getName();
+        String customerUsername = authentication.getName();
         
-        Customer customer = customers.findByUsername(customer_name)
-            .orElseThrow(() -> new CustomerNotFoundException(customer_name));
-
+        Customer customer = customers.findByUsername(customerUsername)
+            .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
+        
         long customerId = customer.getId();
-        // if customer is deactivated, return 403 forbidden
-        if (!customer.isActive()) {
-            throw new AccessDeniedException("403 returned");
-        }
-        
+
+        // if role is manager -> get all the accounts
+        // else -> get OWN accounts
         if (customer.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"))){
             return accounts.findAll();
-        } else{
+        } else {
             return accounts.findByCustomerId(customerId);
         }
     }
@@ -58,17 +56,13 @@ public class AccountController {
     public Account getAccountByAccountIdAndCustomerId(@PathVariable (value = "accountId") Long accountId) {
         //source:https://www.baeldung.com/get-user-in-spring-security
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String customer_name = authentication.getName();
-        
-        Customer customer = customers.findByUsername(customer_name)
-            .orElseThrow(() -> new CustomerNotFoundException(customer_name));
+        String customerUsername = authentication.getName();
+
+        Customer customer = customers.findByUsername(customerUsername)
+            .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
 
         long customerId = customer.getId();
-        // if customer is deactivated, return 403 forbidden
-        if (!customer.isActive()) {
-            throw new AccessDeniedException("403 returned");
-        }
-
+        
         return accounts.findByIdAndCustomerId(accountId, customerId).orElseThrow(() -> new AccountNotFoundException(accountId));
     }
 
@@ -77,7 +71,7 @@ public class AccountController {
     public Account addAccount (@Valid @RequestBody Account account) {
         Customer customer = customers.findById(account.getCustomer_id())
             .orElseThrow(() -> new CustomerNotFoundException(account.getCustomer_id()));
-
+        
         //if customer is deactivated, return 403 forbidden
         if (!customer.isActive()) {
             throw new AccessDeniedException("403 returned");

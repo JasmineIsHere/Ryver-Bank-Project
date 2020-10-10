@@ -125,14 +125,14 @@ Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 #Validation pass - Customer can view all their OWN accounts
 
-# ###
-# GET http://localhost:8080/customers/4/accounts
-# Accept: application/json
-# Authorization: Basic good_user_1 01_user_01
-# #Validation fail - Customers cannot view other customer's accounts
+###
+GET http://localhost:8080/accounts/1
+Accept: application/json
+Authorization: Basic good_user_1 01_user_01
+#Validation pass - Customer can view their OWN specific account using accountId
 
 ###
-POST http://localhost:8080/customers/3/accounts/2/transactions
+POST http://localhost:8080/accounts/1/transactions
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
 #Validation pass - Customers can create new transactions
@@ -140,13 +140,19 @@ Authorization: Basic good_user_1 01_user_01
 {
     "sender": 1,
     "receiver": 2,
-    "amount": 5167.0
+    "amount": 12345.0
 }
 
 ###
-GET http://localhost:8080/customers/3/accounts/3/transactions
+GET http://localhost:8080/accounts/1/transactions
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
+#Validation pass - Customers can view own account's transactions
+
+###
+GET http://localhost:8080/accounts/2/transactions
+Accept: application/json
+Authorization: Basic good_user_2 02_user_02
 #Validation pass - Customers can view own account's transactions
 
 
