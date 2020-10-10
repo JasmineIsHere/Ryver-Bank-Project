@@ -72,6 +72,9 @@ public class TransactionController {
             throw new AccountMismatchException();
         }
 
+        if(transaction.getAmount() <= 0){
+            throw new BadBalanceException();
+        }
         Customer customer = customers.findByUsername(customerUsername) //user that log in and the sender
             .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
 
@@ -87,9 +90,9 @@ public class TransactionController {
         Account receiverAccount =  accounts.findById(receiverAccountId)
             .orElseThrow(() -> new AccountNotFoundException(receiverAccountId));
 
-            if (senderAccount.getAvailable_balance() < transaction.getAmount()){
-                throw new InsufficientBalanceException();
-            } 
+        if (senderAccount.getAvailable_balance() < transaction.getAmount()){
+            throw new InsufficientBalanceException();
+        } 
             
         senderAccount.setBalance(senderAccount.getAvailable_balance() - transaction.getAmount());
         senderAccount.setAvailable_balance(senderAccount.getAvailable_balance() - transaction.getAmount());

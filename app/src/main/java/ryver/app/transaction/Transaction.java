@@ -24,14 +24,6 @@ public class Transaction {
     private Long receiver; // receiver's account id
     private double amount;
 
-    // // @ManyToMany (fetch = FetchType.EAGER)
-    // @ManyToMany
-    // // @Fetch (value=FetchMode.SELECT)
-    // @JoinTable(name = "account_transactions",
-    //     joinColumns = @JoinColumn(name = "transaction_id"),
-    //     inverseJoinColumns = @JoinColumn(name = "account_id"))
-    // private Set<Account> account;
-
     @ManyToOne
     @JoinColumn(name = "account_id", nullable = false)
     @JsonIgnore
