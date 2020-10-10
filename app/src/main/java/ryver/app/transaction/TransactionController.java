@@ -49,7 +49,7 @@ public class TransactionController {
             .orElseThrow(() -> new AccountNotFoundException(accountId));
 
         // return transactions.findByAccountId(accountId);
-        return transactions.findByAccountId(accountId);
+        return transactions.findBySenderOrReceiver(accountId, accountId);
         
     }
 
@@ -67,16 +67,37 @@ public class TransactionController {
     public Transaction addTransaction (@PathVariable (value = "accountId") Long accountId, @Valid @RequestBody Transaction transaction) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String customerUsername = authentication.getName();
+        
+        if (accountId != transaction.getSender()) {
+            throw new AccountMismatchException();
+        }
 
-        Customer customer = customers.findByUsername(customerUsername)
+        Customer customer = customers.findByUsername(customerUsername) //user that log in and the sender
             .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
 
+        //sender
         Long customerId = customer.getId();
 
-        Account account =  accounts.findByIdAndCustomerId(accountId, customerId)
+        Account senderAccount =  accounts.findByIdAndCustomerId(accountId, customerId)
             .orElseThrow(() -> new AccountNotFoundException(accountId));
         
-        transaction.setAccount(account);
+            //receiver
+        Long receiverAccountId = transaction.getReceiver();
+
+        Account receiverAccount =  accounts.findById(receiverAccountId)
+            .orElseThrow(() -> new AccountNotFoundException(receiverAccountId));
+
+            if (senderAccount.getAvailable_balance() < transaction.getAmount()){
+                throw new InsufficientBalanceException();
+            } 
+            
+        senderAccount.setBalance(senderAccount.getAvailable_balance() - transaction.getAmount());
+        senderAccount.setAvailable_balance(senderAccount.getAvailable_balance() - transaction.getAmount());
+
+        receiverAccount.setBalance(receiverAccount.getAvailable_balance() + transaction.getAmount());
+        receiverAccount.setAvailable_balance(receiverAccount.getAvailable_balance() + transaction.getAmount());
+        
+        transaction.setAccount(senderAccount);
         return transactions.save(transaction);
 
 
@@ -162,10 +183,10 @@ public class TransactionController {
 
     //     //System.out.println("receiverAcc = " + accounts.findById(receiverAccountId));
 
-    //     senderAccount.setBalance(senderAccount.getBalance() - transaction.getAmount());
+    //     senderAccount.setBalance(senderAccount.getAvailable_balance() - transaction.getAmount());
     //     senderAccount.setAvailable_balance(senderAccount.getAvailable_balance() - transaction.getAmount());
 
-    //     receiverAccount.setBalance(receiverAccount.getBalance() + transaction.getAmount());
+    //     receiverAccount.setBalance(receiverAccount.getAvailable_balance() + transaction.getAmount());
     //     receiverAccount.setAvailable_balance(receiverAccount.getAvailable_balance() + transaction.getAmount());
  
     //     //something wrong here
