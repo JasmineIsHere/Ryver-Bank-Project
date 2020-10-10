@@ -30,7 +30,7 @@ Authorization: Basic manager_1 01_manager_01
     "nric": "S9111111B",
     "phone": "91111111",
     "address": "111 Tampines Road S111111",
-    "active": false
+    "active": true
 }
 
 
