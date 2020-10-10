@@ -72,11 +72,12 @@ public class TransactionController {
         Set<Account> accountSet = new HashSet<>();
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        //will always be the sender that post a transfer request
         
         String customerUsername = authentication.getName(); // good_user_1
 
-        // System.out.println(customerUsername);
-
+        //System.out.println(customerUsername);
+        //SENDER STUFF
         Customer customer = customers.findByUsername(customerUsername)
             .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
 
@@ -85,13 +86,21 @@ public class TransactionController {
         Account senderAccount =  accounts.findByIdAndCustomerId(accountId, customerId)
             .orElseThrow(() -> new AccountNotFoundException(accountId));
 
+        //RECEIVER STUFF
         Long receiverAccountId = transaction.getReceiver();
 
         Account receiverAccount =  accounts.findById(receiverAccountId)
             .orElseThrow(() -> new AccountNotFoundException(receiverAccountId));
 
-        // System.out.println(accounts.findById(account.getId()));
+        //System.out.println("receiverAcc = " + accounts.findById(receiverAccountId));
 
+        senderAccount.setBalance(senderAccount.getBalance() - transaction.getAmount());
+        senderAccount.setAvailable_balance(senderAccount.getAvailable_balance() - transaction.getAmount());
+
+        receiverAccount.setBalance(receiverAccount.getBalance() + transaction.getAmount());
+        receiverAccount.setAvailable_balance(receiverAccount.getAvailable_balance() + transaction.getAmount());
+ 
+        //something wrong here
         accountSet.add(senderAccount);
         accountSet.add(receiverAccount);
         // problem is with the accounts ^^^^ when second posting of transaction
