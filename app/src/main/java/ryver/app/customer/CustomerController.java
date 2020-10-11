@@ -38,20 +38,18 @@ public class CustomerController {
         Customer customer = customers.findById(customerId)
             .orElseThrow(() -> new CustomerNotFoundException(customerId));
 
-
         // fields which customers and managers can update - password, phone, address
         customer.setPassword(encoder.encode(updatedCustomerInfo.getPassword()));
         customer.setPhone(updatedCustomerInfo.getPhone());
         customer.setAddress(updatedCustomerInfo.getAddress());
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication(); //not testable
         // fields which only managers can update - active
         if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"))) {
             customer.setActive(updatedCustomerInfo.isActive());
         }
-
-        return customers.save(customer);
+        customers.save(customer);
+        return customer;
     }
 
     /**
