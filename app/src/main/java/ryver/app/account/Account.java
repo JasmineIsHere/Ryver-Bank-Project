@@ -38,8 +38,8 @@ public class Account {
     @JsonIgnore
     private List<Transaction> transactions;
 
-    @OneToMany(mappedBy = "account",
-    orphanRemoval = true,
-    cascade = CascadeType.ALL)
-    private List<Trade> trades;
+    // @OneToMany(mappedBy = "account",
+    // orphanRemoval = true,
+    // cascade = CascadeType.ALL)
+    // private List<Trade> trades;
 }
