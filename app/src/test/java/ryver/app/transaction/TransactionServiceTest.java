@@ -31,25 +31,83 @@
 // @ExtendWith(MockitoExtension.class)
 // public class TransactionServiceTest {
 //     @Mock
+//     BCryptPasswordEncoder encoder;
+//     @Mock
+//     private CustomerRepository customers;
+//     @Mock
+//     private AccountRepository accounts;
+
+//     @Mock
 //     private TransactionRepository transactions;
 //     // List<Transaction> findByAccountId(Long accountId);
 //     // List<Transaction> findBySenderOrReceiver(Long accountId, Long accountId2);
-
-//     @Mock
-//     BCryptPasswordEncoder encoder;
-
 //     @InjectMocks
 //     private TransactionController transactionController;
-
-//     @Test
-//     void getAllTransactionsByAccountId_getTransactionList_returnListOfTransactions(){}
-//     void addTransaction_newTransaction_returnSavedTransaction(){}
-//     void addTransaction_invalidAccountId_returnException(){}
-//     void addTransaction_badBalance_returnException(){}
-//     void addTransaction_insufficientBalance_returnException(){}
-
-
 //     // public List<Transaction> getAllTransactionsByAccountId(@PathVariable (value = "accountId") Long accountId) {
 //     // public Transaction addTransaction (@PathVariable (value = "accountId") Long accountId, @Valid @RequestBody Transaction transaction) {
 
+//     @Test
+//     void getAllTransactionsByAccountId_getTransactionList_returnListOfTransactions(){
+//         //arrange
+//         Customer manager = new Customer(
+//             "Jolene", "password", "manager", "Jolene Loh", "T1234567Z", "12345678", "address", true);
+//         when(customers.save(any(Customer.class))).thenReturn(manager);
+//         Account account = new Account();
+//         when(accounts.save(any(Account.class))).thenReturn(account);
+//         Transaction transaction = new Transaction();
+//         when(transactions.save(any(Transaction.class))).thenReturn(transaction);
+//         //act
+//         List<Transaction> transactionList = transactionController.getAllTransactionsByAccountId(account.getId());
+//         //assert
+//         assertNotNull(transactionList);
+//         verify(customers).save(manager);
+//         verify(accounts).save(account);
+//         verify(transactions).save(transaction);
+//     }
+
+//     @Test
+//     void addTransaction_newTransaction_returnSavedTransaction(){
+//         //arrange
+//         Customer manager = new Customer(
+//             "Jolene", "password", "manager", "Jolene Loh", "T1234567Z", "12345678", "address", true);
+//         when(customers.save(any(Customer.class))).thenReturn(manager);
+//         Account account = new Account();
+//         when(accounts.save(any(Account.class))).thenReturn(account);
+//         Transaction transaction = new Transaction();
+//         when(transactions.save(any(Transaction.class))).thenReturn(transaction);
+//         //act
+//         Transaction savedTransaction = transactionController.addTransactions(account.getId(), transaction);
+//         //assert
+//         assertNotNull(savedTransaction);
+//         verify(customers).save(manager);
+//         verify(accounts).save(account);
+//         verify(transactions).save(transaction);
+//     }
+
+//     @Test
+//     void addTransaction_invalidAccountId_returnException(){
+//         //arrange
+//         //act
+//         String message = "You cannot access this account";
+//         //assert
+//         assertEquals(message, );
+//     }
+
+//     @Test
+//     void addTransaction_badBalance_returnException(){
+//         //arrange
+//         //act
+//         String message = "Bad balance detected";
+//         //assert
+//         assertEquals(message, );
+//     }
+
+//     @Test
+//     void addTransaction_insufficientBalance_returnException(){
+//         //arrange
+//         //act
+//         String message = "Insufficient Balance";
+//         //assert
+//         assertEquals(message, );
+//     }
 // }

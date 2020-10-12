@@ -31,13 +31,14 @@
 // @ExtendWith(MockitoExtension.class)
 // public class AccountServiceTest {
 //     @Mock
+//     BCryptPasswordEncoder encoder;
+//     @Mock
+//     private CustomerRepository customers;
+
+//     @Mock
 //     private AccountRepository accounts;
 //     // findByCustomerId(Long customerId);
 //     // findByIdAndCustomerId(Long accountId, Long customerId);
-
-//     @Mock
-//     BCryptPasswordEncoder encoder;
-
 //     @InjectMocks
 //     private AccountController accountController;
 
