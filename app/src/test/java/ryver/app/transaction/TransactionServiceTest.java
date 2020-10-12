@@ -2,8 +2,10 @@
 
 // import ryver.app.customer.*;
 // import ryver.app.account.*;
+// import ryver.app.transaction.*;
 // import ryver.app.customer.Customer.*;
 // import ryver.app.account.Account.*;
+// import ryver.app.transaction.Transaction.*;
 
 // import org.springframework.boot.test.context.SpringBootTest;
 // import org.springframework.boot.SpringApplication;
@@ -34,8 +36,13 @@
 //     BCryptPasswordEncoder encoder;
 //     @Mock
 //     private CustomerRepository customers;
+//     //    Optional<Customer> findByUsername(String username);
+//     // List<Customer> findByAuthorities(String authorities);
 //     @Mock
 //     private AccountRepository accounts;
+//     // List<Account> findByCustomerId(Long customerId);
+//     // Optional<Account> findByIdAndCustomerId(Long accountId, Long customerId);
+//     // Optional<Account> findById(Long accountId);
 
 //     @Mock
 //     private TransactionRepository transactions;
@@ -49,65 +56,61 @@
 //     @Test
 //     void getAllTransactionsByAccountId_getTransactionList_returnListOfTransactions(){
 //         //arrange
-//         Customer manager = new Customer(
-//             "Jolene", "password", "manager", "Jolene Loh", "T1234567Z", "12345678", "address", true);
-//         when(customers.save(any(Customer.class))).thenReturn(manager);
-//         Account account = new Account();
-//         when(accounts.save(any(Account.class))).thenReturn(account);
-//         Transaction transaction = new Transaction();
+//         Customer sender = new Customer(
+//             "Jolene", "password", "manager", "Jolene Loh", "T0046822Z", "12345678", "address", true);
+//         when(customers.save(any(Customer.class))).thenReturn(sender);
+//         Account senderAccount = new Account(1000.0, 1000.0, sender.getId(), sender);
+//         when(accounts.save(any(Account.class))).thenReturn(sender);
+        
+//         Customer sender = new Customer(
+//             "Jack", "password", "manager", "Jack Tan", "T1234567Z", "22345678", "address", true);
+//         when(customers.save(any(Customer.class))).thenReturn(reciever);        
+//         Account recieverAccount = new Account(1000.0, 1000.0, reciever.getId(), reciever);
+//         when(accounts.save(any(Account.class))).thenReturn(reciever);
+        
+//         Transaction transaction = new Transaction(senderAccount.getId(), recieverAccount.getId(), 100.0, senderAccount);
 //         when(transactions.save(any(Transaction.class))).thenReturn(transaction);
+
 //         //act
-//         List<Transaction> transactionList = transactionController.getAllTransactionsByAccountId(account.getId());
+//         List<Transaction> transactionList = transactionController.getAllTransactionsByAccountId(senderAccount.getId());
+
 //         //assert
 //         assertNotNull(transactionList);
-//         verify(customers).save(manager);
-//         verify(accounts).save(account);
-//         verify(transactions).save(transaction);
+//         verify(customers).findByUsername("Jolene");
+//         verify(customers).findByUsername("Jack");
+//         verify(accounts).findById(senderAccount.getId());
+//         verify(accounts).findById(recieverAccount.getId());
+//         verify(transactions).findBySenderOrReciever(senderAccount.getId(), recieverAccount.getId());
 //     }
 
 //     @Test
 //     void addTransaction_newTransaction_returnSavedTransaction(){
 //         //arrange
-//         Customer manager = new Customer(
-//             "Jolene", "password", "manager", "Jolene Loh", "T1234567Z", "12345678", "address", true);
-//         when(customers.save(any(Customer.class))).thenReturn(manager);
-//         Account account = new Account();
-//         when(accounts.save(any(Account.class))).thenReturn(account);
-//         Transaction transaction = new Transaction();
+//         Customer sender = new Customer(
+//             "Jolene", "password", "manager", "Jolene Loh", "T0046822Z", "12345678", "address", true);
+//         when(customers.save(any(Customer.class))).thenReturn(sender);
+//         Account senderAccount = new Account(1000.0, 1000.0, sender.getId(), sender);
+//         when(accounts.save(any(Account.class))).thenReturn(sender);
+        
+//         Customer sender = new Customer(
+//             "Jack", "password", "manager", "Jack Tan", "T1234567Z", "22345678", "address", true);
+//         when(customers.save(any(Customer.class))).thenReturn(reciever);        
+//         Account recieverAccount = new Account(1000.0, 1000.0, reciever.getId(), reciever);
+//         when(accounts.save(any(Account.class))).thenReturn(reciever);
+        
+//         Transaction transaction = new Transaction(senderAccount.getId(), recieverAccount.getId(), 100.0, senderAccount);
 //         when(transactions.save(any(Transaction.class))).thenReturn(transaction);
+
 //         //act
-//         Transaction savedTransaction = transactionController.addTransactions(account.getId(), transaction);
+//         Transaction savedTransaction = transactionController.addTransactions(senderAccount.getId(), transaction);
+
 //         //assert
 //         assertNotNull(savedTransaction);
-//         verify(customers).save(manager);
-//         verify(accounts).save(account);
+//         verify(customers).findByUsername("Jolene");
+//         verify(customers).findByUsername("Jack");
+//         verify(accounts).findById(senderAccount.getId());
+//         verify(accounts).findById(recieverAccount.getId());
+//         verify(transactions).findBySenderOrReciever(senderAccount.getId(), recieverAccount.getId());
 //         verify(transactions).save(transaction);
-//     }
-
-//     @Test
-//     void addTransaction_invalidAccountId_returnException(){
-//         //arrange
-//         //act
-//         String message = "You cannot access this account";
-//         //assert
-//         assertEquals(message, );
-//     }
-
-//     @Test
-//     void addTransaction_badBalance_returnException(){
-//         //arrange
-//         //act
-//         String message = "Bad balance detected";
-//         //assert
-//         assertEquals(message, );
-//     }
-
-//     @Test
-//     void addTransaction_insufficientBalance_returnException(){
-//         //arrange
-//         //act
-//         String message = "Insufficient Balance";
-//         //assert
-//         assertEquals(message, );
 //     }
 // }
