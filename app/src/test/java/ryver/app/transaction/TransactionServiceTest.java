@@ -41,4 +41,15 @@ public class TransactionServiceTest {
     @InjectMocks
     private TransactionController transactionController;
 
+    @Test
+    void getAllTransactionsByAccountId_getTransactionList_returnListOfTransactions(){}
+    void addTransaction_newTransaction_returnSavedTransaction(){}
+    void addTransaction_invalidAccountId_returnException(){}
+    void addTransaction_badBalance_returnException(){}
+    void addTransaction_insufficientBalance_returnException(){}
+
+
+    // public List<Transaction> getAllTransactionsByAccountId(@PathVariable (value = "accountId") Long accountId) {
+    // public Transaction addTransaction (@PathVariable (value = "accountId") Long accountId, @Valid @RequestBody Transaction transaction) {
+
 }

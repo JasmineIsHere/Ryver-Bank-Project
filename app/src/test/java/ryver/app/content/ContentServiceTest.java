@@ -41,8 +41,14 @@ public class ContentServiceTest {
     @InjectMocks
     private ContentController ContentController;
 
-    public List<Transaction> getAllTransactionsByAccountId(@PathVariable (value = "accountId") Long accountId) {
-        public Transaction addTransaction (@PathVariable (value = "accountId") Long accountId, @Valid @RequestBody Transaction transaction) {
+    void addContent_approveContent_returnSavedContent(){}
+    void updateContent_ROLEManager_approveContentAndReturnSavedContent(){}
+    void updateContent_ROLEAnalyst_returnSavedContent(){}
+    void updateContent_invalidContentId_returnException(){}
+    // public Content addContent(@Valid @RequestBody Content content) {
+    //     public Content updateContent(@PathVariable (value = "contentId") Long contentId, @Valid @RequestBody Content updatedContentInfo) {
+    //         public void deleteContent(@PathVariable (value = "contentId") Long contentId) {
+
 
 
 }
