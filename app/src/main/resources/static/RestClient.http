@@ -530,3 +530,14 @@ Authorization: Basic good_user_1 01_user_01
 GET http://localhost:8080/stocks/goog
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
+
+################### Begin Portfolio Testing #########################################
+
+###
+# A user can view their own portfolio
+# Returns: 200 OK
+GET http://localhost:8080/portfolio/3
+Accept: application/json
+Authorization: Basic good_user_1 01_user_01
+
+################### End Portfolio Testing #########################################
