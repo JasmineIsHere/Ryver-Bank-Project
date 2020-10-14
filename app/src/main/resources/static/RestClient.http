@@ -271,8 +271,8 @@ Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
 
 {
-    "sender": 1,
-    "receiver": 2,
+    "from": 1,
+    "to": 2,
     "amount": 2.0
 }
 
@@ -292,8 +292,8 @@ Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
 
 {
-    "sender": 1,
-    "receiver": 2,
+    "from": 1,
+    "to": 2,
     "amount": 1234567.0
 }
 
@@ -307,8 +307,8 @@ Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
 
 {
-    "sender": 1,
-    "receiver": 3,
+    "from": 1,
+    "to": 3,
     "amount": 1234567.0
 }
 
