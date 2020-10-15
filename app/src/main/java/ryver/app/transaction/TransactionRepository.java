@@ -12,5 +12,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>{
     // List<Transaction> findByAccountIdAndCustomerId(Long accountId, Long customerId);
 
     List<Transaction> findByAccountId(Long accountId);
-    List<Transaction> findBySenderOrReceiver(Long accountId, Long accountId2);
+    List<Transaction> findByToOrFrom(Long accountId, Long accountId2);
 }

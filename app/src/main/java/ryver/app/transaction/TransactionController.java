@@ -50,7 +50,7 @@ public class TransactionController {
             .orElseThrow(() -> new AccountNotFoundException(accountId));
 
         // return transactions.findByAccountId(accountId);
-        return transactions.findBySenderOrReceiver(accountId, accountId);
+        return transactions.findByToOrFrom(accountId, accountId);
         
     }
 
@@ -69,7 +69,7 @@ public class TransactionController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String customerUsername = authentication.getName();
         
-        if (accountId != transaction.getSender()) {
+        if (accountId != transaction.getFrom()) {
             throw new AccountMismatchException();
         }
 
@@ -86,7 +86,7 @@ public class TransactionController {
             .orElseThrow(() -> new AccountNotFoundException(accountId));
         
             //receiver
-        Long receiverAccountId = transaction.getReceiver();
+        Long receiverAccountId = transaction.getTo();
 
         Account receiverAccount =  accounts.findById(receiverAccountId)
             .orElseThrow(() -> new AccountNotFoundException(receiverAccountId));

@@ -1,19 +1,19 @@
-################### USER (Customer) Testing #############################################
-#In the beginning there is no customers
+################### Start User (Customer) Testing #############################################
+# In the beginning there is no customers
 GET http://localhost:8080/customers
 Accept: application/json
 Authorization: Basic manager_1 01_manager_01
-#Validation pass - Valid managers can view list of all customers
+# Validation pass - Valid managers can view list of all customers
 
 ###
-#A manager can create a new user
-#Param: User's data
-#Returns: 201 Created with user details
-#Create user1
+# A manager can create a new customer
+# Param: customer's data
+# Returns: 201 Created with customer details
+# Create customer 1
 POST http://localhost:8080/customers
 Content-Type: application/json
 Authorization: Basic manager_1 01_manager_01
-#Validation pass - Valid managers can add new customers
+# Validation pass - Valid managers can add new customers
 
 {
     "username": "good_user_1",
@@ -27,13 +27,13 @@ Authorization: Basic manager_1 01_manager_01
 }
 
 ###
-#A user cannot create a new user
-#Param: User's data
-#Returns: 403 Forbidden
+# A customer cannot create a new customer
+# Param: customer's data
+# Returns: 403 Forbidden
 POST http://localhost:8080/customers
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
-#Validation pass - Valid managers can add new customers
+# Validation fail - Customer cannot add new customers
 
 {
     "username": "good_user_2",
@@ -47,14 +47,14 @@ Authorization: Basic good_user_1 01_user_01
 }
 
 ###
-#A manager can create a new user
-#Param: User's data
-#Returns: 201 Created with user details
-#Create user 2
+# A manager can create a new customer
+# Param: customer's data
+# Returns: 201 Created with customer details
+# Create customer 2
 POST http://localhost:8080/customers
 Content-Type: application/json
 Authorization: Basic manager_1 01_manager_01
-#Validation pass - Valid managers can add new customers
+# Validation pass - Valid managers can add new customers
 
 {
     "username": "good_user_2",
@@ -68,12 +68,12 @@ Authorization: Basic manager_1 01_manager_01
 }
 
 ###
-#A manager can modify certain details
-#Param: updated User's data (change address and phone)
-# 999 Tamp Road to 111 Tamp Road
+# A manager can modify certain details
+# Param: updated customer's data (change address and phone)
+# 999 Tampines Road to 111 Tampines Road
 # 90123456 to 9111111
 # active false to true
-#Returns: 200 OK with updated user details
+# Returns: 200 OK with updated customer details
 PUT http://localhost:8080/customers/3
 Content-Type: application/json
 Authorization: Basic manager_1 01_manager_01
@@ -90,11 +90,11 @@ Authorization: Basic manager_1 01_manager_01
 }
 
 ###
-#A user can modify his own details
-#Param: updated User's data (change address and phone)
+# A customer can modify his own details
+# Param: updated customer's data (change address and phone)
 # 111 Tamp Road to 222 Tamp Road
 # 9111111 to 92222222
-#Returns: 200 OK with updated user details
+# Returns: 200 OK with updated customer details
 PUT http://localhost:8080/customers/3
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
@@ -111,52 +111,51 @@ Authorization: Basic good_user_1 01_user_01
 }
 
 ###
-#a invalid manager cannot get the list of customers
-#Returns: 401 Unauthorized
+# a invalid manager cannot get the list of customers
+# Returns: 401 Unauthorized
 GET http://localhost:8080/customers
 Accept: application/json
 Authorization: Basic bad_manager 01_manager_01
 
 ###
-#a user cannot get the list of users
-#Returns: 403 Forbidden
+# a customer cannot get the list of customers
+# Returns: 403 Forbidden
 GET http://localhost:8080/customers
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
-#Validation fail - Customers cannot view list of all customers
+# Validation fail - Customers cannot view list of all customers
 
 ###
-# we now have 2 users as shown here
+# we now have 2 customers as shown here
 GET http://localhost:8080/customers
 Accept: application/json
 Authorization: Basic manager_1 01_manager_01
-
-
 
 
 ################### End User (Customer) Testing ##############################################
 
+
 ################### Begin Accounts Testing ###################################### 
-#In the beginning there is no account
-#Returns: 200 OK with nothing
+# In the beginning there is no account
+# Returns: 200 OK with nothing
 GET http://localhost:8080/accounts
 Accept: application/json
 Authorization: Basic manager_1 01_manager_01
-#Validation pass - Valid managers can view list of all accounts of customer
+# Validation pass - Valid managers can view list of all accounts of customer
 
 ###
-#a invalid manager cannot get the list of account
-#Returns: 401 Unauthorized
+# a invalid manager cannot get the list of account
+# Returns: 401 Unauthorized
 GET http://localhost:8080/accounts
 Accept: application/json
 Authorization: Basic non_existing_manager_1 01_manager_01
 
 
 ###
-#A manager can create a new Account
-#Param: customerId, balance and availBalance
-#Returns: 201 Created with new acc detail
-#Create new account for user1
+# A manager can create a new Account
+# Param: customerId, balance and availBalance
+# Returns: 201 Created with new acc detail
+# Create new account for customer 1
 POST http://localhost:8080/accounts
 Content-Type: application/json
 Authorization: Basic manager_1 01_manager_01
@@ -169,10 +168,10 @@ Authorization: Basic manager_1 01_manager_01
 }
 
 ###
-#A manager can create a new Account
-#Param: customerId, balance and availBalance
-#Returns: 201 Created with new acc detail
-#Create new account for user2
+# A manager can create a new Account
+# Param: customerId, balance and availBalance
+# Returns: 201 Created with new acc detail
+# Create new account for customer 2
 POST http://localhost:8080/accounts
 Content-Type: application/json
 Authorization: Basic manager_1 01_manager_01
@@ -185,42 +184,42 @@ Authorization: Basic manager_1 01_manager_01
 }
 
 ###
-# we Now have 2 accounts 1 for user1 and 1 for user2
+# we now have 2 accounts, 1 each for customer 1 and customer 2
 # Returns: 200 OK all account info
 GET http://localhost:8080/accounts
 Accept: application/json
 Authorization: Basic manager_1 01_manager_01
-#Validation pass - Valid managers can view list of all accounts of customer
+# Validation pass - Valid managers can view list of all accounts of customer
 
 ###
-# A User can only view his own accounts
-# Returns: 200 OK all account info for the authorized user
+# A customer can only view his own accounts
+# Returns: 200 OK all account info for the authorized customer
 GET http://localhost:8080/accounts
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
-#Validation pass - Customer can view all their OWN accounts
+# Validation pass - Customer can view all their OWN accounts
 
 ###
-# A User can view his own accounts
-# Returns: 200 OK with all account info for the authorized user
+# A customer can view his own accounts
+# Returns: 200 OK with all account info for the authorized customer
 GET http://localhost:8080/accounts/1
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
-#Validation pass - Customer can view their OWN specific account using accountId
+# Validation pass - Customer can view their OWN specific account using accountId
 
 ###
-# A User cannot view another user's account
+# A customer cannot view another customer's account
 # Returns: 403 Forbidden 
-# Note: Account 2 belongs to user2
+# Note: Account 2 belongs to customer 2
 GET http://localhost:8080/accounts/2
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
-#Validation fail - Customer cannot view other people's accounts
+# Validation fail - Customer cannot view other people's accounts
 
 
 ###
-#A User cannot modify his own account
-#Return 405 Method not allowed
+# A customer cannot modify his own account
+# Return 405 Method not allowed
 PUT http://localhost:8080/accounts/1
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
@@ -232,8 +231,8 @@ Authorization: Basic good_user_1 01_user_01
 }
 
 ###
-#A User cannot modify others account
-#Return 405 Method not allowed
+# A customer cannot modify others account
+# Return 405 Method not allowed
 PUT http://localhost:8080/accounts/4
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
@@ -245,8 +244,8 @@ Authorization: Basic good_user_1 01_user_01
 }
 
 ###
-#A manager cannot modify any account
-#Return 405 Method not allowed
+# A manager cannot modify any account
+# Return 405 Method not allowed
 PUT http://localhost:8080/accounts/1
 Content-Type: application/json
 Authorization: Basic manager_1 01_manager_01
@@ -256,16 +255,15 @@ Authorization: Basic manager_1 01_manager_01
     "balance": 300.0,
     "available_balance": 300.0
 }
+###
 
 ################ End Account Testing #############################################
 
 
-
-
 ################ Begin Transaction Testing #######################################
 
-# A User can make transaction if he have sufficient value
-# User1 has 100 bucks
+# A customer can make transaction if he have sufficient value
+# customer 1 has 100 bucks
 # Param: sender Account Id, Receiver Account Id, Value to transfer
 # Returns: 200 OK with transaction details
 POST http://localhost:8080/accounts/1/transactions
@@ -273,20 +271,20 @@ Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
 
 {
-    "sender": 1,
-    "receiver": 2,
+    "from": 1,
+    "to": 2,
     "amount": 2.0
 }
 
 ###
-# Check user 1 account 1 now have 98 bucks
+# Check customer 1 account 1 now have 98 bucks
 GET http://localhost:8080/accounts/1
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 
 ###
-# A User cannot make transaction if he have insufficient value
-# User 1 now have 98 bucks
+# A customer cannot make transaction if he have insufficient value
+# Customer 1 now have 98 bucks
 # Param: sender Account Id, Receiver Account Id, Value to transfer
 # Returns: 400 Bad Request Insufficient Balance in account
 POST http://localhost:8080/accounts/1/transactions
@@ -294,13 +292,13 @@ Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
 
 {
-    "sender": 1,
-    "receiver": 2,
+    "from": 1,
+    "to": 2,
     "amount": 1234567.0
 }
 
 ###
-# A User cannot make transaction if the receiver account does not exist
+# A customer cannot make transaction if the receiver account does not exist
 # Account 3 does not exist
 # Param: sender Account Id, Receiver Account Id, Value to transfer
 # Returns: 404 Resource not found: Could not find account 3
@@ -309,28 +307,28 @@ Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
 
 {
-    "sender": 1,
-    "receiver": 3,
+    "from": 1,
+    "to": 3,
     "amount": 1234567.0
 }
 
 ###
-# A User can view his own transaction 
+# A customer can view his own transaction 
 # Returns: 200 OK with list of transaction
-# where user is sender
+# where customer is sender
 GET http://localhost:8080/accounts/1/transactions
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
-#Validation pass - Customers can view own account's transactions
+# Validation pass - Customers can view own account's transactions
 
 ###
-# A User can view his own transaction 
+# A customer can view his own transaction 
 # Returns: 200 OK with list of transaction
-# where user is receiver
+# where customer is receiver
 GET http://localhost:8080/accounts/2/transactions
 Accept: application/json
 Authorization: Basic good_user_2 02_user_02
-#Validation pass - Customers can view own account's transactions
+# Validation pass - Customers can view own account's transactions
 
 
 
@@ -340,12 +338,12 @@ Authorization: Basic good_user_2 02_user_02
 ####################### Begin Content Testing ###################################
 
 ###
-# A User cannot add new contents
+# A customer cannot add new contents
 # Returns: 403 Forbidden 
 POST http://localhost:8080/content
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
-#Validation fail - Users cannot add new content
+# Validation fail - Customers cannot add new content
 
 {
     "title":"The title of the advisory or news",
@@ -377,7 +375,7 @@ Authorization: Basic analyst_1 01_analyst_01
 POST http://localhost:8080/content
 Content-Type: application/json
 Authorization: Basic manager_1 01_manager_01
-#Validation pass - Valid managers can add new content
+# Validation pass - Valid managers can add new content
 
 {
     "title":"The title of the advisory or news",
@@ -389,13 +387,13 @@ Authorization: Basic manager_1 01_manager_01
 
 
 ###
-# A user can only view approved contents
+# A customer can only view approved contents
 # Returns: 200 OK with empty list
 # note: there is 2 article both of which has yet to be approved
 GET http://localhost:8080/content
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
-#Validation pass - Customers can view only approved content
+# Validation pass - Customers can view only approved content
 
 ###
 # An analyst can view all contents
@@ -416,7 +414,7 @@ Authorization: Basic manager_1 01_manager_01
 
 
 ###
-# A user cannot update contents 
+# A customer cannot update contents 
 # Returns: 403 Forbidden 
 # note: Content 1 exists
 PUT http://localhost:8080/content/1
@@ -463,12 +461,12 @@ Authorization: Basic manager_1 01_manager_01
 
 
 ###
-# A user cannot delete content
+# A customer cannot delete content
 # Returns: 403 Forbidden
 DELETE http://localhost:8080/content/1
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
-#Validation fail - Users cannot delete content
+# Validation fail - Customers cannot delete content
 
 ###
 # An Analyst can delete content
@@ -515,7 +513,7 @@ Accept: application/json
 Authorization: Basic manager_1 01_manager_01
 
 ###
-# A user can view a list of STI stock
+# A customer can view a list of STI stock
 # Returns: 200 OK list of all STI stock 
 # note: components of STI as of 12 October 2020
 # note: Authentication is required to prevent excessive stress I.e. no permit all
@@ -524,17 +522,27 @@ Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 
 ###
-# A user can view a Single stock
+# A customer can view a Single stock
 # Returns: 200 OK with goog stock (non-STI but still works)
 # note: Authentication is required to prevent excessive stress I.e. no permit all
 GET http://localhost:8080/stocks/goog
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 
+################### End Stock Testing #########################################
+
+################### Start Trade Testing #########################################
+
+
+
+
+################### End Trade Testing #########################################
+
+
 ################### Begin Portfolio Testing #########################################
 
 ###
-# A user can view their own portfolio
+# A customer can view their own portfolio
 # Returns: 200 OK
 GET http://localhost:8080/portfolio/3
 Accept: application/json

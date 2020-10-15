@@ -20,8 +20,9 @@ import lombok.*;
 public class Transaction {
     private  @Id @GeneratedValue (strategy = GenerationType.IDENTITY) Long id;
     
-    private Long sender; // sender's account id
-    private Long receiver; // receiver's account id
+    @Column(name = "\"from\"")
+    private Long from; // sender's account id
+    private Long to; // receiver's account id
     private double amount;
 
     @ManyToOne
