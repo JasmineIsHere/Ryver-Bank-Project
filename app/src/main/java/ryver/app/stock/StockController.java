@@ -2,6 +2,7 @@ package ryver.app.stock;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,7 @@ public class StockController {
         this.stocks = stocks;
     }
 
-    @GetMapping("/stocks")
-    public ArrayList<CustomStock> getStocks() {
+    public ArrayList<CustomStock> initiateStocks() {
         // true as of 12/10/2020
         String[] symbols = new String[] {"A17U.SI", "C61U.SI", "C31.SI", "C38U.SI", "C09.SI", "C52.SI", "D01.SI", "D05.SI", "G13.SI",
         "H78.SI", "C07.SI", "J36.SI", "J37.SI", "BN4.SI", "N2IU.SI", "ME8U.SI", "M44U.SI", "O39.SI", "S58.SI", "U96.SI", "S68.SI", "C6L.SI", 
@@ -49,23 +49,34 @@ public class StockController {
         return null;
     }  
 
+    @GetMapping("/stocks")
+    public List<CustomStock> getStocks() {
+        // true as of 12/10/2020
+        return stocks.findAll();
+    }  
+
     @GetMapping("/stocks/{symbol}")
-    public CustomStock getSpecificStock(@PathVariable (value = "symbol") String symbol){
-        CustomStock stock = new CustomStock();
-
-        try {
-            Stock s = YahooFinance.get(symbol);
-            StockQuote quote = s.getQuote();
-            stock.setSymbol(quote.getSymbol());
-            stock.setAsk(quote.getAsk());
-            stock.setBid(quote.getBid());
-            stock.setAsk_volume(quote.getAskSize());
-            stock.setBid_volume(quote.getBidSize());
-            stock.setLast_price(quote.getPreviousClose());
-        } catch(IOException ex){
-            System.out.println("Error retrieving data");
-        }
-
-        return stock;
+    public CustomStock getStockBySymbol(@PathVariable (value = "symbol") String symbol){
+        return stocks.findBySymbol(symbol.toUpperCase());
     }
+
+    //@GetMapping("/stocks/{symbol}")
+    // public CustomStock getSpecificStock(@PathVariable (value = "symbol") String symbol){
+    //     CustomStock stock = new CustomStock();
+
+    //     try {
+    //         Stock s = YahooFinance.get(symbol);
+    //         StockQuote quote = s.getQuote();
+    //         stock.setSymbol(quote.getSymbol());
+    //         stock.setAsk(quote.getAsk());
+    //         stock.setBid(quote.getBid());
+    //         stock.setAsk_volume(quote.getAskSize());
+    //         stock.setBid_volume(quote.getBidSize());
+    //         stock.setLast_price(quote.getPreviousClose());
+    //     } catch(IOException ex){
+    //         System.out.println("Error retrieving data");
+    //     }
+
+    //     return stock;
+    // }
 }

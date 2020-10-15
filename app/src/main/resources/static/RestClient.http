@@ -508,7 +508,7 @@ Authorization: Basic manager_1 01_manager_01
 ###
 # A manager can view a Single stock
 # Returns: 200 OK with goog stock (non-STI but still works)
-GET http://localhost:8080/stocks/goog
+GET http://localhost:8080/stocks/a17u.si
 Accept: application/json
 Authorization: Basic manager_1 01_manager_01
 
