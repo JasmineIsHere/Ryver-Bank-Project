@@ -71,12 +71,13 @@ public class Trade {
     }
 
     // for AppApplication
-    public Trade(String action, String symbol, int quantity, double bid, double ask, String status, Long accountId, Long customerId, Account account, CustomStock stock){
+    public Trade(String action, String symbol, int quantity, double bid, double ask, long date, String status, Long accountId, Long customerId, Account account, CustomStock stock){
         this.action = action;
         this.symbol = symbol;
         this.quantity = quantity;
         this.bid = bid;
         this.ask = ask;
+        this.date = date;
         this.status = status;
         this.accountId = accountId;
         this.customerId = customerId;

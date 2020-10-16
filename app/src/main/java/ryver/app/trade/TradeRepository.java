@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface TradeRepository extends JpaRepository<Trade, Long>{
     // CREATED FOR TESTING. NOT NEEDED FOR SUBMISSION
     List<Trade> findByCustomerId(Long customerId);
+    List<Trade> findByStatusAndSymbol(String status, String symbol);
     
     Optional<Trade> findByIdAndCustomerId(Long customerId, Long tradeId);
 }

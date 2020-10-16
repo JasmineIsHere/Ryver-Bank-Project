@@ -546,9 +546,6 @@ Authorization: Basic good_user_1 01_user_01
     "quantity":1000, 
     "bid":3.28,
     "ask":3.27, 
-    "avg_price":3.30,
-    "filled_quantity":0,
-    "date": ,
     "account_id":2,
     "customer_id":4,
     "status":"open"
@@ -556,7 +553,7 @@ Authorization: Basic good_user_1 01_user_01
 }
 
 ###
-
+// CREATED FOR TESTING. NOT NEEDED FOR SUBMISSION
 GET http://localhost:8080/trades
 Accept: application/json
 Authorization: Basic testuser_01 01_testuser_01
@@ -570,7 +567,7 @@ Authorization: Basic good_user_1 01_user_01
 
 ###
 
-# A customer cancel a trade
+# A customer cancel a trade (status), other fields will be ignored
 PUT http://localhost:8080/trades/1
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
@@ -582,8 +579,8 @@ Authorization: Basic good_user_1 01_user_01
     "quantity": 1000, 
     "bid": 3.28,
     "ask": 3.27, 
-    "account_id": 1, 
-    "customer_id": 3, 
+    "account_id": 2, 
+    "customer_id": 4, 
     "status":"cancelled"
 
 }

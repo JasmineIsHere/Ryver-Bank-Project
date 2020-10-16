@@ -62,6 +62,8 @@ public class TradeController {
 
     }
 
+    
+
     @PreAuthorize("authentication.principal.active == true")
     @GetMapping("/trades/{tradeId}")
     public Trade getSpecificTrade(@PathVariable (value = "tradeId") Long tradeId){
@@ -79,6 +81,12 @@ public class TradeController {
 
         return trade;
 
+    }
+
+    // search for open trades according to symbol
+    public List<Trade> getSpecificStockOpenTrade(String symbol){
+        List<Trade> trade = trades.findByStatusAndSymbol("open", symbol);
+        return trade;
     }
 
     @PreAuthorize("authentication.principal.active == true")
@@ -168,6 +176,12 @@ public class TradeController {
             // if there's sufficient balance, set available balance to new balance
             account.setAvailable_balance(available_balance - calculatedBuyPrice);
             
+            List<Trade> specificStockOpenTrade = getSpecificStockOpenTrade(symbol);
+            // check if the market has the stocks the customer is buying
+            if (!(specificStockOpenTrade.isEmpty())) {
+                // check price (better price match first)
+
+            }
         } else {
             // FOR SELLING
             if (ask != 0.0) {
@@ -191,8 +205,8 @@ public class TradeController {
         
         
         // FOR BUYING
-        // check if symbol exist in stock
-        // check if enough amount in account balance when submitting the order (must be sufficient, if not error 400)
+        // DONE check if symbol exist in stock
+        // DONE check if enough amount in account balance when submitting the order (must be sufficient, if not error 400)
         // check if amount is enough in balance when filling the order bc bid/ ask price will change (if not enough, partial filled)
         // add to portfolio
 
@@ -203,6 +217,7 @@ public class TradeController {
         // check if symbol exist in portfolio (quantity selling > quantity own)
 
             // sell at market price -> market bid price
+            // sell at limit ask price
 
 
         // set current timestamp to date

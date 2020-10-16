@@ -2,6 +2,10 @@ package ryver.app;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.*;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.sql.Timestamp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -54,9 +58,43 @@ public class AppApplication {
 			String symbol = stock.getSymbol();
 			System.out.println(symbol);
 
+			DecimalFormat df = new DecimalFormat("#.#");
+			// random -> 0 to 1
+			double rand1 = Math.random();
+			double rand2 = Math.random();
+
+			double formattedRand1 = Double.parseDouble(df.format(rand1));
+			double formattedRand2 = Double.parseDouble(df.format(rand2));
+			
+			// get random quantity
+			int quantity1 = (int)(formattedRand1 * 5000);
+			int quantity2 = (int)(formattedRand2 * 10000);
+
+			double stockAsk = stock.getAsk().doubleValue();
+			// get random ask price -> (Math.random() * (max - min)) + min
+			double randAsk = (Math.random() * ((stockAsk + 0.5) - (stockAsk - 0.5))) + (stockAsk - 0.5);
+			double formattedRandAsk = Double.parseDouble(df.format(randAsk));
+
 			// action, symbol, quantity, bid, ask, accountId, customerId
-			System.out.println("[Add market maker's trades]: " + trades.save(new Trade("sell", symbol, 1000, 0.0, 3.29, "open", 1L, 3L, account, stock)));
-			System.out.println("[Add market maker's trades]: " + trades.save(new Trade("sell", symbol, 200, 0.0, 0.0, "open", 1L, 3L, account, stock)));
+			// market order
+			if (quantity1 != 0) {
+				long timestamp = new Timestamp(System.currentTimeMillis()).getTime();
+				System.out.println("[Add market maker's trades]: " + trades.save(new Trade("sell", symbol, quantity1, 0.0, 0.0, timestamp, "open", 1L, 3L, account, stock)));
+				stock.setAsk(stock.getBid());
+			}
+			
+			// limit order
+			if (quantity2 != 0) {
+				long timestamp = new Timestamp(System.currentTimeMillis()).getTime();
+				System.out.println("[Add market maker's trades]: " + trades.save(new Trade("sell", symbol, quantity2, 0.0, formattedRandAsk, timestamp, "open", 1L, 3L, account, stock)));
+				stock.setAsk(BigDecimal.valueOf(formattedRandAsk));
+			}
+
+			// save new ask price into the stocks database
+			if (stock.getAsk().doubleValue() > stock.getBid().doubleValue()) {
+				stocks.save(stock);
+			}
+
 		}
 
 		// RestTemplateClient client = ctx.getBean(RestTemplateClient.class);
