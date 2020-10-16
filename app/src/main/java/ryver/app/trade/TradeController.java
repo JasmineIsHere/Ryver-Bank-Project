@@ -74,7 +74,7 @@ public class TradeController {
         long customerId = customer.getId();
 
         Trade trade = trades.findByIdAndCustomerId(customerId, tradeId)
-            .orElseThrow(() -> new TradeNotFoundException(id));
+            .orElseThrow(() -> new TradeNotFoundException(tradeId));
 
         return trade;
 
@@ -147,7 +147,8 @@ public class TradeController {
 
             } else {
                 // Market Order (buy) -> calculated by market ask price
-                CustomStock stock = stocks.findBySymbol(symbol);
+                CustomStock stock = stocks.findBySymbol(symbol)
+                    .orElseThrow(() -> new InvalidStockException(symbol));
                 // doubleValue() -> change Big Decimal to double
                 calculatedBuyPrice = stock.getAsk().doubleValue() * quantity;
 
@@ -222,7 +223,8 @@ public class TradeController {
         
         long customerId = customer.getId();
 
-        Trade trade = trades.findByIdAndCustomerId(customerId, tradeId);
+        Trade trade = trades.findByIdAndCustomerId(customerId, tradeId)
+            .orElseThrow(() -> new TradeNotFoundException(tradeId));
 
 
         // customer can cancel a trade if its open
