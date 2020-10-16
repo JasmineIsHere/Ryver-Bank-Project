@@ -19,6 +19,7 @@ import ryver.app.stock.StockRepository;
 import ryver.app.transaction.InsufficientBalanceException;
 import ryver.app.stock.InvalidStockException;
 
+import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -72,7 +73,10 @@ public class TradeController {
         
         long customerId = customer.getId();
 
-        return trades.findByIdAndCustomerId(customerId, tradeId);
+        Trade trade = trades.findByIdAndCustomerId(customerId, tradeId)
+            .orElseThrow(() -> new TradeNotFoundException(id));
+
+        return trade;
 
     }
 

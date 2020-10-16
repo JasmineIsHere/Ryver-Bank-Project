@@ -2,6 +2,10 @@
 
 // import java.util.List;
 
+// import ryver.app.trade.Trade;
+// import ryver.app.trade.TradeRepository;
+// import ryver.app.trade.TradeNotFoundException;
+
 // import ryver.app.customer.Customer;
 // import ryver.app.customer.CustomerRepository;
 // import ryver.app.customer.CustomerNotFoundException;
@@ -20,10 +24,10 @@
 //     @GetMapping("/portfolio/{customerId}")
 //     @PreAuthorize("authentication.principal.active == true and (hasRole('USER') and #customerId == authentication.principal.id)")
 //     public Portfolio getPortfolio(@PathVariable (value = "customerId") Long customerId) {
-//         Portfolio portfolio = portfolios.findByCustomerId()
+//         Portfolio portfolio = portfolios.findByCustomerId(customerId)
 //             .orElseThrow(() -> new CustomerNotFoundException(customerId));
         
-//         List<Trade> assets = trades.findByCustomerId()
+//         List<Trade> assets = trades.findByCustomerId(customerId)
 //             .orElseThrow(() -> new CustomerNotFoundException(customerId));
 
 //             portfolio.setAssets(assets);

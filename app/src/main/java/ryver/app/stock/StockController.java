@@ -63,7 +63,8 @@ public class StockController {
 
     @GetMapping("/stocks/{symbol}")
     public CustomStock getStockBySymbol(@PathVariable (value = "symbol") String symbol){
-        return stocks.findBySymbol(symbol.toUpperCase());
+        return stocks.findBySymbol(symbol)
+            .orElseThrow(() -> new InvalidStockException(symbol));
     }
 
     //@GetMapping("/stocks/{symbol}")

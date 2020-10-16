@@ -3,7 +3,6 @@ package ryver.app.trade;
 import ryver.app.account.*;
 import ryver.app.stock.*;
 
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
