@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.lang.*;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +33,12 @@ public class StockController {
                 Stock s = stockMap.get(symbols[i]);
                 CustomStock stock = new CustomStock();
                 StockQuote quote = s.getQuote();
-                stock.setSymbol(quote.getSymbol());
+
+                // remove the .si from the stock symbol
+                String originalSymbol = quote.getSymbol();
+                String[] splitSymbol = originalSymbol.split("\\.");
+                
+                stock.setSymbol(splitSymbol[0]);
                 stock.setAsk(quote.getAsk());
                 stock.setBid(quote.getBid());
                 stock.setLast_price(quote.getPreviousClose());
