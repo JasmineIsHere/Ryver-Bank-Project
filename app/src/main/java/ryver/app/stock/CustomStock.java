@@ -26,8 +26,8 @@ public class CustomStock {
     private long ask_volume; //qty
     private BigDecimal ask; //$$
 
-    // @OneToMany(mappedBy = "stock",
-    // orphanRemoval = true,
-    // cascade = CascadeType.ALL)
-    // private List<Trade> trades;
+    @OneToMany(mappedBy = "stock",
+    orphanRemoval = true,
+    cascade = CascadeType.ALL)
+    private List<Trade> trades;
 }
