@@ -1,5 +1,5 @@
 ################### Start User (Customer) Testing #############################################
-# In the beginning there is no customers
+# In the beginning there is a test customer
 GET http://localhost:8080/customers
 Accept: application/json
 Authorization: Basic manager_1 01_manager_01
@@ -74,7 +74,7 @@ Authorization: Basic manager_1 01_manager_01
 # 90123456 to 9111111
 # active false to true
 # Returns: 200 OK with updated customer details
-PUT http://localhost:8080/customers/3
+PUT http://localhost:8080/customers/4
 Content-Type: application/json
 Authorization: Basic manager_1 01_manager_01
 
@@ -95,7 +95,7 @@ Authorization: Basic manager_1 01_manager_01
 # 111 Tamp Road to 222 Tamp Road
 # 9111111 to 92222222
 # Returns: 200 OK with updated customer details
-PUT http://localhost:8080/customers/3
+PUT http://localhost:8080/customers/4
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
 
@@ -137,7 +137,7 @@ Authorization: Basic manager_1 01_manager_01
 
 ################### Begin Accounts Testing ###################################### 
 # In the beginning there is no account
-# Returns: 200 OK with nothing
+# Returns: 200 OK with 1 test account
 GET http://localhost:8080/accounts
 Accept: application/json
 Authorization: Basic manager_1 01_manager_01
@@ -162,7 +162,7 @@ Authorization: Basic manager_1 01_manager_01
 # Validation pass - Valid managers can create new accounts
 
 {
-    "customer_id": 3,
+    "customer_id": 4,
     "balance": 100.0,
     "available_balance": 100.0
 }
@@ -178,13 +178,13 @@ Authorization: Basic manager_1 01_manager_01
 # Validation pass - Valid managers can create new accounts
 
 {
-    "customer_id": 4,
+    "customer_id": 5,
     "balance": 100000.0,
     "available_balance": 100000.0
 }
 
 ###
-# we now have 2 accounts, 1 each for customer 1 and customer 2
+# we now have 3 accounts, 1 each for test customer, customer 1 and customer 2
 # Returns: 200 OK all account info
 GET http://localhost:8080/accounts
 Accept: application/json
@@ -202,7 +202,7 @@ Authorization: Basic good_user_1 01_user_01
 ###
 # A customer can view his own accounts
 # Returns: 200 OK with all account info for the authorized customer
-GET http://localhost:8080/accounts/1
+GET http://localhost:8080/accounts/2
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 # Validation pass - Customer can view their OWN specific account using accountId
@@ -211,7 +211,7 @@ Authorization: Basic good_user_1 01_user_01
 # A customer cannot view another customer's account
 # Returns: 403 Forbidden 
 # Note: Account 2 belongs to customer 2
-GET http://localhost:8080/accounts/2
+GET http://localhost:8080/accounts/3
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 # Validation fail - Customer cannot view other people's accounts
@@ -220,7 +220,7 @@ Authorization: Basic good_user_1 01_user_01
 ###
 # A customer cannot modify his own account
 # Return 405 Method not allowed
-PUT http://localhost:8080/accounts/1
+PUT http://localhost:8080/accounts/2
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
 
@@ -233,7 +233,7 @@ Authorization: Basic good_user_1 01_user_01
 ###
 # A customer cannot modify others account
 # Return 405 Method not allowed
-PUT http://localhost:8080/accounts/4
+PUT http://localhost:8080/accounts/3
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
 
@@ -271,14 +271,14 @@ Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
 
 {
-    "from": 1,
-    "to": 2,
+    "from": 2,
+    "to": 3,
     "amount": 2.0
 }
 
 ###
 # Check customer 1 account 1 now have 98 bucks
-GET http://localhost:8080/accounts/1
+GET http://localhost:8080/accounts/2
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 
@@ -287,13 +287,13 @@ Authorization: Basic good_user_1 01_user_01
 # Customer 1 now have 98 bucks
 # Param: sender Account Id, Receiver Account Id, Value to transfer
 # Returns: 400 Bad Request Insufficient Balance in account
-POST http://localhost:8080/accounts/1/transactions
+POST http://localhost:8080/accounts/2/transactions
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
 
 {
-    "from": 1,
-    "to": 2,
+    "from": 2,
+    "to": 3,
     "amount": 1234567.0
 }
 
@@ -302,13 +302,13 @@ Authorization: Basic good_user_1 01_user_01
 # Account 3 does not exist
 # Param: sender Account Id, Receiver Account Id, Value to transfer
 # Returns: 404 Resource not found: Could not find account 3
-POST http://localhost:8080/accounts/1/transactions
+POST http://localhost:8080/accounts/2/transactions
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
 
 {
-    "from": 1,
-    "to": 3,
+    "from": 2,
+    "to": 4,
     "amount": 1234567.0
 }
 
@@ -316,7 +316,7 @@ Authorization: Basic good_user_1 01_user_01
 # A customer can view his own transaction 
 # Returns: 200 OK with list of transaction
 # where customer is sender
-GET http://localhost:8080/accounts/1/transactions
+GET http://localhost:8080/accounts/2/transactions
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 # Validation pass - Customers can view own account's transactions
@@ -325,7 +325,7 @@ Authorization: Basic good_user_1 01_user_01
 # A customer can view his own transaction 
 # Returns: 200 OK with list of transaction
 # where customer is receiver
-GET http://localhost:8080/accounts/2/transactions
+GET http://localhost:8080/accounts/3/transactions
 Accept: application/json
 Authorization: Basic good_user_2 02_user_02
 # Validation pass - Customers can view own account's transactions
@@ -549,14 +549,20 @@ Authorization: Basic good_user_1 01_user_01
     "avg_price":3.30,
     "filled_quantity":0,
     "date": ,
-    "account_id":1,
-    "customer_id":3,
+    "account_id":2,
+    "customer_id":4,
     "status":"open"
 
 }
 
 ###
 
+GET http://localhost:8080/trades
+Accept: application/json
+Authorization: Basic testuser_01 01_testuser_01
+
+
+###
 # A customer can view his own specific trade
 GET http://localhost:8080/trades/1
 Accept: application/json

@@ -1778,3 +1778,24 @@ alter table transaction add constraint FK6g20fcr3bhr6bihgy24rq1r1b foreign key (
 2020-10-16 22:16:02 jdbc[4]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CUSTOMER" not found; SQL statement:
 insert into customer (id, active, address, authorities, full_name, nric, password, phone, username) values (null, ?, ?, ?, ?, ?, ?, ?, ?) [42102-200]
+2020-10-16 22:40:33 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CUSTOMER" not found; SQL statement:
+insert into customer (id, active, address, authorities, full_name, nric, password, phone, username) values (null, ?, ?, ?, ?, ?, ?, ?, ?) [42102-200]
+2020-10-16 22:41:37 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CUSTOMER" not found; SQL statement:
+select customer0_.id as id1_2_, customer0_.active as active2_2_, customer0_.address as address3_2_, customer0_.authorities as authorit4_2_, customer0_.full_name as full_nam5_2_, customer0_.nric as nric6_2_, customer0_.password as password7_2_, customer0_.phone as phone8_2_, customer0_.username as username9_2_ from customer customer0_ where customer0_.username=? [42102-200]
+2020-10-16 22:41:43 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CUSTOMER" not found; SQL statement:
+select customer0_.id as id1_2_, customer0_.active as active2_2_, customer0_.address as address3_2_, customer0_.authorities as authorit4_2_, customer0_.full_name as full_nam5_2_, customer0_.nric as nric6_2_, customer0_.password as password7_2_, customer0_.phone as phone8_2_, customer0_.username as username9_2_ from customer customer0_ where customer0_.username=? [42102-200]
+2020-10-16 22:41:45 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CUSTOMER" not found; SQL statement:
+select customer0_.id as id1_2_, customer0_.active as active2_2_, customer0_.address as address3_2_, customer0_.authorities as authorit4_2_, customer0_.full_name as full_nam5_2_, customer0_.nric as nric6_2_, customer0_.password as password7_2_, customer0_.phone as phone8_2_, customer0_.username as username9_2_ from customer customer0_ where customer0_.username=? [42102-200]
+2020-10-16 22:41:47 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CUSTOMER" not found; SQL statement:
+select customer0_.id as id1_2_, customer0_.active as active2_2_, customer0_.address as address3_2_, customer0_.authorities as authorit4_2_, customer0_.full_name as full_nam5_2_, customer0_.nric as nric6_2_, customer0_.password as password7_2_, customer0_.phone as phone8_2_, customer0_.username as username9_2_ from customer customer0_ where customer0_.username=? [42102-200]
+2020-10-16 22:41:53 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CUSTOMER" not found; SQL statement:
+select customer0_.id as id1_2_, customer0_.active as active2_2_, customer0_.address as address3_2_, customer0_.authorities as authorit4_2_, customer0_.full_name as full_nam5_2_, customer0_.nric as nric6_2_, customer0_.password as password7_2_, customer0_.phone as phone8_2_, customer0_.username as username9_2_ from customer customer0_ where customer0_.username=? [42102-200]
+2020-10-16 22:42:05 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CUSTOMER" not found; SQL statement:
+select customer0_.id as id1_2_, customer0_.active as active2_2_, customer0_.address as address3_2_, customer0_.authorities as authorit4_2_, customer0_.full_name as full_nam5_2_, customer0_.nric as nric6_2_, customer0_.password as password7_2_, customer0_.phone as phone8_2_, customer0_.username as username9_2_ from customer customer0_ where customer0_.username=? [42102-200]

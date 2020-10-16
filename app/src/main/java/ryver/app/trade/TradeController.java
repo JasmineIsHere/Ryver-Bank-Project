@@ -45,21 +45,22 @@ public class TradeController {
         this.stocks = stocks;
     }
 
-    // @PreAuthorize("authentication.principal.active == true")
-    // @GetMapping("/trades")
-    // public List<Trade> getAllTrades(){
+    // CREATED FOR TESTING. NOT NEEDED FOR SUBMISSION
+    @PreAuthorize("authentication.principal.active == true")
+    @GetMapping("/trades")
+    public List<Trade> getAllTrades(){
 
-    //     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    //     String customerUsername = authentication.getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String customerUsername = authentication.getName();
         
-    //     Customer customer = customers.findByUsername(customerUsername)
-    //         .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
+        Customer customer = customers.findByUsername(customerUsername)
+            .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
         
-    //     long customerId = customer.getId();
+        long customerId = customer.getId();
 
-    //     return trades.findByCustomerId(customerId);
+        return trades.findByCustomerId(customerId);
 
-    // }
+    }
 
     @PreAuthorize("authentication.principal.active == true")
     @GetMapping("/trades/{tradeId}")
@@ -80,6 +81,7 @@ public class TradeController {
 
     }
 
+    @PreAuthorize("authentication.principal.active == true")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/trades")
     public Trade createTrade(@Valid @RequestBody Trade trade){

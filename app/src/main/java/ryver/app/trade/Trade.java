@@ -7,6 +7,7 @@ import ryver.app.stock.*;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.*;
 
@@ -51,10 +52,12 @@ public class Trade {
 
     @ManyToOne
     @JoinColumn(name = "account", nullable = false)
+    @JsonIgnore
     private Account account;
 
     @ManyToOne
     @JoinColumn(name = "stock_id", nullable = false)
+    @JsonIgnore
     private CustomStock stock;
 
     public Trade(String action, String symbol, int quantity, double bid, double ask, Long accountId, Long customerId){
@@ -67,12 +70,14 @@ public class Trade {
         this.customerId = customerId;
     }
 
-    public Trade(String action, String symbol, int quantity, double bid, double ask, Long accountId, Long customerId, Account account, CustomStock stock){
+    // for AppApplication
+    public Trade(String action, String symbol, int quantity, double bid, double ask, String status, Long accountId, Long customerId, Account account, CustomStock stock){
         this.action = action;
         this.symbol = symbol;
         this.quantity = quantity;
         this.bid = bid;
         this.ask = ask;
+        this.status = status;
         this.accountId = accountId;
         this.customerId = customerId;
         this.account = account;

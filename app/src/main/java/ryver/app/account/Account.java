@@ -38,6 +38,7 @@ public class Account {
         this.customer_id = customer_id;
     }
 
+    // for AppApplication
     public Account(double balance, double available_balance, long customer_id, Customer customer) {
         this.balance = balance;
         this.available_balance = available_balance;
@@ -54,5 +55,6 @@ public class Account {
     @OneToMany(mappedBy = "account",
     orphanRemoval = true,
     cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Trade> trades;
 }
