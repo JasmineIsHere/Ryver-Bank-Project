@@ -1,5 +1,6 @@
 package ryver.app.trade;
 
+import ryver.app.customer.*;
 import ryver.app.account.*;
 import ryver.app.stock.*;
 
@@ -40,11 +41,11 @@ public class Trade {
     // @NotNull(message = "Status should not be null. ")
     private String status; //open/filled/partial-filled/cancelled/expired
 
-    // @NotNull(message = "Account ID should not be null. ")
+    @NotNull(message = "Account ID should not be null. ")
     @Column(name = "account_id")
     private Long accountId; //account used to submit buy/sell request
 
-    // @NotNull(message = "Customer ID should not be null. ")
+    @NotNull(message = "Customer ID should not be null. ")
     @Column(name = "customer_id")
     private Long customerId;//customer submitting the buy/sell request
 
@@ -56,14 +57,25 @@ public class Trade {
     @JoinColumn(name = "stock_id", nullable = false)
     private CustomStock stock;
 
-
-    public Trade(String action, String symbol, int quantity, double bid, double ask){
+    public Trade(String action, String symbol, int quantity, double bid, double ask, Long accountId, Long customerId){
         this.action = action;
         this.symbol = symbol;
         this.quantity = quantity;
         this.bid = bid;
         this.ask = ask;
-        // this.accountId = accountId;
-        // this.customerId = customerId;
+        this.accountId = accountId;
+        this.customerId = customerId;
+    }
+
+    public Trade(String action, String symbol, int quantity, double bid, double ask, Long accountId, Long customerId, Account account, CustomStock stock){
+        this.action = action;
+        this.symbol = symbol;
+        this.quantity = quantity;
+        this.bid = bid;
+        this.ask = ask;
+        this.accountId = accountId;
+        this.customerId = customerId;
+        this.account = account;
+        this.stock = stock;
     }
 }

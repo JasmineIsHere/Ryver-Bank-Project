@@ -32,6 +32,19 @@ public class Account {
     @JoinColumn(name = "customer", nullable = false)
     private Customer customer;
 
+    public Account(double balance, double available_balance, long customer_id) {
+        this.balance = balance;
+        this.available_balance = available_balance;
+        this.customer_id = customer_id;
+    }
+
+    public Account(double balance, double available_balance, long customer_id, Customer customer) {
+        this.balance = balance;
+        this.available_balance = available_balance;
+        this.customer_id = customer_id;
+        this.customer = customer;
+    }
+
     @OneToMany(mappedBy = "account",
     orphanRemoval = true,
     cascade = CascadeType.ALL)
