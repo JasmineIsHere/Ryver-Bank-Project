@@ -31,6 +31,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+/** 
+ *      T E S T
+ *      1.updateCustomer_ROLEManagerUpdateROLEManager_ReturnSavedCustomer
+ *      2.updateCustomer_ROLEManagerUpdateROLECustomer_ReturnSavedCustomer
+ *      3.updateCustomer_ROLEManagerUpdateROLEAnalyst_ReturnSavedCustomer
+ *      4.updateCustomer_ROLECustomerUpdateROLECustomer_ReturnSavedCustomer
+ *      5. 
+ *      6. 
+*/
+
 @ExtendWith(MockitoExtension.class)
 public class CustomerServiceTest {
     @Mock
