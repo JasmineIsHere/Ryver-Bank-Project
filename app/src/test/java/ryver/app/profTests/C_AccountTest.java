@@ -1,4 +1,4 @@
-// package csd.testclient;
+// package ryver.app.proftests;
 
 // import static org.junit.jupiter.api.Assertions.assertEquals;
 

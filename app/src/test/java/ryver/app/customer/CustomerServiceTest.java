@@ -32,13 +32,22 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 /** 
+ * KEY: 
+ * W --> Works 
+ * X --> Doesnt work
+ * 
  *      T E S T
- *      1.updateCustomer_ROLEManagerUpdateROLEManager_ReturnSavedCustomer
- *      2.updateCustomer_ROLEManagerUpdateROLECustomer_ReturnSavedCustomer
- *      3.updateCustomer_ROLEManagerUpdateROLEAnalyst_ReturnSavedCustomer
- *      4.updateCustomer_ROLECustomerUpdateROLECustomer_ReturnSavedCustomer
- *      5. 
- *      6. 
+ *  W   1.updateCustomer_ROLEManagerUpdateROLEManager_ReturnSavedCustomer
+ *  W   2.updateCustomer_ROLEManagerUpdateROLECustomer_ReturnSavedCustomer
+ *  W   3.updateCustomer_ROLEManagerUpdateROLEAnalyst_ReturnSavedCustomer
+ *  W   4.updateCustomer_ROLECustomerUpdateROLECustomer_ReturnSavedCustomer
+ *  W   5.updateCustomer_ROLEAnalystUpdateROLEAnalyst_ReturnSavedCustomer
+ *  W   6.addCustomer_NewCustomerWithValidNric_ReturnSavedCustomer
+ *  X   7.addCustomer_NewCustomerWithInvalidNric_ReturnNull
+ *  W   8.validateNric_ValidNric_ReturnTrue
+ * 
+ * Notes:
+ * - do we need to add tests: customer update manager?
 */
 
 @ExtendWith(MockitoExtension.class)
@@ -62,7 +71,7 @@ public class CustomerServiceTest {
         //customerDB.add(manager);
 
         Customer updatedManager = new Customer(
-            "Jolene", "password", "MANAGER", "Jolene Loh", "T0046822Z", "12345678", "address", false);
+            "Jolene", "password", "ROLE_MANAGER", "Jolene Loh", "T0046822Z", "12345678", "address", false);
         updatedManager.setId(1L);
 
         when(customers.findById(manager.getId())).thenReturn(Optional.of(manager)); //supposed to be an optional
@@ -75,95 +84,126 @@ public class CustomerServiceTest {
         //only password, phone, address is changed (active status not changed because authentication could not be mocked)
 
         //assert
+        assertEquals("[ROLE_MANAGER]", manager.getAuthorities().toString());
         assertEquals(updatedManager.getAddress(), savedManager.getAddress());
         assertEquals(updatedManager.getPhone(), savedManager.getPhone());
         assertEquals(updatedManager.getPassword(), savedManager.getPassword());
         assertNotEquals(updatedManager.getUsername(), savedManager.getUsername());
         assertNotEquals(updatedManager.getFullName(), savedManager.getFullName());
         assertNotEquals(updatedManager.getNric(), savedManager.getNric());
-        
 
         verify(customers).findById(manager.getId());
         verify(customers).save(savedManager);
-
     }
 
-    // @Test //CANNOT GENERATE ID
-    // void updateCustomer_ROLEManagerUpdateROLECustomer_ReturnSavedCustomer(){
-    //     //arrange
-    //     Customer customer = new Customer(
-    //         "Jerry", "password", "ROLE_USER", "Jerry Loh", "T0046822Z", "12345678", "address", true);
-    //     Long customerId = 1L;
-    //     when(customers.findById(customerId)).thenReturn(Optional.empty());
-    //     when(customers.findByAuthorities(any(String.class))).thenReturn(new ArrayList<Customer>());
-    //     //act
-    //     Customer savedCustomer = customerController.updateCustomer(customerId, customer);
-    //     //assert
-    //     assertNotNull(savedCustomer);
-    //     verify(customers).findById(customerId);
-    //     verify(customers).findByAuthorities("ROLE_USER");
-    // }
+    @Test //CANNOT GENERATE ID
+    void updateCustomer_ROLEManagerUpdateROLECustomer_ReturnSavedCustomer(){
+        //arrange
+        Customer manager = new Customer(
+            "manager_1", "01_manager_01", "ROLE_MANAGER", "Manager One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
+        Customer updatedCustomer = new Customer(
+            "good_user_1", "01_user_01", "ROLE_USER", "User One", "T0046822Z", "12345678", "address", false);
+        when(customers.findById(manager.getId())).thenReturn(Optional.of(manager)); 
+        when(customers.save(any(Customer.class))).thenReturn(updatedCustomer);         
+        when(encoder.encode(updatedCustomer.getPassword())).thenReturn(updatedCustomer.getPassword());
+        //act
+        Customer savedCustomer = customerController.updateCustomer(manager.getId(), updatedCustomer);
+        //assert
+        assertEquals("[ROLE_MANAGER]", manager.getAuthorities().toString());
+        assertEquals(updatedCustomer.getAddress(), savedCustomer.getAddress());
+        assertEquals(updatedCustomer.getPhone(), savedCustomer.getPhone());
+        assertEquals(updatedCustomer.getPassword(), savedCustomer.getPassword());
+        assertNotEquals(updatedCustomer.getUsername(), savedCustomer.getUsername());
+        assertNotEquals(updatedCustomer.getFullName(), savedCustomer.getFullName());
+        assertNotEquals(updatedCustomer.getNric(), savedCustomer.getNric());
+        verify(customers).findById(manager.getId());
+        verify(customers).save(savedCustomer);
+    }
 
-    // @Test //CANNOT GENERATE ID
-    // void updateCustomer_ROLEManagerUpdateROLEAnalyst_ReturnSavedCustomer(){
-    //     //arrange
-    //     Customer customer = new Customer(
-    //         "Jerry", "password", "ROLE_USER", "Jerry Loh", "T0046822Z", "12345678", "address", true);
-    //     Long customerId = 1L;
-    //     when(customers.findById(customerId)).thenReturn(Optional.empty());
-    //     when(customers.findByAuthorities(any(String.class))).thenReturn(new ArrayList<Customer>());
-    //     //act
-    //     Customer savedCustomer = customerController.updateCustomer(customerId, customer);
-    //     //assert
-    //     assertNotNull(savedCustomer);
-    //     verify(customers).findById(customerId);
-    //     verify(customers).findByAuthorities("ROLE_ANALYST");
-    // }
+    @Test
+    void updateCustomer_ROLEManagerUpdateROLEAnalyst_ReturnSavedCustomer(){
+        //arrange
+        Customer manager = new Customer(
+            "manager_1", "01_manager_01", "ROLE_MANAGER", "Manager One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
+        Customer updatedAnalyst = new Customer(
+            "analyst_1", "01_analyst_01", "ROLE_ANALYST", "Analyst One", "T0046822Z", "12345678", "address", false);
+        when(customers.findById(manager.getId())).thenReturn(Optional.of(manager)); 
+        when(customers.save(any(Customer.class))).thenReturn(updatedAnalyst);         
+        when(encoder.encode(updatedAnalyst.getPassword())).thenReturn(updatedAnalyst.getPassword());
+        //act
+        Customer savedAnalyst = customerController.updateCustomer(manager.getId(), updatedAnalyst);
+        //assert
+        assertEquals("[ROLE_MANAGER]", manager.getAuthorities().toString());
+        assertEquals(updatedAnalyst.getAddress(), savedAnalyst.getAddress());
+        assertEquals(updatedAnalyst.getPhone(), savedAnalyst.getPhone());
+        assertEquals(updatedAnalyst.getPassword(), savedAnalyst.getPassword());
+        assertNotEquals(updatedAnalyst.getUsername(), savedAnalyst.getUsername());
+        assertNotEquals(updatedAnalyst.getFullName(), savedAnalyst.getFullName());
+        assertNotEquals(updatedAnalyst.getNric(), savedAnalyst.getNric());
+        verify(customers).findById(manager.getId());
+        verify(customers).save(savedAnalyst);
+    }
 
-    // @Test //CANNOT GENERATE ID
-    // void updateCustomer_ROLECustomerUpdateROLECustomer_ReturnSavedCustomer(){
-    //     //arrange
-    //     Customer customer = new Customer(
-    //         "Jerry", "password", "ROLE_USER", "Jerry Loh", "T0046822Z", "12345678", "address", true);
-    //     Long customerId = 1L;
-    //     when(customers.findById(customerId)).thenReturn(Optional.empty());
-    //     when(customers.findByAuthorities(any(String.class))).thenReturn(new ArrayList<Customer>());
-    //     //act
-    //     Customer savedCustomer = customerController.updateCustomer(customerId, customer);
-    //     //assert
-    //     assertNotNull(savedCustomer);
-    //     verify(customers).findById(customerId);
-    //     verify(customers).findByAuthorities("ROLE_USER");
-    // }
+    @Test
+    void updateCustomer_ROLECustomerUpdateROLECustomer_ReturnSavedCustomer(){
+        //arrange
+        Customer customer = new Customer(
+            "good_user_1", "01_user_01", "ROLE_USER", "User One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
+        Customer updatedCustomer = new Customer(
+            "good_user_2", "02_user_02", "ROLE_USER", "User Two", "T0046822Z", "12345678", "address", false);
+        when(customers.findById(customer.getId())).thenReturn(Optional.of(customer)); 
+        when(customers.save(any(Customer.class))).thenReturn(updatedCustomer);         
+        when(encoder.encode(updatedCustomer.getPassword())).thenReturn(updatedCustomer.getPassword());
+        //act
+        Customer savedCustomer = customerController.updateCustomer(customer.getId(), updatedCustomer);
+        //assert
+        assertEquals("[ROLE_USER]", customer.getAuthorities().toString());
+        assertEquals(updatedCustomer.getAddress(), savedCustomer.getAddress());
+        assertEquals(updatedCustomer.getPhone(), savedCustomer.getPhone());
+        assertEquals(updatedCustomer.getPassword(), savedCustomer.getPassword());
+        assertNotEquals(updatedCustomer.getUsername(), savedCustomer.getUsername());
+        assertNotEquals(updatedCustomer.getFullName(), savedCustomer.getFullName());
+        assertNotEquals(updatedCustomer.getNric(), savedCustomer.getNric());
+        verify(customers).findById(customer.getId());
+        verify(customers).save(savedCustomer);
+    }
 
-    // @Test //CANNOT GENERATE ID
-    // void updateCustomer_ROLEAnalystUpdateROLEAnalyst_ReturnSavedCustomer(){
-    //     //arrange
-    //     Customer customer = new Customer(
-    //         "Jerry", "password", "ROLE_USER", "Jerry Loh", "T0046822Z", "12345678", "address", true);
-    //     Long customerId = 1L;
-    //     when(customers.findById(customerId)).thenReturn(Optional.empty());
-    //     when(customers.findByAuthorities(any(String.class))).thenReturn(new ArrayList<Customer>());
-    //     //act
-    //     Customer savedCustomer = customerController.updateCustomer(customerId, customer);
-    //     //assert
-    //     assertNotNull(savedCustomer);
-    //     verify(customers).findById(customerId);
-    //     verify(customers).findByAuthorities("ROLE_USER");
-    // }
+    @Test
+    void updateCustomer_ROLEAnalystUpdateROLEAnalyst_ReturnSavedCustomer(){
+        //arrange
+        Customer analyst = new Customer(
+            "analyst_0", "00_analyst_00", "ROLE_ANALYST", "Analyst Zero", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
+        Customer updatedAnalyst = new Customer(
+            "analyst_1", "01_analyst_01", "ROLE_ANALYST", "Analyst One", "T0046822Z", "12345678", "address", false);
+        when(customers.findById(analyst.getId())).thenReturn(Optional.of(analyst)); 
+        when(customers.save(any(Customer.class))).thenReturn(updatedAnalyst);         
+        when(encoder.encode(updatedAnalyst.getPassword())).thenReturn(updatedAnalyst.getPassword());
+        //act
+        Customer savedAnalyst = customerController.updateCustomer(analyst.getId(), updatedAnalyst);
+        //assert
+        assertEquals("[ROLE_ANALYST]", analyst.getAuthorities().toString());
+        assertEquals(updatedAnalyst.getAddress(), savedAnalyst.getAddress());
+        assertEquals(updatedAnalyst.getPhone(), savedAnalyst.getPhone());
+        assertEquals(updatedAnalyst.getPassword(), savedAnalyst.getPassword());
+        assertNotEquals(updatedAnalyst.getUsername(), savedAnalyst.getUsername());
+        assertNotEquals(updatedAnalyst.getFullName(), savedAnalyst.getFullName());
+        assertNotEquals(updatedAnalyst.getNric(), savedAnalyst.getNric());
+        verify(customers).findById(analyst.getId());
+        verify(customers).save(savedAnalyst);
+    }
 
-    // @Test //WORKS
-    // void addCustomer_NewCustomerWithValidNric_ReturnSavedCustomer(){
-    //     //arrange
-    //     Customer manager = new Customer(
-    //         "Jolene", "password", "manager", "Jolene Loh", "T0046822Z", "12345678", "address", true);
-    //     when(customers.save(any(Customer.class))).thenReturn(manager);
-    //     //act
-    //     Customer savedManager = customerController.addCustomer(manager);
-    //     //assert
-    //     assertNotNull(savedManager);
-    //     verify(customers).save(manager);
-    // }
+    @Test
+    void addCustomer_NewCustomerWithValidNric_ReturnSavedCustomer(){
+        //arrange
+        Customer manager = new Customer(
+            "Jolene", "password", "manager", "Jolene Loh", "T0046822Z", "12345678", "address", true);
+        when(customers.save(any(Customer.class))).thenReturn(manager);
+        //act
+        Customer savedManager = customerController.addCustomer(manager);
+        //assert
+        assertNotNull(savedManager);
+        verify(customers).save(manager);
+    }
 
     // @Test //SUDDENLY DOESNT WORK
     // void addCustomer_NewCustomerWithInvalidNric_ReturnNull(){
@@ -178,14 +218,14 @@ public class CustomerServiceTest {
     //     verify(customers).save(manager);
     // }
 
-    // @Test //WORKS
-    // void validateNric_ValidNric_ReturnTrue(){
-    //     //arrange
-    //     Customer manager = new Customer(
-    //         "Jolene", "password", "manager", "Jolene Loh", "T1234567Z", "12345678", "address", true);
-    //     //act
-    //     boolean validNric = customerController.validateNric(manager.getNric());
-    //     //assert
-    //     assertNotNull(validNric);
-    // }
+    @Test 
+    void validateNric_ValidNric_ReturnTrue(){
+        //arrange
+        Customer manager = new Customer(
+            "Jolene", "password", "manager", "Jolene Loh", "T1234567Z", "12345678", "address", true);
+        //act
+        boolean validNric = customerController.validateNric(manager.getNric());
+        //assert
+        assertNotNull(validNric);
+    }
 }
