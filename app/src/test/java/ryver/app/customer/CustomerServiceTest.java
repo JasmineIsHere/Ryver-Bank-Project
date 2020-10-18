@@ -133,6 +133,21 @@ public class CustomerServiceTest {
         //arrange
         Customer manager = new Customer(
             "Jolene", "password", "manager", "Jolene Loh", "T1234567Z", "12345678", "address", true);
+            
+        //act
+        Customer savedManager = null;
+        try{
+            savedManager = customerController.addCustomer(manager);
+        } catch (InvalidNricException e){
+
+        }
+        
+        
+        //assert
+        assertThrows(InvalidNricException.class, () -> {customerController.addCustomer(manager);}); //asserts a InvalidNricException was thrown
+        assertNull(savedManager); //asserts that no new customer is added
+
+        verify(customers, never()).save(manager); //verify the save method was never executed because an exception was thrown
     }
 
     @Test 
