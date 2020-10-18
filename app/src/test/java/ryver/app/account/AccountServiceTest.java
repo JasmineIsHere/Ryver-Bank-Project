@@ -28,6 +28,24 @@
 // import org.mockito.Mock;
 // import org.mockito.junit.jupiter.MockitoExtension;
 
+// /** 
+//  * KEY: 
+//  * W --> Works 
+//  * X --> Doesnt work
+//  * 
+//  *      T E S T
+//  *  X   1.getAllAccountsByCustomerId_ROLECustomer_ReturnListOfAccounts
+//  *  X   2.getAllAccountsByCustomerId_ROLEManager_ReturnListOfAccounts
+//  *  X   3.getAllAccountsByCustomerId_ROLEAnalyst_ReturnListOfAccounts
+//  *  X   4.getAllAccountsByCustomerId_CustomerInactive_ReturnListOfAccounts
+//  *  X   5.getAccountByAccountIdAndCustomerId_CustomerActive_ReturnAccount
+//  *  X   6.getAccountByAccountIdAndCustomerId_CustomerInactive_ReturnNull
+//  *  X   7.addAccount_NewAccount_ReturnSavedAccount
+//  * 
+//  * Notes:
+//  * none
+// */
+
 // @ExtendWith(MockitoExtension.class)
 // public class AccountServiceTest {
 //     @Mock
@@ -42,20 +60,19 @@
 //     @InjectMocks
 //     private AccountController accountController;
 
-//     //what is the setup for accounts?
-//     // @Test
-//     // void getAllAccountsByCustomerId_ROLECustomer_ReturnListOfAccounts(){
-//     //     //arrange
-//     //     Customer customer = new Customer(
-//     //         "customer_1", encoder.encode("01_customer_01"), "ROLE_USER", "Customer One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
-//     //     Account account = new Account(400, 400, 1L);
-//     //     when(customers.findByAuthorities(any(String.class))).thenReturn(new ArrayList<Customer>());
-//     //     //act
-//     //     Account listOfAccounts = accountController.getAllAccountsByCustomerId(1L); 
-//     //     //assert
-//     //     assertNotNull(listOfAccounts);
-//     //     verify(customers).findByAuthorities("ROLE_USER");
-//     // }
+//     @Test
+//     void getAllAccountsByCustomerId_ROLECustomer_ReturnListOfAccounts(){
+//         //arrange
+//         Customer customer = new Customer(
+//             "customer_1", encoder.encode("01_customer_01"), "ROLE_USER", "Customer One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
+//         Account account = new Account(400, 400, 1L);
+//         when(customers.findByAuthorities(any(String.class))).thenReturn(new ArrayList<Customer>());
+//         //act
+//         Account listOfAccounts = accountController.getAllAccountsByCustomerId(1L); 
+//         //assert
+//         assertNotNull(listOfAccounts);
+//         verify(customers).findByAuthorities("ROLE_USER");
+//     }
 
 //     // @Test
 //     // void getAllAccountsByCustomerId_ROLEManager_ReturnListOfAccounts(){
@@ -85,45 +102,45 @@
 //     //     verify(customers).findByAuthorities("ROLE_MANAGER");
 //     // }
 
-//     @Test
-//     void getAccountByAccountIdAndCustomerId_CustomerActive_ReturnAccount(){
-//         //arrange
-//         Customer manager = new Customer(
-//         "Jolene", "password", "manager", "Jolene Loh", "T0046822Z", "12345678", "address", true);
-//         Account account = new Account(1L, 400.0, 400.0);
-//         Long accountId = 22L;
-//         //act
-//         Account returnAccount = account.getAccountByAccountIdAndCustomerId(accountId);
-//         //assert
-//         assertNotNull(returnAccount);
-//     }
+//     // @Test
+//     // void getAccountByAccountIdAndCustomerId_CustomerActive_ReturnAccount(){
+//     //     //arrange
+//     //     Customer manager = new Customer(
+//     //     "Jolene", "password", "manager", "Jolene Loh", "T0046822Z", "12345678", "address", true);
+//     //     Account account = new Account(1L, 400.0, 400.0);
+//     //     Long accountId = 22L;
+//     //     //act
+//     //     Account returnAccount = account.getAccountByAccountIdAndCustomerId(accountId);
+//     //     //assert
+//     //     assertNotNull(returnAccount);
+//     // }
 
-//     @Test
-//     void getAccountByAccountIdAndCustomerId_CustomerInactive_ReturnNull(){
-//         //arrange
-//         Customer customer = new Customer(
-//             "Jerry", "password", "customer", "Jerry Loh", "T0046822Z", "12345678", "address", false);
-//         Account account = new Account(400.0, 400.0, 1L);
-//         Long accountId = 22L;
-//         //act
-//         Account returnAccount = account.getAccountByAccountIdAndCustomerId(accountId);
-//         //assert
-//         assertNull(returnAccount);
-//     }
+//     // @Test
+//     // void getAccountByAccountIdAndCustomerId_CustomerInactive_ReturnNull(){
+//     //     //arrange
+//     //     Customer customer = new Customer(
+//     //         "Jerry", "password", "customer", "Jerry Loh", "T0046822Z", "12345678", "address", false);
+//     //     Account account = new Account(400.0, 400.0, 1L);
+//     //     Long accountId = 22L;
+//     //     //act
+//     //     Account returnAccount = account.getAccountByAccountIdAndCustomerId(accountId);
+//     //     //assert
+//     //     assertNull(returnAccount);
+//     // }
 
-//     @Test
-//     void addAccount_NewAccount_ReturnSavedAccount(){
-//         //arrange
-//         Customer manager = new Customer(
-//             "Jolene", "password", "manager", "Jolene Loh", "T0046822Z", "12345678", "address", true);
-//         Account account = new Account(400.0, 400.0, 1L);
-//         when(books.findByIdAndCustomerId(any(String.class))).thenReturn(new ArrayList<Account>());
-//         when(accounts.save(any(Account.class))).thenReturn(account);
-//         //act
-//         Account savedAccount = customer.addAccount(account);
-//         //assert
-//         assertNotNull(savedAccount);
-//         verify(accounts).findByIdAndCustomerId(manager.getAccountId(), manager.getCustomerId());
-//         verify(accounts).save(account);
-//     }
+//     // @Test
+//     // void addAccount_NewAccount_ReturnSavedAccount(){
+//     //     //arrange
+//     //     Customer manager = new Customer(
+//     //         "Jolene", "password", "manager", "Jolene Loh", "T0046822Z", "12345678", "address", true);
+//     //     Account account = new Account(400.0, 400.0, 1L);
+//     //     when(books.findByIdAndCustomerId(any(String.class))).thenReturn(new ArrayList<Account>());
+//     //     when(accounts.save(any(Account.class))).thenReturn(account);
+//     //     //act
+//     //     Account savedAccount = customer.addAccount(account);
+//     //     //assert
+//     //     assertNotNull(savedAccount);
+//     //     verify(accounts).findByIdAndCustomerId(manager.getAccountId(), manager.getCustomerId());
+//     //     verify(accounts).save(account);
+//     // }
 // }
