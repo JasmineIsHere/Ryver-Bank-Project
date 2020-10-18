@@ -37,6 +37,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  *  X   1.getAccountByAccountIdAndCustomerId_CustomerActive_ReturnAccount
  *  X   2.getAccountByAccountIdAndCustomerId_CustomerInactive_ReturnNull
  *  W   3.addAccount_NewAccount_ReturnSavedAccount
+ *  X   4.addAccount_CustomerInactive_ReturnException
  * 
  * Notes:
  * none
@@ -57,36 +58,30 @@ public class AccountServiceTest {
     private AccountController accountController = new AccountController(accounts, customers);
 
     // @Test
-    // void getAllAccountsByCustomerId_ROLECustomer_ReturnListOfAccounts(){
+    // void getAccountByAccountIdAndCustomerId_CustomerActive_ReturnAccount(){
     //     //arrange
     //     Customer customer = new Customer(
     //         "good_user_1", "01_user_01", "ROLE_USER", "User One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
     //     customer.setId(1L);
-    //     Account accountOne = new Account(400, 400, 1L, customer);
-    //     // Account accountTwo = new Account(500, 500, 1L, customer);
+
+    //     Account account = new Account(400.0, 400.0, 1L, customer);
 
     //     when(customers.findById(customer.getId())).thenReturn(Optional.of(customer)); 
-    //     when(accounts.save(any(Account.class))).thenReturn(accountOne);
+    //     when(accounts.save(any(Account.class))).thenReturn(account);
+
+    //     Account savedAccount = accountController.addAccount(account);
+
+    //     when(accounts.findById(savedAccount.getId())).thenReturn(Optional.of(savedAccount)); 
+    //     when(accounts.save(any(Account.class))).thenReturn(account);
 
     //     //act
-    //     Account listOfAccounts = accountController.getAllAccountsByCustomerId(1L); 
+    //     Account returnAccount = accountController.getAccountByAccountIdAndCustomerId(savedAccount.getId());
 
-    //     //assert
-    //     assertNotNull(listOfAccounts);
-    //     verify(customers).findByAuthorities("ROLE_USER");
-    // }
-
-    // @Test
-    // void getAccountByAccountIdAndCustomerId_CustomerActive_ReturnAccount(){
-    //     //arrange
-    //     Customer manager = new Customer(
-    //     "Jolene", "password", "manager", "Jolene Loh", "T0046822Z", "12345678", "address", true);
-    //     Account account = new Account(1L, 400.0, 400.0);
-    //     Long accountId = 22L;
-    //     //act
-    //     Account returnAccount = account.getAccountByAccountIdAndCustomerId(accountId);
     //     //assert
     //     assertNotNull(returnAccount);
+    //     verify(customers).findById(customer.getId());
+    //     verify(accounts).save(account);
+    //     verify(accounts).save(savedAccount);
     // }
 
     // @Test
@@ -108,7 +103,9 @@ public class AccountServiceTest {
         Customer customer = new Customer(
             "good_user_1", "01_user_01", "ROLE_USER", "User One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
         customer.setId(1L);
+
         Account account = new Account(400.0, 400.0, 1L, customer);
+
         when(customers.findById(customer.getId())).thenReturn(Optional.of(customer)); 
         when(accounts.save(any(Account.class))).thenReturn(account);
     
@@ -120,4 +117,33 @@ public class AccountServiceTest {
         verify(customers).findById(customer.getId());
         verify(accounts).save(account);
     }
+
+    // @Test
+    // void addAccount_CustomerInactive_ReturnException(){
+    //     //arrange
+    //     Customer customer = new Customer(
+    //         "good_user_1", "01_user_01", "ROLE_USER", "User One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", false);
+    //     customer.setId(1L);
+
+    //     Account account = new Account(400.0, 400.0, 1L, customer);
+
+    //     when(customers.findById(customer.getId())).thenReturn(Optional.of(customer)); 
+    //     when(accounts.save(any(Account.class))).thenReturn(account);
+    
+    //     //act
+    //     Account savedAccount = null;
+    //     try{
+    //         savedAccount = accountController.addAccount(account);
+    //     } 
+    //     // catch (CustomerNotFoundException e){} 
+    //     catch (AccessDeniedException e){}
+
+    //     //assert
+    //     assertThrows(AccessDeniedException.class, () -> {accountController.addAccount(account);}); 
+    //     assertNull(savedAccount); 
+    //     verify(accounts, never()).save(account); 
+
+    //     // verify(customers).findById(customer.getId());
+    //     // verify(accounts).save(account);
+    // }
 }

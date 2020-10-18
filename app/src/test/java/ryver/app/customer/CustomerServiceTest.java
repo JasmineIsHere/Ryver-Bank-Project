@@ -45,11 +45,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
  *  W   1.updateCustomer_Found_ReturnSavedCustomer
  *  X   2.updateCustomer_NotFound_returnNull 
  *  W   3.addCustomer_NewCustomerWithValidNric_ReturnSavedCustomer
- *  X   4.addCustomer_NewCustomerWithInvalidNric_ReturnNull
+ *  W   4.addCustomer_NewCustomerWithInvalidNric_ReturnNull
  *  W   5.validateNric_ValidNric_ReturnTrue
  * 
  * Notes:
  * - need to add a return null function for test2
+ * - the isActive part of the assert does not work
 */
 
 @ExtendWith(MockitoExtension.class)
@@ -99,55 +100,63 @@ public class CustomerServiceTest {
     // @Test
     // void updateCustomer_NotFound_returnNull(){
     //     //arrange        
+    //     Customer customer = new Customer(
+    //         "good_user_1", "01_user_01", "ROLE_USER", "User One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", false);
+    //     customer.setId(1L);
+
     //     Customer updatedCustomer = new Customer(
     //         "good_user_1", "01_user_01", "ROLE_USER", "User One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
     //     updatedCustomer.setId(1L);
-    //     Long customerId = 10L;
 
     //     when(customers.findById(customerId)).thenReturn(Optional.empty()); 
     //     when(encoder.encode(updatedCustomer.getPassword())).thenReturn(updatedCustomer.getPassword());
             
     //     //act
-    //     Customer savedCustomer = customerController.updateCustomer(customerId, updatedCustomer);
-        
+    //     Customer savedCustomer = null;
+    //     try{
+    //         savedCustomer = customerController.updateCustomer(1L, updatedCustomer);
+    //     } catch (CustomerNotFoundException e){
+    //     }
+
     //     //assert
-    //     assertNull(savedCustomer);            
-    //     verify(customers).findById(updatedCustomer.getId());
+    //     assertThrows(CustomerNotFoundException.class, () -> {customerController.updateCustomer(updatedCustomer);});
+    //     assertNull(savedCustomer);
+    //     verify(customers, never()).save(updatedCustomer); 
     // }
 
     @Test
     void addCustomer_NewCustomerWithValidNric_ReturnSavedCustomer(){
         //arrange
-        Customer manager = new Customer(
-            "Jolene", "password", "manager", "Jolene Loh", "T0046822Z", "12345678", "address", true);
-        when(customers.save(any(Customer.class))).thenReturn(manager);
+        Customer customer = new Customer(
+            "user_1", "01_user_01", "ROLE_USER", "User One", "T0046822Z", "12345678", "address", true);
+        when(customers.save(any(Customer.class))).thenReturn(customer);
+        
         //act
-        Customer savedManager = customerController.addCustomer(manager);
+        Customer savedCustomer = customerController.addCustomer(customer);
+        
         //assert
-        assertNotNull(savedManager);
-        verify(customers).save(manager);
+        assertNotNull(savedCustomer);
+        verify(customers).save(customer);
     }
 
-    @Test //WORKS
+    @Test
     void addCustomer_NewCustomerWithInvalidNric_ReturnNull(){
         //arrange
-        Customer manager = new Customer(
-            "Jolene", "password", "manager", "Jolene Loh", "T1234567Z", "12345678", "address", true);
+        Customer customer = new Customer(
+            "user_1", "01_user_01", "ROLE_USER", "User One", "T1234567Z", "12345678", "address", true);
             
         //act
-        Customer savedManager = null;
+        Customer savedCustomer = null;
         try{
-            savedManager = customerController.addCustomer(manager);
+            savedCustomer = customerController.addCustomer(customer);
         } catch (InvalidNricException e){
-
         }
         
-        
         //assert
-        assertThrows(InvalidNricException.class, () -> {customerController.addCustomer(manager);}); //asserts a InvalidNricException was thrown
-        assertNull(savedManager); //asserts that no new customer is added
+        assertThrows(InvalidNricException.class, () -> {customerController.addCustomer(customer);}); //asserts a InvalidNricException was thrown
+        assertNull(savedCustomer); //asserts that no new customer is added
 
-        verify(customers, never()).save(manager); //verify the save method was never executed because an exception was thrown
+        verify(customers, never()).save(customer); //verify the save method was never executed because an exception was thrown
     }
 
     @Test 

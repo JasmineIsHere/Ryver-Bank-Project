@@ -38,7 +38,8 @@ public class Account {
         this.customer_id = customer_id;
     }
 
-    // for AppApplication
+    // for AppApplication 
+    // JOLENE: i think can just leave this here, used it for my testing
     public Account(double balance, double available_balance, long customer_id, Customer customer) {
         this.balance = balance;
         this.available_balance = available_balance;
