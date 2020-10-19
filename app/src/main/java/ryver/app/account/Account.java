@@ -30,6 +30,7 @@ public class Account {
 
     @ManyToOne
     @JoinColumn(name = "customer", nullable = false)
+    @JsonIgnore
     private Customer customer;
 
     public Account(double balance, double available_balance, long customer_id) {

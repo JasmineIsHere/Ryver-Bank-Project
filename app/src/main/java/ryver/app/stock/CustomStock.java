@@ -7,6 +7,7 @@ import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.*;
 
@@ -18,6 +19,9 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class CustomStock {
+    // only keeps the best open trade
+    // if the trade gets filled then revert back to the next best priced open trade
+    // best price - lowest ask, highest bid. if same price -> get the earlier submitted trade
 
     private @Id String symbol; //symbol of stock eg. A17U
     private BigDecimal last_price; //$$
@@ -29,5 +33,6 @@ public class CustomStock {
     @OneToMany(mappedBy = "stock",
     // orphanRemoval = true,
     cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Trade> trades;
 }

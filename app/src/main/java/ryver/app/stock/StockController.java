@@ -59,7 +59,7 @@ public class StockController {
     public List<CustomStock> getStocks() {
         // true as of 12/10/2020
         return stocks.findAll();
-    }  
+    }
 
     @GetMapping("/stocks/{symbol}")
     public CustomStock getStockBySymbol(@PathVariable (value = "symbol") String symbol){

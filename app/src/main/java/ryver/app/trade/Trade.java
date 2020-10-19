@@ -35,7 +35,7 @@ public class Trade {
     private double ask; //for selling
     
     private double avg_price; // the average filled price, as one trade can be matched by several other trades
-    private int filled_quanity; //# of quantity successfully sold/bought out of total "quantity"
+    private int filled_quantity; //# of quantity successfully sold/bought out of total "quantity"
 
     private long date; //Unix timestamp 
 
@@ -66,12 +66,26 @@ public class Trade {
         this.quantity = quantity;
         this.bid = bid;
         this.ask = ask;
+        this.status = "open";
         this.accountId = accountId;
         this.customerId = customerId;
     }
 
-    // for AppApplication
-    public Trade(String action, String symbol, int quantity, double bid, double ask, long date, String status, Long accountId, Long customerId, Account account, CustomStock stock){
+    // for AppApplication (20k initial stocks)
+    // date, filled quantity, avg price -> 0
+    public Trade(String action, String symbol, int quantity, double bid, double ask, String status, Long accountId, Long customerId){
+        this.action = action;
+        this.symbol = symbol;
+        this.quantity = quantity;
+        this.bid = bid;
+        this.ask = ask;
+        this.status = status;
+        this.accountId = accountId;
+        this.customerId = customerId;
+    }
+
+    // for AppApplication (market maker trades)
+    public Trade(String action, String symbol, int quantity, double bid, double ask, long date, String status, Long accountId, Long customerId){
         this.action = action;
         this.symbol = symbol;
         this.quantity = quantity;
@@ -81,7 +95,12 @@ public class Trade {
         this.status = status;
         this.accountId = accountId;
         this.customerId = customerId;
-        this.account = account;
-        this.stock = stock;
+    }
+
+    @Override public String toString() {
+        String string = "Trade(tradeid=" + this.id + ", action=" + this.action + ", symbol=" + this.symbol +  ", quantity=" + this.quantity +  ", bid=" + this.bid +  ", ask=" + this.ask +  ", avg_price=" + this.avg_price +  ", filled_quantity=" + this.filled_quantity +  ", date=" + this.date +  ", account_id=" + this.accountId +  ", customer_id=" + this.customerId +  ", status=" + this.status + ")";
+        // string = string.substring(0, 600);
+        
+        return string;
     }
 }
