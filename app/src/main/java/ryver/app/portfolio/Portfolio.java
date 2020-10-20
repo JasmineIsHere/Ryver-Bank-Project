@@ -29,3 +29,19 @@
 //         this.customer_id = customer_id;
 //     }
 // }
+
+
+/*NOTE: 
+Asset
+                    "code":"A17U",           From trade - symbol
+                    "quantity":1000,         From trade - quantity
+                    "avg_price": 3.30,       From trade - avg price
+                    "current_price":3.31,    From stock - last price???
+                    "value":3310.0,          current_price * quantity
+                    "gain_loss":10.0         value - (avg_price * quantity)
+
+Mapping
+Customer - Portfolio: OnetoOne
+Portfolio - Asset(Trade?): OnetoMany
+Asset - Portfolio/Customer: ManytoOne
+*/
