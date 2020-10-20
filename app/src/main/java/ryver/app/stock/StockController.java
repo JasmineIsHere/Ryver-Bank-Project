@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.validation.Valid;
+
 import java.lang.*;
 
 import org.springframework.web.bind.annotation.*;
@@ -65,6 +68,16 @@ public class StockController {
     public CustomStock getStockBySymbol(@PathVariable (value = "symbol") String symbol){
         return stocks.findBySymbol(symbol)
             .orElseThrow(() -> new InvalidStockException(symbol));
+    }
+
+    public CustomStock updateStockBySymbol(@PathVariable (value = "symbol") String symbol, @Valid @RequestBody CustomStock updatedStockInfo){
+        CustomStock stock = stocks.findBySymbol(symbol)
+            .orElseThrow(() -> new InvalidStockException(symbol));
+
+        stock.setAsk_volume(updatedStockInfo.getAsk_volume());
+        stock.setBid_volume(updatedStockInfo.getBid_volume());
+
+        return stocks.save(stock);
     }
 
     //@GetMapping("/stocks/{symbol}")
