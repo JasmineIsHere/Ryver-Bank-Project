@@ -66,7 +66,6 @@ public class Trade {
         this.quantity = quantity;
         this.bid = bid;
         this.ask = ask;
-        this.status = "open";
         this.accountId = accountId;
         this.customerId = customerId;
     }

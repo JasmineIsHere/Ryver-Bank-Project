@@ -112,6 +112,7 @@ public class AppApplication {
 				LocalDateTime datetime = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime();
 				System.out.println(datetime);
 				
+				// Trade trade = new Trade("sell", symbol, quantity2, 0.0, 3.2, timestamp, "open", 1L, 3L);
 				Trade trade = new Trade("sell", symbol, quantity2, 0.0, formattedRandAsk, timestamp, "open", 1L, 3L);
 				trade.setAccount(account);
 				trade.setStock(stock);
