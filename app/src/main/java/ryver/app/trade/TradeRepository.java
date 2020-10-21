@@ -11,5 +11,5 @@ public interface TradeRepository extends JpaRepository<Trade, Long>{
     List<Trade> findByCustomerId(Long customerId);
     
     List<Trade> findByActionAndStatusAndSymbol(String action, String status, String symbol);
-    Optional<Trade> findByIdAndCustomerId(Long customerId, Long tradeId);
+    Optional<Trade> findByIdAndCustomerId(Long tradeId, Long customerId);
 }
