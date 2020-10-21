@@ -82,7 +82,7 @@ public class TradeController {
         
         long customerId = customer.getId();
 
-        Trade trade = trades.findByIdAndCustomerId(customerId, tradeId)
+        Trade trade = trades.findByIdAndCustomerId(tradeId, customerId)
             .orElseThrow(() -> new TradeNotFoundException(tradeId));
 
         return trade;
@@ -506,7 +506,9 @@ public class TradeController {
         
         trade.setAccount(account);
         trade.setStock(stock);
-        return trades.save(trade);
+        trades.save(trade);
+        System.out.println(trade);
+        return trade;
     }
 
     @PreAuthorize("authentication.principal.active == true")
@@ -521,13 +523,23 @@ public class TradeController {
         
         long customerId = customer.getId();
 
-        Trade trade = trades.findByIdAndCustomerId(customerId, tradeId)
+        Trade trade = trades.findByIdAndCustomerId(tradeId, customerId)
             .orElseThrow(() -> new TradeNotFoundException(tradeId));
 
 
         // customer can cancel a trade if its open
-        if (trade.getStatus() == "open" && updatedTradeInfo.getStatus() == "cancelled") {
+        if (trade.getStatus().equals("open") && updatedTradeInfo.getStatus().equals("cancelled")) {
             trade.setStatus("cancelled");
+        }
+
+        long accountId = trade.getAccountId();
+
+        Account account = accounts.findById(accountId)
+            .orElseThrow(() -> new AccountNotFoundException(accountId));
+
+        // set back the available balance if its a buy order
+        if (trade.getAction().equals("buy")) {
+            account.setAvailable_balance(account.getBalance());
         }
 
         trades.save(trade);

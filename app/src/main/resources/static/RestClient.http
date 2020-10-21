@@ -547,11 +547,17 @@ Authorization: Basic good_user_1 01_user_01
     "action": "buy", 
     "symbol": "A17U", 
     "quantity": 21000, 
-    "bid": 0.0,
+    "bid": 1,
     "ask": 0.0, 
     "accountId": 2, 
     "customerId": 4
 }
+
+###
+// CREATED FOR TESTING. NOT NEEDED FOR SUBMISSION
+GET http://localhost:8080/trades
+Accept: application/json
+Authorization: Basic good_user_1 01_user_01
 
 ###
 // CREATED FOR TESTING. NOT NEEDED FOR SUBMISSION
@@ -562,15 +568,15 @@ Authorization: Basic testuser_01 01_testuser_01
 
 ###
 # A customer can view his own specific trade
-GET http://localhost:8080/trades/1
+GET http://localhost:8080/trades/89
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 
 ###
 
-# A customer cancel a trade (status), other fields will be ignored
-PUT http://localhost:8080/trades/1
-Accept: application/json
+# A customer cancel a trade (status) if the trade is still open, other fields will be ignored
+PUT http://localhost:8080/trades/90
+Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
 
 {
@@ -580,11 +586,19 @@ Authorization: Basic good_user_1 01_user_01
     "quantity": 1000, 
     "bid": 3.28,
     "ask": 3.27, 
-    "account_id": 2, 
-    "customer_id": 4, 
-    "status":"cancelled"
+    "status":"cancelled",
+    "accountId": 2, 
+    "customerId": 4
 
 }
+
+###
+# A customer can check his own account after the cancellation of stocks
+# Returns: 200 OK all account info for the authorized customer
+GET http://localhost:8080/accounts
+Accept: application/json
+Authorization: Basic good_user_1 01_user_01
+# Validation pass - Customer can view all their OWN accounts
 
 
 ################### End Trade Testing #########################################
