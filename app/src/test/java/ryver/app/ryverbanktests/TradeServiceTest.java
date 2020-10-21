@@ -3,9 +3,11 @@
 // import ryver.app.customer.*;
 // import ryver.app.account.*;
 // import ryver.app.transaction.*;
+// import ryver.app.trade.*;
 // import ryver.app.customer.Customer.*;
 // import ryver.app.account.Account.*;
 // import ryver.app.transaction.Transaction.*;
+// import ryver.app.trade.Trade.*;
 
 // import org.springframework.boot.test.context.SpringBootTest;
 // import org.springframework.boot.SpringApplication;
@@ -30,28 +32,34 @@
 // import org.mockito.Mock;
 // import org.mockito.junit.jupiter.MockitoExtension;
 
+// /** 
+//  * KEY: 
+//  * W --> Works 
+//  * X --> Doesnt work
+//  * 
+//  *      T E S T
+//  *  X   1.getAllTransactionsByAccountId_getTransactionList_returnListOfTransactions
+//  *  X   2.getAllTransactionsByAccountId_none_returnException
+//  *  X   3.addTransaction_newTransaction_returnSavedTransaction
+//  *  X   4.addTransaction_newTransaction_returnSavedTransaction
+//  * 
+//  * Notes:
+//  * none
+// */
+
 // @ExtendWith(MockitoExtension.class)
-// public class TransactionServiceTest {
+// public class TradeServiceTest {
 //     @Mock
 //     BCryptPasswordEncoder encoder;
 //     @Mock
 //     private CustomerRepository customers;
-//     //    Optional<Customer> findByUsername(String username);
-//     // List<Customer> findByAuthorities(String authorities);
 //     @Mock
 //     private AccountRepository accounts;
-//     // List<Account> findByCustomerId(Long customerId);
-//     // Optional<Account> findByIdAndCustomerId(Long accountId, Long customerId);
-//     // Optional<Account> findById(Long accountId);
 
 //     @Mock
-//     private TransactionRepository transactions;
-//     // List<Transaction> findByAccountId(Long accountId);
-//     // List<Transaction> findBySenderOrReceiver(Long accountId, Long accountId2);
+//     private TradeRepository trades;
 //     @InjectMocks
-//     private TransactionController transactionController;
-//     // public List<Transaction> getAllTransactionsByAccountId(@PathVariable (value = "accountId") Long accountId) {
-//     // public Transaction addTransaction (@PathVariable (value = "accountId") Long accountId, @Valid @RequestBody Transaction transaction) {
+//     private TradeController tradeController;
 
 //     @Test
 //     void getAllTransactionsByAccountId_getTransactionList_returnListOfTransactions(){
