@@ -610,7 +610,7 @@ Authorization: Basic good_user_1 01_user_01
 ###
 # A customer can view their own portfolio
 # Returns: 200 OK
-GET http://localhost:8080/portfolio/3
+GET http://localhost:8080/portfolio/4
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 

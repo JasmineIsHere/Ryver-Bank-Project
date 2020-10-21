@@ -1,6 +1,7 @@
 package ryver.app.trade;
 
 import ryver.app.customer.*;
+import ryver.app.portfolio.Portfolio;
 import ryver.app.account.*;
 import ryver.app.stock.*;
 
@@ -59,6 +60,11 @@ public class Trade {
     @JoinColumn(name = "stock_id", nullable = false)
     @JsonIgnore
     private CustomStock stock;
+
+    @ManyToOne
+    @JoinColumn(name = "portfolio_id")
+    @JsonIgnore
+    private Portfolio portfolio;
 
     public Trade(String action, String symbol, int quantity, double bid, double ask, Long accountId, Long customerId){
         this.action = action;
