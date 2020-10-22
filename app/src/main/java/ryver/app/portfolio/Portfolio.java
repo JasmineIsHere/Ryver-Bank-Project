@@ -20,7 +20,7 @@ import lombok.*;
 @EqualsAndHashCode
 public class Portfolio {
     private @Id @GeneratedValue (strategy = GenerationType.IDENTITY) Long id;
-    // private long customer_id;
+    private long customer_id;
     // private List<Trade> assets;
     private double unrealized_gain_loss; // for stocks currently owned
     private double total_gain_loss;     // for all the trades made so far
@@ -30,14 +30,13 @@ public class Portfolio {
     // }
 
     @OneToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer", nullable = false)
     @JsonIgnore
     private Customer customer;
 
     @OneToMany(mappedBy = "portfolio",
     orphanRemoval = true,
     cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<Trade> assets;
 }
 
@@ -47,7 +46,7 @@ Asset
                     "code":"A17U",           From trade - symbol
                     "quantity":1000,         From trade - quantity
                     "avg_price": 3.30,       From trade - avg price
-                    "current_price":3.31,    From stock - last price???
+                    "current_price":3.31,    From trade - bid price???
                     "value":3310.0,          current_price * quantity
                     "gain_loss":10.0         value - (avg_price * quantity)
 

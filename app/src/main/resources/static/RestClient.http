@@ -614,4 +614,9 @@ GET http://localhost:8080/portfolio/4
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 
+###
+GET http://localhost:8080/portfolio
+Accept: application/json
+Authorization: Basic good_user_1 01_user_01
+
 ################### End Portfolio Testing #########################################
