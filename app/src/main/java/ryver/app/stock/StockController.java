@@ -69,34 +69,4 @@ public class StockController {
         return stocks.findBySymbol(symbol)
             .orElseThrow(() -> new InvalidStockException(symbol));
     }
-
-    public CustomStock updateStockBySymbol(@PathVariable (value = "symbol") String symbol, @Valid @RequestBody CustomStock updatedStockInfo){
-        CustomStock stock = stocks.findBySymbol(symbol)
-            .orElseThrow(() -> new InvalidStockException(symbol));
-
-        stock.setAsk_volume(updatedStockInfo.getAsk_volume());
-        stock.setBid_volume(updatedStockInfo.getBid_volume());
-
-        return stocks.save(stock);
-    }
-
-    //@GetMapping("/stocks/{symbol}")
-    // public CustomStock getSpecificStock(@PathVariable (value = "symbol") String symbol){
-    //     CustomStock stock = new CustomStock();
-
-    //     try {
-    //         Stock s = YahooFinance.get(symbol);
-    //         StockQuote quote = s.getQuote();
-    //         stock.setSymbol(quote.getSymbol());
-    //         stock.setAsk(quote.getAsk());
-    //         stock.setBid(quote.getBid());
-    //         stock.setAsk_volume(quote.getAskSize());
-    //         stock.setBid_volume(quote.getBidSize());
-    //         stock.setLast_price(quote.getPreviousClose());
-    //     } catch(IOException ex){
-    //         System.out.println("Error retrieving data");
-    //     }
-
-    //     return stock;
-    // }
 }

@@ -83,7 +83,6 @@ class CustomerIntegrationTest {
 
 		ResponseEntity<Object> result = restTemplate.withBasicAuth("user_2", "02_user_02").postForEntity(uri, entity, Object.class);
 		
-
 		assertEquals(403, result.getStatusCode().value()); //Forbidden
 	}
 
