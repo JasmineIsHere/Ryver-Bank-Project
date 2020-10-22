@@ -575,7 +575,7 @@ Authorization: Basic good_user_1 01_user_01
 ###
 
 # A customer cancel a trade (status) if the trade is still open, other fields will be ignored
-PUT http://localhost:8080/trades/90
+PUT http://localhost:8080/trades/89
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
 
@@ -609,7 +609,12 @@ Authorization: Basic good_user_1 01_user_01
 ###
 # A customer can view their own portfolio
 # Returns: 200 OK
-GET http://localhost:8080/portfolio/3
+GET http://localhost:8080/portfolio/4
+Accept: application/json
+Authorization: Basic good_user_1 01_user_01
+
+###
+GET http://localhost:8080/portfolio
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 
