@@ -26,6 +26,8 @@ import ryver.app.trade.Trade;
 import ryver.app.trade.TradeController;
 import ryver.app.trade.TradeRepository;
 
+import ryver.app.portfolio.*;
+
 @SpringBootApplication
 public class AppApplication {
 
@@ -45,15 +47,19 @@ public class AppApplication {
 		Account account = new Account(100000.0, 100000.0, 3);
 		account.setCustomer(customer);
 		System.out.println("[Add test account]: " + accounts.save(account));
-		
+
 		StockRepository stocks = ctx.getBean(StockRepository.class);
-		StockController stocksCtrl = new StockController(stocks);
+
+		PortfolioRepository portfolios = ctx.getBean(PortfolioRepository.class);
+
+		TradeRepository trades = ctx.getBean(TradeRepository.class);
+		TradeController tradesCtrl = new TradeController(trades, customers, accounts, stocks, portfolios);
+		
+		StockController stocksCtrl = new StockController(stocks, tradesCtrl);
+
 		System.out.println("\n[Grabbin stocks]: ");
 		List<CustomStock> stockList = stocksCtrl.initiateStocks();
 		System.out.println("Found " + stockList.size() + " stocks in the STI list");
-
-		TradeRepository trades = ctx.getBean(TradeRepository.class);
-		TradeController tradesCtrl = new TradeController(trades, customers, accounts, stocks);
 
 		for (CustomStock stock: stockList){
 			System.out.println("[Add in stock]: " + stocks.save(stock));
@@ -61,12 +67,12 @@ public class AppApplication {
 			System.out.println(symbol);
 			
 			// initial stocks
-			Trade trade1 = new Trade("sell", symbol, (int)stock.getAsk_volume(), 0.0, stock.getAsk().doubleValue(), "open", 1L, 3L);
+			Trade trade1 = new Trade("sell", symbol, (int)stock.getAsk_volume(), 0.0, stock.getAsk().doubleValue(), 0, "open", 1L, 3L);
 			trade1.setAccount(account);
 			trade1.setStock(stock);
 			trades.save(trade1);
 
-			Trade trade2 = new Trade("buy", symbol, (int)stock.getBid_volume(), stock.getBid().doubleValue(), 0.0, "open", 1L, 3L);
+			Trade trade2 = new Trade("buy", symbol, (int)stock.getBid_volume(), stock.getBid().doubleValue(), 0.0, 0, "open", 1L, 3L);
 			trade2.setAccount(account);
 			trade2.setStock(stock);
 			trades.save(trade2);
@@ -76,35 +82,44 @@ public class AppApplication {
 			DecimalFormat df = new DecimalFormat("#.#");
 			// random -> 0 to 1
 			double rand1 = Math.random();
-			double rand2 = Math.random();
-
 			double formattedRand1 = Double.parseDouble(df.format(rand1));
-			double formattedRand2 = Double.parseDouble(df.format(rand2));
+			int quantity1 = (int)(formattedRand1 * 10000);
+
+			double stockBid = stock.getBid().doubleValue();
+			// get random bid price -> (Math.random() * (max - min)) + min
+			double randBid = (Math.random() * ((stockBid - 0.1) - (stockBid - 0.3))) + (stockBid - 0.3);
+			double formattedRandBid = Double.parseDouble(df.format(randBid));
 			
-			// get random quantity
-			int quantity1 = (int)(formattedRand1 * 5000);
+			
+			// limit buy order
+			if (quantity1 != 0) {
+				// milliseconds
+				long timestamp = new Timestamp(System.currentTimeMillis()).getTime();
+				// datetime
+				LocalDateTime datetime = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime();
+				System.out.println(datetime);
+				
+				Trade trade = new Trade("buy", symbol, quantity1, formattedRandBid, 0.0, timestamp, "open", 1L, 3L);
+				trade.setAccount(account);
+				trade.setStock(stock);
+				System.out.println("[Add market maker's trades]: " + trades.save(trade));
+				
+				// if this trade's bid is lower than the stock's previous ask
+				// if this trade's bid is higher than the stock's previous bid
+				// -> save new bid price and quantity into the stocks database
+				tradesCtrl.updateTradeToStock(trade, stock);
+			}
+
+			double rand2 = Math.random();
+			double formattedRand2 = Double.parseDouble(df.format(rand2));
 			int quantity2 = (int)(formattedRand2 * 10000);
 
 			double stockAsk = stock.getAsk().doubleValue();
 			// get random ask price -> (Math.random() * (max - min)) + min
 			double randAsk = (Math.random() * ((stockAsk + 0.3) - (stockAsk + 0.1))) + (stockAsk + 0.1);
 			double formattedRandAsk = Double.parseDouble(df.format(randAsk));
-
-			// // action, symbol, quantity, bid, ask, timestamp, status, accountId, customerId
-			// // market order -> stock's bid price
-			// if (quantity1 != 0) {
-			// 	long timestamp = new Timestamp(System.currentTimeMillis()).getTime();
-			// 	Trade trade = new Trade("sell", symbol, quantity1, 0.0, 0.0, timestamp, "open", 1L, 3L);
-			// 	trade.setAccount(account);
-			// 	trade.setStock(stock);
-			// 	System.out.println("[Add market maker's trades]: " + trades.save(trade));
-			// 	// stock.setAsk(stock.getBid());
-			// 	// stock.setAsk_volume(quantity1);
-
-			// 	// impossible to save into database because ask == bid
-			// }
 			
-			// limit order
+			// limit sell order
 			if (quantity2 != 0) {
 				// milliseconds
 				long timestamp = new Timestamp(System.currentTimeMillis()).getTime();

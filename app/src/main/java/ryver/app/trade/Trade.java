@@ -76,20 +76,7 @@ public class Trade {
         this.customerId = customerId;
     }
 
-    // for AppApplication (20k initial stocks)
-    // date, filled quantity, avg price -> 0
-    public Trade(String action, String symbol, int quantity, double bid, double ask, String status, Long accountId, Long customerId){
-        this.action = action;
-        this.symbol = symbol;
-        this.quantity = quantity;
-        this.bid = bid;
-        this.ask = ask;
-        this.status = status;
-        this.accountId = accountId;
-        this.customerId = customerId;
-    }
-
-    // for AppApplication (market maker trades)
+    // for AppApplication (market maker trades and 20k initial stocks)
     public Trade(String action, String symbol, int quantity, double bid, double ask, long date, String status, Long accountId, Long customerId){
         this.action = action;
         this.symbol = symbol;
