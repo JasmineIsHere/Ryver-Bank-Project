@@ -72,10 +72,7 @@ public class CustomerController {
       customer.setPassword(encoder.encode(customer.getPassword()));
       if (!validateNric(customer.getNric())) 
           throw new InvalidNricException();
-      
-      if(customers.findByUsername(customer.getUsername()) != null)
-        throw new UsernameAlreadyExistException(customer.getUsername());
-
+    
       // Only customers have portfolios
       //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
       // System.out.println(customer.getAuthorities());
