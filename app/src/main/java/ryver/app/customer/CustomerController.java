@@ -84,8 +84,8 @@ public class CustomerController {
         portfolios.save(portfolio);
         System.out.println("Portfolio created");
         createdCustomer.setPortfolio(portfolio);
-        return  customers.save(createdCustomer);
-      }else
+        return customers.save(createdCustomer);
+      } else
         return customers.save(customer);
     }
 
