@@ -1,8 +1,12 @@
 package ryver.app.customer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+
+import ryver.app.portfolio.*;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +20,12 @@ import org.springframework.http.HttpStatus;
 @RestController
 public class CustomerController {
     private CustomerRepository customers;
+    private PortfolioRepository portfolios;
     private BCryptPasswordEncoder encoder;
 
-    public CustomerController(CustomerRepository customers, BCryptPasswordEncoder encoder){
+    public CustomerController(CustomerRepository customers, PortfolioRepository portfolios, BCryptPasswordEncoder encoder){
         this.customers = customers;
+        this.portfolios = portfolios;
         this.encoder = encoder;
     }
 
@@ -60,10 +66,26 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/customers")
     public Customer addCustomer(@Valid @RequestBody Customer customer){
-        customer.setPassword(encoder.encode(customer.getPassword()));
-        if (!validateNric(customer.getNric()))
-            throw new InvalidNricException();
+      customer.setPassword(encoder.encode(customer.getPassword()));
+      if (!validateNric(customer.getNric())) 
+          throw new InvalidNricException();
+      
 
+      // Only customers have portfolios
+      //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+      // System.out.println(customer.getAuthorities());
+      ArrayList<SimpleGrantedAuthority> a = new ArrayList(customer.getAuthorities());
+      if (a.get(0).getAuthority().equals("ROLE_USER")) {
+        System.out.println("HI");
+        Customer createdCustomer = customers.save(customer);
+        Portfolio portfolio = new Portfolio();
+        portfolio.setCustomer(createdCustomer);
+        portfolio.setCustomer_id(createdCustomer.getId());
+        portfolios.save(portfolio);
+        System.out.println("Portfolio created");
+        createdCustomer.setPortfolio(portfolio);
+        return  customers.save(createdCustomer);
+      }else
         return customers.save(customer);
     }
 

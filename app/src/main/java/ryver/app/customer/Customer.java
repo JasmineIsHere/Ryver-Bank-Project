@@ -5,12 +5,14 @@ import java.util.Collection;
 import java.util.List;
 
 import ryver.app.account.*;
+import ryver.app.portfolio.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.CascadeType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -71,12 +73,14 @@ public class Customer implements UserDetails{
 
     private boolean active;
 
-
     @OneToMany(mappedBy = "customer",
     orphanRemoval = true,
     cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Account> accounts;
+
+    @OneToOne(mappedBy="customer", cascade = CascadeType.ALL)
+    private Portfolio portfolio;
 
     public Customer(String username, String password, String authorities, String fullName, String nric, String phone, String address, boolean active){
         this.username = username;
