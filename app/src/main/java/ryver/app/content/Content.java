@@ -1,7 +1,6 @@
 package ryver.app.content;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 
 import lombok.*;
 

@@ -7,7 +7,6 @@ import javax.validation.Valid;
 
 import ryver.app.portfolio.*;
 import ryver.app.asset.Asset;
-import ryver.app.customer.UsernameAlreadyExistException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

@@ -3,12 +3,10 @@ package ryver.app.portfolio;
 import java.util.List;
 
 import ryver.app.customer.*;
-import ryver.app.trade.*;
 import ryver.app.asset.Asset;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
-import javax.validation.constraints.*;
 
 import lombok.*;
 

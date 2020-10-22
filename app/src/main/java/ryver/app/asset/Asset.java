@@ -2,7 +2,6 @@ package ryver.app.asset;
 
 import java.math.BigDecimal;
 import javax.persistence.*;
-import java.util.*;
 import ryver.app.portfolio.*;
 
 import lombok.*;

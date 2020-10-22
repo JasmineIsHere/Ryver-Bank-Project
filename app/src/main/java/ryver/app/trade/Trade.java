@@ -1,6 +1,5 @@
 package ryver.app.trade;
 
-import ryver.app.customer.*;
 import ryver.app.portfolio.Portfolio;
 import ryver.app.account.*;
 import ryver.app.stock.*;
@@ -15,7 +14,6 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode

@@ -5,7 +5,6 @@ import ryver.app.trade.*;
 import java.math.BigDecimal;
 import java.util.*;
 import javax.persistence.*;
-import javax.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

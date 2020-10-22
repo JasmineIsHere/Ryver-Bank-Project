@@ -4,17 +4,12 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.access.prepost.*;
 
-import ryver.app.customer.Customer;
-import ryver.app.customer.CustomerRepository;
-import ryver.app.customer.CustomerNotFoundException;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.access.*;
+
 import org.springframework.http.HttpStatus;
 
 

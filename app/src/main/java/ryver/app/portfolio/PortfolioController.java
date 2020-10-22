@@ -2,12 +2,7 @@ package ryver.app.portfolio;
 
 import java.util.List;
 
-import ryver.app.trade.Trade;
-import ryver.app.trade.TradeRepository;
-import ryver.app.trade.TradeNotFoundException;
 
-import ryver.app.customer.Customer;
-import ryver.app.customer.CustomerRepository;
 import ryver.app.customer.CustomerNotFoundException;
 
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +11,9 @@ import org.springframework.security.access.prepost.*;
 @RestController
 public class PortfolioController {
     private PortfolioRepository portfolios;
-    private TradeRepository trades;
 
-    public PortfolioController(PortfolioRepository portfolios, TradeRepository trades) {
+    public PortfolioController(PortfolioRepository portfolios) {
         this.portfolios = portfolios;
-        this.trades = trades;
     }
 
     @GetMapping("/portfolio")
