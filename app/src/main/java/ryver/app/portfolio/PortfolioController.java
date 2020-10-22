@@ -1,9 +1,8 @@
 package ryver.app.portfolio;
 
-import java.util.List;
-
-
 import ryver.app.customer.CustomerNotFoundException;
+
+import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.*;

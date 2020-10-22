@@ -1,30 +1,29 @@
 package ryver.app.account;
 
-import java.util.List;
-
-import javax.validation.Valid;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.security.access.prepost.*;
-
 import ryver.app.customer.Customer;
 import ryver.app.customer.CustomerRepository;
 import ryver.app.customer.CustomerNotFoundException;
 
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.*;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AccountController {
     private AccountRepository accounts;
     private CustomerRepository customers;
 
-    public AccountController(AccountRepository accounts, CustomerRepository customers){
+    public AccountController(AccountRepository accounts, CustomerRepository customers) {
         this.accounts = accounts;
         this.customers = customers;
     }
-    
   
     // Deactivated customer returns 403 forbidden
     @PreAuthorize("authentication.principal.active == true")
@@ -41,7 +40,7 @@ public class AccountController {
 
         // if role is manager -> get all the accounts
         // else -> get OWN accounts
-        if (customer.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"))){
+        if (customer.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"))) {
             return accounts.findAll();
         } else {
             return accounts.findByCustomerId(customerId);

@@ -20,7 +20,7 @@ public class Content{
     private boolean approved;
     
     //JOLENE: for testing
-    public Content(String title, String summary, String content, String link, boolean approved){
+    public Content(String title, String summary, String content, String link, boolean approved) {
         this.title = title;
         this.summary = summary;
         this.content = content;

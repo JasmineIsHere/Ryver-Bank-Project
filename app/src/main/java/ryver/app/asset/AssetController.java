@@ -2,7 +2,6 @@ package ryver.app.asset;
 
 import java.util.List;
 
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,7 +49,6 @@ public class AssetController {
         if(!portfolios.existsById(portfolioId)) 
             throw new PortfolioNotFoundException(portfolioId);
     
-
         return assets.findByIdAndPortfolioId(assetId, portfolioId).map(asset -> {
             assets.delete(asset);
             return ResponseEntity.ok().build();
