@@ -1,4 +1,4 @@
-package ryver.app.customer;
+package ryver.app.ryverbanktests;
 
 import ryver.app.customer.*;
 import ryver.app.customer.Customer.*;

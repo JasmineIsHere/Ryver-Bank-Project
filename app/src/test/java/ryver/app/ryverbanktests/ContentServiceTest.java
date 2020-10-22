@@ -1,4 +1,4 @@
-package test.java.ryver.app;
+package ryver.app.ryverbanktests;
 
 import ryver.app.customer.*;
 import ryver.app.content.*;
