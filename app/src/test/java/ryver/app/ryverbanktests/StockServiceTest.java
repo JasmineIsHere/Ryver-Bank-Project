@@ -53,8 +53,10 @@
 //     @Test
 //     void getStockBySymbol_Found_returnStocks(){
 //         //arrange
+//         // Trade trade1 = new Trade("sell", symbol, (int)stock.getAsk_volume(), 0.0, stock.getAsk().doubleValue(), 0, "open", 1L, 3L);
+
 //         CustomStock stock = new CustomStock(
-//             "V03", "20.97", "20000", "20.59", "20000", "20.6", "null");
+//             "V03", 20.97, 20000, 20.59, 20000, 20.6, null);
 //         when(stock.findBySymbol(stock.getSymbol())).thenReturn(Optional.of(stock));
 
 //         //act
