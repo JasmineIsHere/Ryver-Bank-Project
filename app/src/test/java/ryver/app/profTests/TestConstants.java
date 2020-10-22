@@ -1,4 +1,4 @@
-package ryver.app.profTests;
+package csd.testclient;
 
 /**
  * The user acceptance test suite is written in rest-assured (https://rest-assured.io/).
@@ -10,6 +10,17 @@ package ryver.app.profTests;
  * @Order annnotation above each test case.
  * 
  * The test suite will be run in this order: A_Customer -> B_Content -> C_Account -> D_Trade.
+ * 
+ * HOW TO RUN THE TESTS:
+ * 1) Make sure your ryverbank application is running either locally or on AWS ECS.
+ * 2) Obtain the URL to your application and update the baseURL below accordingly.
+ *    If running locally, the baseURL to your app should be http://localhost:8080
+ * 3) Launch a new VS Code window, and open the folder containing this test suite (cloned from bitbucket)
+ * 4) You can now run each test file from within VS Code
+ *    Please follow the instructions in Lab 6 (Software Testing) if you're not sure how to use Maven 
+ *    or the Java Test Runner to run tests.
+ * 5) Note that the test files are to be run sequentially: you have to run A_CustomerTest first,
+ *    then B_ContentTest, and so on.
  * 
  * Note that we will not evaluate your ability to write rest-assured test cases in the project,
  * the in-class quiz, or exam.
@@ -53,6 +64,10 @@ public class TestConstants {
     public static final double account_balance_1 = 500000.0;
     public static final double account_balance_2 = 100000.0;
 
+    // trade-specific data - you do not need to care about these
+    public static int buyQuantity = 2000;
+    public static int sellQuantity = 1000;
+
     /**
      *   We will assert the following status codes returned from your API:
      *   HTTP status codes for get/post/put/delete:
@@ -71,6 +86,7 @@ public class TestConstants {
 
     // the below variables specify various enpoints of your api
     // together with description of functionalities provided by each endpoint
+    ///////////////////////////////////////////////////////////
     
     /**
         Managing customers of the bank.

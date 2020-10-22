@@ -1,4 +1,4 @@
-package ryver.app.customer;
+package ryver.app.ryverbankintegratedtests;
 
 import ryver.app.customer.CustomerRepository;
 import ryver.app.customer.Customer;

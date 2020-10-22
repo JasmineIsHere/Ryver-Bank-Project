@@ -1,4 +1,4 @@
-package ryver.app.ryverbanktests;
+package ryver.app.ryverbankintegratedtests;
 
 import ryver.app.account.AccountRepository;
 import ryver.app.account.Account;
