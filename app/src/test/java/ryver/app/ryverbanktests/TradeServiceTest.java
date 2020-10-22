@@ -95,37 +95,16 @@
 
 //         //assert
 //         assertNotNull(listOfTrades);
-//         verify("");
+//         verify(trades).findByActionAndStatusAndSymbol("sell", "open", trade.symbol());
+//         verify(trades).findByActionAndStatusAndSymbol("sell", "partial-filled", trade.symbol());
 //     }
 
-//     @Test
-//     void addTransaction_newTransaction_returnSavedTransaction(){
-//         //arrange
-//         Customer sender = new Customer(
-//             "Jolene", "password", "manager", "Jolene Loh", "T0046822Z", "12345678", "address", true);
-//         when(customers.save(any(Customer.class))).thenReturn(sender);
-//         Account senderAccount = new Account(1000.0, 1000.0, sender.getId(), sender);
-//         when(accounts.save(any(Account.class))).thenReturn(sender);
+//     // @Test
+//     // void addTransaction_newTransaction_returnSavedTransaction(){
+//     //     //arrange
         
-//         Customer sender = new Customer(
-//             "Jack", "password", "manager", "Jack Tan", "T1234567Z", "22345678", "address", true);
-//         when(customers.save(any(Customer.class))).thenReturn(reciever);        
-//         Account recieverAccount = new Account(1000.0, 1000.0, reciever.getId(), reciever);
-//         when(accounts.save(any(Account.class))).thenReturn(reciever);
-        
-//         Transaction transaction = new Transaction(senderAccount.getId(), recieverAccount.getId(), 100.0, senderAccount);
-//         when(transactions.save(any(Transaction.class))).thenReturn(transaction);
+//     //     //act
 
-//         //act
-//         Transaction savedTransaction = transactionController.addTransactions(senderAccount.getId(), transaction);
-
-//         //assert
-//         assertNotNull(savedTransaction);
-//         verify(customers).findByUsername("Jolene");
-//         verify(customers).findByUsername("Jack");
-//         verify(accounts).findById(senderAccount.getId());
-//         verify(accounts).findById(recieverAccount.getId());
-//         verify(transactions).findBySenderOrReciever(senderAccount.getId(), recieverAccount.getId());
-//         verify(transactions).save(transaction);
-//     }
+//     //     //assert
+//     // }
 // }
