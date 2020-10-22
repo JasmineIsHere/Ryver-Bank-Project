@@ -46,12 +46,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class ContentServiceTest {
     @Mock
     private ContentRepository contents;
-    // List<Content> findByApproved(boolean approved);
 
     @InjectMocks
     private ContentController contentController;
-    // public Content addContent(@Valid @RequestBody Content content) {
-    // public Content updateContent(@PathVariable (value = "contentId") Long contentId, @Valid @RequestBody Content updatedContentInfo) {
 
     @Test
     void addContent_approveContent_returnSavedContent(){
@@ -66,49 +63,4 @@ public class ContentServiceTest {
         assertNotNull(savedContent);
         verify(contents).save(content);
     }
-
-    // @Test 
-    // void updateContent_Found_approveContentAndReturnSavedContent(){
-    //     //arrange
-    //     Content content = new Content("title", "summary", "content","link", true);
-    //     content.setId(1L);
-    //     when(content.findById(content.getId())).thenReturn(Optional.of(content));      
-    //     when(content.save(any(Content.class))).thenReturn(currentContent);
-
-    //     Content updatedContent = new Content("title2", "summary2", "content2","link2", true);
-    //     updatedContent.setId(1L);
-    //     when(content.save(any(Content.class))).thenReturn(updatedContent);      
-
-    //     //act
-    //     Content savedContent = contentController.updateContent(currentContent.getId(), updatedContent);
-
-    //     //assert
-    //     assertEquals(updatedContent.getTitle(), savedContent.getTitle());
-    //     assertEquals(updatedContent.getSummary(), savedContent.getSummary());
-    //     assertEquals(updatedContent.getContent(), savedContent.getContent());
-    //     assertEquals(updatedContent.getLink(), savedContent.getLink());
-    //     assertEquals(updatedContent.isApproved(), savedContent.isApproved());
-
-    //     verify(contents).save(content);
-    //     verify(contents).save(updatedContent);
-    // }  
-
-    // @Test
-    // void updateContent_ROLEAnalyst_returnSavedContent(){
-    //     //arrange
-    //     Customer manager = new Customer(
-    //         "Janice", "password", "ANALYST", "Jolene Loh", "T0046822Z", "12345678", "address", true);
-    //     when(customers.save(any(Customer.class))).thenReturn(manager);
-    //     Content currentContent = new Content();
-    //     when(content.save(any(Content.class))).thenReturn(currentContent);      
-    //     Content updatedContent = new Content();
-    //     when(content.save(any(Content.class))).thenReturn(updatedContent);      
-    //     //act
-    //     Content savedContent = contentController.updateContent(currentContent.getId(), updatedContent);
-    //     //assert
-    //     assertNotNull(savedContent);
-    //     verify(customers).save(manager);
-    //     verify(contents).save(currentContent);
-    //     verify(contents).save(updatedContent);
-    // }
 }

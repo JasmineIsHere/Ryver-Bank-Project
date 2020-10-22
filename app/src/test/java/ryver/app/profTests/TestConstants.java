@@ -71,7 +71,6 @@ public class TestConstants {
 
     // the below variables specify various enpoints of your api
     // together with description of functionalities provided by each endpoint
-    ///////////////////////////////////////////////////////////
     
     /**
         Managing customers of the bank.

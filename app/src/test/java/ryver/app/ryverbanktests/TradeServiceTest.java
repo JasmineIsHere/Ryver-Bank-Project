@@ -4,10 +4,12 @@
 // import ryver.app.account.*;
 // import ryver.app.transaction.*;
 // import ryver.app.trade.*;
+// import ryver.app.stock.*;
 // import ryver.app.customer.Customer.*;
 // import ryver.app.account.Account.*;
 // import ryver.app.transaction.Transaction.*;
 // import ryver.app.trade.Trade.*;
+// import ryver.app.stock.Stock.*;
 
 // import org.springframework.boot.test.context.SpringBootTest;
 // import org.springframework.boot.SpringApplication;
@@ -38,11 +40,16 @@
 //  * X --> Doesnt work
 //  * 
 //  *      T E S T
-//  *  X   1.getAllTransactionsByAccountId_getTransactionList_returnListOfTransactions
-//  *  X   2.getAllTransactionsByAccountId_none_returnException
-//  *  X   3.addTransaction_newTransaction_returnSavedTransaction
-//  *  X   4.addTransaction_newTransaction_returnSavedTransaction
-//  * 
+//  *  X   1.getSpecificStockOpenAndPartialFilledBuyTrade_Found_ReturnListOfTrades
+//  *  X   2.getSpecificStockOpenAndPartialFilledSellTrade_Found_ReturnListOfTrades 
+//  *  String action, 
+//  * String symbol,
+//  *  int quantity,
+//  *  double bid,
+//  *  double ask,
+//  *  String status,
+//  *  Long accountId,
+//  *  Long customerId){
 //  * Notes:
 //  * none
 // */
@@ -55,40 +62,40 @@
 //     private CustomerRepository customers;
 //     @Mock
 //     private AccountRepository accounts;
+//     @Mock
+//     private StockRepository stocks;
 
 //     @Mock
 //     private TradeRepository trades;
 //     @InjectMocks
 //     private TradeController tradeController;
 
+
+//     // Trade trade1 = new Trade("sell", symbol, (int)stock.getAsk_volume(), 0.0, stock.getAsk().doubleValue(), "open", 1L, 3L);
+
+//     // Trade trade2 = new Trade("buy", symbol, (int)stock.getBid_volume(), stock.getBid().doubleValue(), 0.0, "open", 1L, 3L);
+
 //     @Test
-//     void getAllTransactionsByAccountId_getTransactionList_returnListOfTransactions(){
+//     void getSpecificStockOpenAndPartialFilledBuyTrade_Found_ReturnListOfTrades(){
 //         //arrange
-//         Customer sender = new Customer(
-//             "Jolene", "password", "manager", "Jolene Loh", "T0046822Z", "12345678", "address", true);
-//         when(customers.save(any(Customer.class))).thenReturn(sender);
-//         Account senderAccount = new Account(1000.0, 1000.0, sender.getId(), sender);
-//         when(accounts.save(any(Account.class))).thenReturn(sender);
-        
-//         Customer sender = new Customer(
-//             "Jack", "password", "manager", "Jack Tan", "T1234567Z", "22345678", "address", true);
-//         when(customers.save(any(Customer.class))).thenReturn(reciever);        
-//         Account recieverAccount = new Account(1000.0, 1000.0, reciever.getId(), reciever);
-//         when(accounts.save(any(Account.class))).thenReturn(reciever);
-        
-//         Transaction transaction = new Transaction(senderAccount.getId(), recieverAccount.getId(), 100.0, senderAccount);
-//         when(transactions.save(any(Transaction.class))).thenReturn(transaction);
+//         Customer customer = new Customer(
+//             "good_user_1", "01_user_01", "ROLE_USER", "User One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
+//         customer.setId(1L);
+//         Account account = new Account(400.0, 400.0, 1L, customer);
+//         CustomStock stock = new CustomStock(
+//              "V03", "20.97", "20000", "20.59", "20000", "20.6", "null");
+//         Trade trade = new Trade(
+//             "sell", stock.getSymbol(), (int)stock.getAsk_volume(), 0.0, stock.getAsk().doubleValue(), "open", customer.getId(), account.getId());
+
+//         when(trades.findByActionAndStatusAndSymbol("sell", "open", trade.symbol())).thenReturn(trade);
+//         when(trades.findByActionAndStatusAndSymbol("sell", "partial-filled", trade.symbol())).thenReturn(trade);
 
 //         //act
-//         List<Transaction> transactionList = transactionController.getAllTransactionsByAccountId(senderAccount.getId());
+//         List<Trade> listOfTrades = tradeController.getSpecificStockOpenAndPartialFilledBuyTrade(trade.getSymbol());
 
 //         //assert
-//         assertNotNull(transactionList);
-//         verify(customers).findByUsername("Jolene");
-//         verify(customers).findByUsername("Jack");
-//         verify(accounts).findById(senderAccount.getId());
-//         verify(accounts).findById(recieverAccount.getId());
-//         verify(transactions).findBySenderOrReciever(senderAccount.getId(), recieverAccount.getId());
+//         assertNotNull(listOfTrades);
+//         verify("");
 //     }
 
 //     @Test

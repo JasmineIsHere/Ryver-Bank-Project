@@ -90,13 +90,13 @@ public class TradeController {
     }
 
     // search for open & partial filled buy trades according to symbol
-    public List<Trade> getSpecificStockOpenAndPartialFilledBuyTrade(String symbol){
+    public List<Trade> getSpecificStockOpenAndPartialFilledBuyTrade(String symbol){ 
         List<Trade> tradeOpen = trades.findByActionAndStatusAndSymbol("buy", "open", symbol);
         List<Trade> tradePartialFilled = trades.findByActionAndStatusAndSymbol("buy", "partial-filled", symbol);
         List<Trade> trade = Stream.concat(tradeOpen.stream(), tradePartialFilled.stream()).collect(Collectors.toList());
         return trade;
     }
-
+ 
     // search for open & partial filled sell trades according to symbol
     public List<Trade> getSpecificStockOpenAndPartialFilledSellTrade(String symbol){
         List<Trade> tradeOpen = trades.findByActionAndStatusAndSymbol("sell", "open", symbol);
