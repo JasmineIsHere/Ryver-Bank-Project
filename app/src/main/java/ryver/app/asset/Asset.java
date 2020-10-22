@@ -23,6 +23,10 @@ public class Asset{
     private long value; 
     private BigDecimal gain_loss;
 
+    @ManyToOne
+    @JoinColumn(name = "portfolio_id", nullable = false)
+    private Portfolio portfolio;
+
     public Asset(String code, long quantity, BigDecimal avg_price, BigDecimal current_price, long value, BigDecimal gain_loss, Portfolio portfolio){
         this.code = code;
         this.quantity = quantity;
@@ -30,5 +34,6 @@ public class Asset{
         this.current_price = current_price;
         this.value = value;
         this.gain_loss = gain_loss;
+        this.portfolio = portfolio;
     }
 }
