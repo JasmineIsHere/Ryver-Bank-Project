@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface AssetRepository extends JpaRepository<Asset, Long>{
     List<Asset> findByPortfolioId(Long portfolioId);
     Optional<Asset> findByIdAndPortfolioId(Long assetId, Long portfolioId);
+
+    Optional<Asset> findByCodeAndPortfolioId(String Code, Long portfolioId);
 }

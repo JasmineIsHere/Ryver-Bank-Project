@@ -43,7 +43,7 @@ public class AssetController {
             asset.setValue(newAsset.getValue());
             asset.setGain_loss(newAsset.getGain_loss());
             return assets.save(asset);
-        }).orElseThrow(() -> new AssetNotFoundException(assetId));
+        }).orElseThrow(() -> new AssetIdNotFoundException(assetId));
     }
 
     public ResponseEntity<?> deleteAsset(Long portfolioId, Long assetId) {
@@ -54,6 +54,6 @@ public class AssetController {
         return assets.findByIdAndPortfolioId(assetId, portfolioId).map(asset -> {
             assets.delete(asset);
             return ResponseEntity.ok().build();
-        }).orElseThrow(() -> new AssetNotFoundException(assetId));
+        }).orElseThrow(() -> new AssetIdNotFoundException(assetId));
     }
 }

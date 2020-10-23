@@ -16,10 +16,13 @@ import ryver.app.customer.CustomerRepository;
 import ryver.app.stock.CustomStock;
 import ryver.app.stock.StockController;
 import ryver.app.stock.StockRepository;
+import ryver.app.portfolio.PortfolioController;
+import ryver.app.portfolio.PortfolioRepository;
 
 import ryver.app.account.Account;
 import ryver.app.account.AccountRepository;
-
+import ryver.app.asset.AssetController;
+import ryver.app.asset.AssetRepository;
 import ryver.app.trade.Trade;
 import ryver.app.trade.TradeController;
 import ryver.app.trade.TradeRepository;
@@ -48,14 +51,18 @@ public class AppApplication {
 
 		StockRepository stocks = ctx.getBean(StockRepository.class);
 
-		//PortfolioRepository portfolios = ctx.getBean(PortfolioRepository.class);
+		PortfolioRepository portfolios = ctx.getBean(PortfolioRepository.class);
+		PortfolioController portfolioCtrl = new PortfolioController(portfolios);
+
+		AssetRepository assets = ctx.getBean(AssetRepository.class);
+		AssetController assetCtrl = new AssetController(assets, portfolios);
 
 		TradeRepository trades = ctx.getBean(TradeRepository.class);
-		// TradeController tradesCtrl = new TradeController(trades, customers, accounts, stocks, portfolios);
+		TradeController tradesCtrl = new TradeController(trades, customers, accounts, stocks, portfolios, portfolioCtrl, assets, assetCtrl);
 		
 		// StockController stocksCtrl = new StockController(stocks, tradesCtrl);
 
-		TradeController tradesCtrl = new TradeController(trades, customers, accounts, stocks);
+		// TradeController tradesCtrl = new TradeController(trades, customers, accounts, stocks);
 		StockController stocksCtrl = new StockController(stocks);
 
 		System.out.println("\n[Grabbin stocks]: ");
