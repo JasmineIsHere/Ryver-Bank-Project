@@ -82,7 +82,7 @@ public class Trade {
         this.bid = bid;
         this.ask = ask;
         this.date = date;
-        this.status = status;
+        this.status = status; 
         this.accountId = accountId;
         this.customerId = customerId;
     }

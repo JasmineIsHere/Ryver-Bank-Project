@@ -28,7 +28,7 @@ public class CustomStock {
     private long bid_volume; //qty
     private BigDecimal bid; //$$
     private long ask_volume; //qty
-    private BigDecimal ask; //$$
+    private BigDecimal ask; //$$ 
 
     @OneToMany(mappedBy = "stock",
     // orphanRemoval = true,
