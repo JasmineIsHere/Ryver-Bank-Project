@@ -34,8 +34,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * X --> Doesnt work
  * 
  *      T E S T
- *  X   1.getAccountByAccountIdAndCustomerId_CustomerActive_ReturnAccount
- *  X   2.getAccountByAccountIdAndCustomerId_CustomerInactive_ReturnNull
  *  W   3.addAccount_NewAccount_ReturnSavedAccount
  *  X   4.addAccount_CustomerInactive_ReturnException
  * 
@@ -54,52 +52,6 @@ public class AccountServiceTest {
     private AccountRepository accounts;
     @InjectMocks
     private AccountController accountController = new AccountController(accounts, customers);
-
-    // @Test
-    // void getAccountByAccountIdAndCustomerId_CustomerActive_ReturnAccount() {
-    //     // arrange
-    //     List<Account> allAccounts = new ArrayList<>();
-    //     Customer customer = new Customer("customer_1", encoder.encode("01_customer_01"), "ROLE_USER", "Customer One",
-    //             "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
-    //     long customer_id = 1L;
-    //     Account account = new Account(400, 400, customer_id);
-    //     allAccounts.add(account);
-
-    //     when(customers.findByUsername(customer.getUsername())).thenReturn(Optional.of(customer));
-    //     when(accounts.findByCustomerId(customer_id)).thenReturn(allAccounts); // a List<Account> is returned according
-    //                                                                           // to AccountController
-    //     when(accounts.findAll()).thenReturn(allAccounts);
-    //     // act
-    //     List<Account> listOfAccounts = accountController.getAllAccountsByCustomerId();
-
-    //     // assert
-    //     assertNull(listOfAccounts);
-    //     verify(customers).findByUsername(customer.getUsername());
-    //     verify(accounts).findByCustomerId(customer_id);
-    // }
-
-    // @Test
-    // void getAccountByAccountIdAndCustomerId_CustomerInactive_ReturnNull(){
-    //     // arrange
-    //     List<Account> allAccounts = new ArrayList<>();
-    //     Customer customer = new Customer("customer_1", encoder.encode("01_customer_01"), "ROLE_USER", "Customer One",
-    //             "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
-    //     long customer_id = 1L;
-    //     Account account = new Account(400, 400, customer_id);
-    //     allAccounts.add(account);
-
-    //     when(customers.findByUsername(customer.getUsername())).thenReturn(Optional.of(customer));
-    //     when(accounts.findByCustomerId(customer_id)).thenReturn(allAccounts); // a List<Account> is returned according
-    //                                                                           // to AccountController
-    //     when(accounts.findAll()).thenReturn(allAccounts);
-    //     // act
-    //     List<Account> listOfAccounts = accountController.getAllAccountsByCustomerId();
-
-    //     // assert
-    //     assertNull(listOfAccounts);
-    //     verify(customers).findByUsername(customer.getUsername());
-    //     verify(accounts).findByCustomerId(customer_id);
-    // }
 
     @Test
     void addAccount_NewAccount_ReturnSavedAccount() {

@@ -1,4 +1,4 @@
-package ryver.app.ryverbankintegratedtests;
+package ryver.app.ryverbankintegrationtests;
 
 import ryver.app.customer.CustomerRepository;
 import ryver.app.customer.Customer;
@@ -45,7 +45,7 @@ class CustomerIntegrationTest {
 	void tearDown() {
 		// clear the database after each test
 		customers.deleteAll();
-	}
+	} 
 
 	@Test
 	public void addCustomer_Success() throws Exception {
