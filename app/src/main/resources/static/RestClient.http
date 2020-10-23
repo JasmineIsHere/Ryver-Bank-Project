@@ -553,9 +553,9 @@ Authorization: Basic good_user_1 01_user_01
 {
     "action": "buy", 
     "symbol": "A17U", 
-    "quantity": 2000, 
+    "quantity": 20000, 
     "bid": 0,
-    "ask": 2, 
+    "ask": 0, 
     "account_id": 2, 
     "customer_id": 4
 }
@@ -574,7 +574,7 @@ Authorization: Basic good_user_2 02_user_02
     "symbol": "A17U", 
     "quantity": 2000, 
     "bid": 0.0,
-    "ask": 2, 
+    "ask": 0, 
     "account_id": 3,
     "customer_id": 5
 }
@@ -590,7 +590,7 @@ Authorization: Basic good_user_1 01_user_01
     "symbol": "A17U", 
     "quantity": 2000, 
     "bid": 0.0,
-    "ask": 0, 
+    "ask": 2, 
     "account_id": 2, 
     "customer_id": 4
 }

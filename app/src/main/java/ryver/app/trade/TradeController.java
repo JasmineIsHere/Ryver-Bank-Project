@@ -312,7 +312,7 @@ public class TradeController {
             if (tradeQuantity == stockAskVol) {
                 System.out.println("ZZ");
                 tradeSellListOfSymbol.get(0).setStatus("filled");
-                trade.setFilled_quantity(tradeSellListOfSymbol.get(0).getQuantity());
+                tradeSellListOfSymbol.get(0).setFilled_quantity(tradeSellListOfSymbol.get(0).getQuantity());
 
                 deleteAsset(stock, tradeSellListOfSymbol.get(0), tradeSellPortfolio);
                 
@@ -511,8 +511,8 @@ public class TradeController {
                 // asset does not exist in portfolio -> add trade to asset
                 System.out.println("WWW");
                 int quantity = trade.getFilled_quantity();
-                double avg_price = stock.getAsk();
-                double current_price = stock.getAsk();
+                double avg_price = bid;
+                double current_price = stock.getBid();
                 double value = current_price * quantity;
                 double gain_loss = value - (avg_price * quantity);
                 System.out.println("XXX");
@@ -523,12 +523,12 @@ public class TradeController {
                 assetCtrl.addAsset(portfolioId, asset);
                 System.out.println("YYY");
             }
+            // update unrealized gain loss in portfolio
+            Portfolio updatedPortfolio = portfolio;
+            portfolioCtrl.updatePortfolio(portfolioId, updatedPortfolio);
         }
 
-        // // update total and unrealized gain loss in portfolio
-        // Portfolio updatedPortfolio = portfolio;
-        // updatedPortfolio.setTotal_gain_loss(total_gain_loss);
-        // portfolioCtrl.updatePortfolio(portfolioId, updatedPortfolio);
+        
         
     }
 
@@ -551,11 +551,13 @@ public class TradeController {
 
             long assetId = asset.getId();
 
+            int prevQuantity = asset.getQuantity();
+            int newQuantity = prevQuantity - trade.getFilled_quantity();
+
             // if trade quantity < asset quantity -> minus
             if (trade.getQuantity() < asset.getQuantity()) {
                 System.out.println("CCCC");
-                int prevQuantity = asset.getQuantity();
-                int newQuantity = prevQuantity - trade.getFilled_quantity();
+                
 
                 Asset newAsset = asset;
                 newAsset.setQuantity(newQuantity);
@@ -571,7 +573,8 @@ public class TradeController {
             System.out.println("EEEE");
             // update total gain loss in portfolio
             double prevTotalGainLoss = portfolio.getTotal_gain_loss();
-            double newTotalGainLoss = prevTotalGainLoss + asset.getGain_loss();
+            double thisTotalGainLoss = trade.getFilled_quantity() * (ask - asset.getAvg_price());
+            double newTotalGainLoss = prevTotalGainLoss + thisTotalGainLoss;
 
             Portfolio updatedPortfolio = portfolio;
             updatedPortfolio.setTotal_gain_loss(newTotalGainLoss);
