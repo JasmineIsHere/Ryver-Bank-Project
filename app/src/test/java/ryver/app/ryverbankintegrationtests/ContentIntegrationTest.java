@@ -1,7 +1,7 @@
-// package ryver.app.ryverbankintegratedtests;
+// package ryver.app.ryverbankintegrationtests;
 
-// import ryver.app.account.AccountRepository;
-// import ryver.app.account.Account;
+// import ryver.app.content.ContentRepository;
+// import ryver.app.content.Content;
 // import ryver.app.customer.*;
 
 // import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +26,7 @@
 
 // /** Start an actual HTTP server listening at a random port */
 // @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-// class AccountIntegrationTest {
+// class ContentIntegrationTest {
 
 // 	@LocalServerPort
 // 	private int port;
@@ -37,7 +37,7 @@
 // 	private TestRestTemplate restTemplate;
 
 // 	@Autowired
-//     private AccountRepository accounts;
+//     private ContentRepository contents;
     
 //     @Autowired
 //     private CustomerRepository customers;
@@ -49,12 +49,12 @@
 // 	void tearDown() {
 //         // clear the database after each test
 //         customers.deleteAll();
-// 		accounts.deleteAll();
+// 		contents.deleteAll();
 //     }
     
 //     @Test
-//     public void addAccount_ROLEManager_Success() throws Exception{
-//         customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "Manager One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); // the manager that will retrieve customer account
+//     public void addContent_ROLEManager_Success() throws Exception{
+//         customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "Manager One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); 
 // 		Customer customer = customers.save(new Customer("User_1", encoder.encode("password"), "ROLE_USER", "Jerry Loh",
 //                 "T0046822Z", "82345678", "address", true)); //target customer
         
@@ -64,16 +64,16 @@
 // 		HttpHeaders headers = new HttpHeaders();
 //         headers.setContentType(MediaType.APPLICATION_JSON);
 // 		HttpEntity<String> entity = new HttpEntity<>(createAccountJSON, headers);
-//         URI postUri = new URI(baseUrl + port + "/accounts");
+//         URI postUri = new URI(baseUrl + port + "/contents");
 
-//         ResponseEntity<Account> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").postForEntity(postUri, entity, Account.class);
+//         ResponseEntity<Account> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").postForEntity(postUri, entity, Content.class);
 
 //         assertEquals(201, result.getStatusCode().value());
 //         assertEquals(customer.getId(), result.getBody().getCustomer_id());
 //     }
 
 //     @Test
-//     public void addAccount_ROLECustomer_Failure() throws Exception{
+//     public void addContent_ROLECustomer_Failure() throws Exception{
 // 		Customer customer = customers.save(new Customer("User_1", encoder.encode("password"), "ROLE_USER", "Jerry Loh",
 //                 "T0046822Z", "82345678", "address", true)); //target customer
         
