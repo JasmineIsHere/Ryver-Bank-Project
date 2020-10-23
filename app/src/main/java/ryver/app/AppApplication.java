@@ -53,9 +53,12 @@ public class AppApplication {
 		PortfolioRepository portfolios = ctx.getBean(PortfolioRepository.class);
 
 		TradeRepository trades = ctx.getBean(TradeRepository.class);
-		TradeController tradesCtrl = new TradeController(trades, customers, accounts, stocks, portfolios);
+		// TradeController tradesCtrl = new TradeController(trades, customers, accounts, stocks, portfolios);
 		
-		StockController stocksCtrl = new StockController(stocks, tradesCtrl);
+		// StockController stocksCtrl = new StockController(stocks, tradesCtrl);
+
+		TradeController tradesCtrl = new TradeController(trades, customers, accounts, stocks);
+		StockController stocksCtrl = new StockController(stocks);
 
 		System.out.println("\n[Grabbin stocks]: ");
 		List<CustomStock> stockList = stocksCtrl.initiateStocks();

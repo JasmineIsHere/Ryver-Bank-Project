@@ -4,6 +4,7 @@ import java.util.List;
 
 import ryver.app.customer.*;
 import ryver.app.trade.*;
+import ryver.app.asset.Asset;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
@@ -37,7 +38,7 @@ public class Portfolio {
     @OneToMany(mappedBy = "portfolio",
     orphanRemoval = true,
     cascade = CascadeType.ALL)
-    private List<Trade> assets;
+    private List<Asset> assets;
 }
 
 

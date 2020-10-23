@@ -23,6 +23,9 @@ public class StockController {
         this.stocks = stocks;
     }
 
+    // expire - to update the available balance
+    // check username before add must be unique
+
     public ArrayList<CustomStock> initiateStocks() {
         // true as of 12/10/2020
         String[] symbols = new String[] {"A17U.SI", "C61U.SI", "C31.SI", "C38U.SI", "C09.SI", "C52.SI", "D01.SI", "D05.SI", "G13.SI",

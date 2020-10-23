@@ -6,6 +6,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import ryver.app.portfolio.*;
+import ryver.app.asset.Asset;
+import ryver.app.customer.UsernameAlreadyExistException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.http.HttpStatus;
+
 
 @RestController
 public class CustomerController {
@@ -70,22 +73,23 @@ public class CustomerController {
       if (!validateNric(customer.getNric())) 
           throw new InvalidNricException();
       
+      if(customers.findByUsername(customer.getUsername()) != null)
+        throw new UsernameAlreadyExistException(customer.getUsername());
 
       // Only customers have portfolios
       //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
       // System.out.println(customer.getAuthorities());
       ArrayList<SimpleGrantedAuthority> a = new ArrayList(customer.getAuthorities());
       if (a.get(0).getAuthority().equals("ROLE_USER")) {
-        System.out.println("HI");
         Customer createdCustomer = customers.save(customer);
         Portfolio portfolio = new Portfolio();
         portfolio.setCustomer(createdCustomer);
         portfolio.setCustomer_id(createdCustomer.getId());
+        portfolio.setAssets(new ArrayList<Asset>());
         portfolios.save(portfolio);
-        System.out.println("Portfolio created");
         createdCustomer.setPortfolio(portfolio);
         return customers.save(createdCustomer);
-      } else
+      }else
         return customers.save(customer);
     }
 
