@@ -128,9 +128,9 @@ public class TradeController {
             // if this trade's bid is lower than the stock's previous ask
             // if this trade's bid is higher than the stock's previous bid
             // -> save new bid price and quantity into the stocks database
-            if ((trade.getBid() < stock.getAsk().doubleValue()) && (trade.getBid() > stock.getBid().doubleValue())) {
+            if ((trade.getBid() < stock.getAsk()) && (trade.getBid() > stock.getBid())) {
                 System.out.println("ABCD1");
-                stock.setBid(BigDecimal.valueOf(trade.getBid()));
+                stock.setBid(trade.getBid());
                 stock.setBid_volume(trade.getQuantity());
                 stocks.save(stock);
             }
@@ -139,9 +139,9 @@ public class TradeController {
             // if this trade's ask is higher than the stock's previous bid
             // if this trade's ask is lower than the stock's previous ask 
             // -> save new ask price and quantity into the stocks database
-            if ((trade.getAsk() > stock.getBid().doubleValue()) && (trade.getAsk() < stock.getAsk().doubleValue())) {
+            if ((trade.getAsk() > stock.getBid()) && (trade.getAsk() < stock.getAsk())) {
                 System.out.println("ABCD2");
-                stock.setAsk(BigDecimal.valueOf(trade.getAsk()));
+                stock.setAsk(trade.getAsk());
                 stock.setAsk_volume(trade.getQuantity());
                 stocks.save(stock);
             }
@@ -182,13 +182,13 @@ public class TradeController {
     }
 
     public void buyTradeCheckForSellMatch(CustomStock stock, Trade trade, Account account, Customer customer, double calculatedBuyPrice) {
-        double stockAsk = stock.getAsk().doubleValue();
+        double stockAsk = stock.getAsk();
         long stockAskVol = stock.getAsk_volume();
 
         double bid = trade.getBid();
 
         if (bid == 0.0) {
-            bid = stock.getAsk().doubleValue();
+            bid = stock.getAsk();
         }
         int quantity = trade.getQuantity();
 
@@ -225,7 +225,7 @@ public class TradeController {
 
 
             if (tradeSellListOfSymbol.isEmpty()) {
-                stock.setAsk(null);
+                stock.setAsk(0);
                 stock.setAsk_volume(0);
 
                 // no more selling stock in the market 
@@ -256,7 +256,7 @@ public class TradeController {
 
     public void checkTradeQuantityAgainstStockAskVol(CustomStock stock, Trade trade, Account account, Customer customer, List<Trade> tradeSellListOfSymbol, long tradeQuantity) {
         // final double prevStockAsk = stock.getAsk().doubleValue();
-        double stockAsk = stock.getAsk().doubleValue();
+        double stockAsk = stock.getAsk();
         int stockAskVol = (int)stock.getAsk_volume();
 
         // double bid = trade.getBid();
@@ -273,7 +273,7 @@ public class TradeController {
             trade.setStatus("filled");
             trade.setFilled_quantity(trade.getQuantity());
             trade.setAvg_price(stockAsk);
-            stock.setLast_price(new BigDecimal(stockAsk, MathContext.DECIMAL64));
+            stock.setLast_price(stockAsk);
 
             account.setAvailable_balance(available_balance - (stockAsk * tradeQuantity));
             account.setBalance(balance - (stockAsk * tradeQuantity));
@@ -292,15 +292,13 @@ public class TradeController {
                 // remove that trade from the list if its filled
                 tradeSellListOfSymbol.remove(0);
                 
-                BigDecimal newStockAsk = new BigDecimal(tradeSellListOfSymbol.get(0).getAsk(), MathContext.DECIMAL64);
-                long newStockAskVol = tradeSellListOfSymbol.get(0).getQuantity();
-                stock.setAsk(newStockAsk);
-                stock.setAsk_volume(newStockAskVol);
+                stock.setAsk(tradeSellListOfSymbol.get(0).getAsk());
+                stock.setAsk_volume(tradeSellListOfSymbol.get(0).getQuantity());
             
             } else {
                 System.out.println("Y");
                 // if there's still quantity leftover in stock
-                stock.setAsk_volume(stockAskVol - tradeQuantity);
+                stock.setAsk_volume(stockAskVol - (int)tradeQuantity);
 
                 tradeSellListOfSymbol.get(0).setStatus("partial-filled");
                 tradeSellListOfSymbol.get(0).setFilled_quantity((int)tradeQuantity);
@@ -338,10 +336,8 @@ public class TradeController {
                 // if no, change the stock information to the next higher ask price
                 for (int j = 0; j < tradeSellListOfSymbol.size(); j++) {
                     // set stock
-                    BigDecimal newStockAsk = new BigDecimal(tradeSellListOfSymbol.get(j).getAsk(), MathContext.DECIMAL64);
-                    long newStockAskVol = (int)tradeSellListOfSymbol.get(j).getQuantity();
-                    stock.setAsk(newStockAsk);
-                    stock.setAsk_volume(newStockAskVol);
+                    stock.setAsk(tradeSellListOfSymbol.get(j).getAsk());
+                    stock.setAsk_volume(tradeSellListOfSymbol.get(j).getQuantity());
 
                     // market order
                     if (trade.getBid() == 0.0) {
@@ -361,7 +357,7 @@ public class TradeController {
 
                             // set account
                             // available balance - stock bought - leftover open stocks
-                            account.setAvailable_balance(available_balance - (stockAsk * stockAskVol) - (stock.getAsk().doubleValue() * (tradeQuantity - stockAskVol)));
+                            account.setAvailable_balance(available_balance - (stockAsk * stockAskVol) - (stockAsk * (tradeQuantity - stockAskVol)));
                             account.setBalance(balance - (stockAsk * stockAskVol));
     
                             break;
@@ -384,7 +380,7 @@ public class TradeController {
     
                             // set account
                             // available balance - stock bought - leftover open stocks
-                            account.setAvailable_balance(available_balance - (stockAsk * stockAskVol) - (stock.getAsk().doubleValue() * (tradeQuantity - stockAskVol)));
+                            account.setAvailable_balance(available_balance - (stockAsk * stockAskVol) - (stockAsk * (tradeQuantity - stockAskVol)));
                             account.setBalance(balance - (stockAsk * stockAskVol));
     
                             break;
@@ -403,11 +399,11 @@ public class TradeController {
 
                 // set account
                 // available balance - stock bought - leftover open stocks
-                account.setAvailable_balance(available_balance - (stockAsk * stockAskVol) - (stock.getAsk().doubleValue() * (tradeQuantity - stockAskVol)));
+                account.setAvailable_balance(available_balance - (stockAsk * stockAskVol) - (stockAsk * (tradeQuantity - stockAskVol)));
                 account.setBalance(balance - (stockAsk * stockAskVol));
 
                 // set stock
-                stock.setAsk(null);
+                stock.setAsk(0);
                 stock.setAsk_volume(0);
 
                 // no more selling stock in the market 
@@ -425,7 +421,7 @@ public class TradeController {
         if (trade.getAction().equals("buy")) {
             double bid = trade.getBid();
             if (bid == 0.0) {
-                bid = stock.getAsk().doubleValue();
+                bid = stock.getAsk();
             }
             System.out.println("1LALAA");
 
@@ -446,7 +442,7 @@ public class TradeController {
 
                 long assetId = asset.getId();
                 int prevQuantity = asset.getQuantity();
-                double prevAvg_price = asset.getAvg_price().doubleValue();
+                double prevAvg_price = asset.getAvg_price();
                 double prevTotalPrice = prevQuantity * prevAvg_price;
                 System.out.println("3LALAA");
                 
@@ -459,7 +455,7 @@ public class TradeController {
 
                 Asset newAsset = asset;
                 newAsset.setQuantity(newQuantity);
-                newAsset.setAvg_price(new BigDecimal(newAvg_price, MathContext.DECIMAL64));
+                newAsset.setAvg_price(newAvg_price);
                 assetCtrl.updateAsset(portfolioId, assetId, newAsset);
                 System.out.println("5LALAA");
 
@@ -467,10 +463,10 @@ public class TradeController {
                 // asset does not exist in portfolio -> add trade to asset
                 System.out.println("6LALAA");
                 int quantity = trade.getFilled_quantity();
-                BigDecimal avg_price = stock.getAsk();
-                BigDecimal current_price = stock.getAsk();
-                double value = current_price.doubleValue() * quantity;
-                BigDecimal gain_loss = new BigDecimal(value - (avg_price.doubleValue() * quantity), MathContext.DECIMAL64);
+                double avg_price = stock.getAsk();
+                double current_price = stock.getAsk();
+                double value = current_price * quantity;
+                double gain_loss = value - (avg_price * quantity);
                 System.out.println("7LALAA");
                 
     
@@ -493,7 +489,7 @@ public class TradeController {
         if (trade.getAction().equals("sell")) {
             double ask = trade.getAsk();
             if (ask == 0.0) {
-                ask = stock.getBid().doubleValue();
+                ask = stock.getBid();
             }
 
             long portfolioId = portfolio.getId();
@@ -521,7 +517,7 @@ public class TradeController {
 
             // update total gain loss in portfolio
             double prevTotalGainLoss = portfolio.getTotal_gain_loss();
-            double newTotalGainLoss = prevTotalGainLoss + asset.getGain_loss().doubleValue();
+            double newTotalGainLoss = prevTotalGainLoss + asset.getGain_loss();
 
             Portfolio updatedPortfolio = portfolio;
             updatedPortfolio.setTotal_gain_loss(newTotalGainLoss);
@@ -534,13 +530,13 @@ public class TradeController {
     
 
     public void sellTradeCheckForBuyMatch(CustomStock stock, Trade trade, Account account, Customer customer) {
-        double stockBid = stock.getBid().doubleValue();
+        double stockBid = stock.getBid();
         long stockBidVol = stock.getBid_volume();
 
         double ask = trade.getAsk();
 
         if (ask == 0.0) {
-            ask = stock.getBid().doubleValue();
+            ask = stockBid;
         }
         int quantity = trade.getQuantity();
 
@@ -576,7 +572,7 @@ public class TradeController {
 
 
             if (tradeBuyListOfSymbol.isEmpty()) {
-                stock.setBid(null);
+                stock.setBid(0);
                 stock.setBid_volume(0);
 
                 // no more selling stock in the market 
@@ -603,8 +599,8 @@ public class TradeController {
         }
     }
 
-    public void checkTradeQuantityAgainstStockBidVol(CustomStock stock, Trade trade, Account account, Customer customer, List<Trade> tradeBuyListOfSymbol, long tradeQuantity) {
-        double stockBid = stock.getBid().doubleValue();
+    public void checkTradeQuantityAgainstStockBidVol(CustomStock stock, Trade trade, Account account, Customer customer, List<Trade> tradeBuyListOfSymbol, int tradeQuantity) {
+        double stockBid = stock.getBid();
         int stockBidVol = (int)stock.getBid_volume();
 
         // double bid = trade.getBid();
@@ -640,8 +636,8 @@ public class TradeController {
                 // remove that trade from the list if its filled
                 tradeBuyListOfSymbol.remove(0);
                 
-                BigDecimal newStockBid = new BigDecimal(tradeBuyListOfSymbol.get(0).getBid(), MathContext.DECIMAL64);
-                long newStockBidVol = tradeBuyListOfSymbol.get(0).getQuantity();
+                double newStockBid = tradeBuyListOfSymbol.get(0).getBid();
+                int newStockBidVol = tradeBuyListOfSymbol.get(0).getQuantity();
                 stock.setBid(newStockBid);
                 stock.setBid_volume(newStockBidVol);
             
@@ -686,8 +682,8 @@ public class TradeController {
                 // if no, change the stock information to the next higher bid price
                 for (int j = 0; j < tradeBuyListOfSymbol.size(); j++) {
                     // set stock
-                    BigDecimal newStockBid = new BigDecimal(tradeBuyListOfSymbol.get(j).getBid(), MathContext.DECIMAL64);
-                    long newStockBidVol = (int)tradeBuyListOfSymbol.get(j).getQuantity();
+                    double newStockBid = tradeBuyListOfSymbol.get(j).getBid();
+                    int newStockBidVol = (int)tradeBuyListOfSymbol.get(j).getQuantity();
                     stock.setBid(newStockBid);
                     stock.setBid_volume(newStockBidVol);
 
@@ -722,13 +718,15 @@ public class TradeController {
                 
                 deleteAsset(stock, trade, portfolio);
 
+
+
                 // set account
-                // available balance - stock bought - leftover open stocks
-                account.setAvailable_balance(available_balance - (stockBid * stockBidVol) - (stock.getAsk().doubleValue() * (tradeQuantity - stockBidVol)));
-                account.setBalance(balance - (stockBid * stockBidVol));
+                // available balance + stock sold
+                account.setAvailable_balance(available_balance + (stockBid * stockBidVol));
+                account.setBalance(balance + (stockBid * stockBidVol));
 
                 // set stock
-                stock.setAsk(null);
+                stock.setAsk(0);
                 stock.setAsk_volume(0);
 
                 // no more selling stock in the market 
@@ -845,7 +843,7 @@ public class TradeController {
 
             // if it's a buy market order, change the bid value to current stock's ask price
             if (bid == 0.0) {
-                bid = stock.getAsk().doubleValue();
+                bid = stock.getAsk();
             }
 
             calculatedBuyPrice = bid * quantity;
@@ -883,7 +881,7 @@ public class TradeController {
         } else {
             // FOR SELLING
             System.out.println("0000");
-            double stockBid = stock.getBid().doubleValue();
+            double stockBid = stock.getBid();
             long stockBidVol = stock.getBid_volume();
 
             // if it's a sell market order, change the ask value to current stock's bid price

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Calendar;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +32,7 @@ public class StockController {
         try {
             Map<String, Stock> stockMap = YahooFinance.get(symbols,true);
             ArrayList<CustomStock> stockList = new ArrayList<CustomStock>(); 
+            
             for(int i=0; i< symbols.length; i++){
                 Stock s = stockMap.get(symbols[i]);
                 CustomStock stock = new CustomStock();
@@ -42,12 +43,14 @@ public class StockController {
                 String[] splitSymbol = originalSymbol.split("\\.");
                 
                 stock.setSymbol(splitSymbol[0]);
-                stock.setAsk(quote.getAsk());
-                stock.setBid(quote.getBid());
-                stock.setLast_price(quote.getPreviousClose());
+                stock.setAsk(quote.getAsk().doubleValue());
+                stock.setBid(quote.getBid().doubleValue());
+                stock.setLast_price(quote.getPreviousClose().doubleValue());
                 stock.setAsk_volume(20000); // set as 20000 volume
                 stock.setBid_volume(20000); // set as 20000 volume
+                stock.setTimestamp(Calendar.getInstance().getTime().getTime());
                 stockList.add(stock);
+                stocks.save(stock);
             }
             
             return stockList;

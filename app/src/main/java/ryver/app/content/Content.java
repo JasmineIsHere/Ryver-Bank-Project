@@ -20,24 +20,11 @@ public class Content{
     private boolean approved;
     
     //JOLENE: for testing
-    public Content(String title, String summary, String content, String link, boolean approved){
+    public Content(String title, String summary, String content, String link, boolean approved) {
         this.title = title;
         this.summary = summary;
         this.content = content;
         this.link = link;
         this.approved = approved;
-    }
-
-    public String getTitle(){
-        return title;
-    }
-    public String getSummary(){
-        return summary;
-    }
-    public String getContent(){
-        return content;
-    }
-    public String getLink(){
-        return link;
     }
 }

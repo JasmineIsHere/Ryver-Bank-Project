@@ -94,7 +94,6 @@ public class Customer implements UserDetails{
         this.active = active;
     }
 
-
     /* Return a collection of authorities granted to the user.
     */
     @Override

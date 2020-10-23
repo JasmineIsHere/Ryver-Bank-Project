@@ -9,7 +9,7 @@ public class PortfolioNotFoundException extends RuntimeException{
     private static final long serialVersionUID = 1L;
 
     public PortfolioNotFoundException(Long customerId) {
-        super("Could not find portfolio for customer " + customerId);
+        super("Could not find portfolio for customer ID " + customerId);
     }
     
 }

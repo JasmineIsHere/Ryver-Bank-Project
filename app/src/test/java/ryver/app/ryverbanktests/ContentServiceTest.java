@@ -35,8 +35,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * 
  *      T E S T
  *  W   1.addContent_approveContent_returnSavedContent
- *  X   2.updateContent_Found_approveContentAndReturnSavedContent
- *  X   3.updateContent_NotFound_returnSavedContent
  * 
  * Notes:
  * none

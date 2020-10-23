@@ -1,4 +1,4 @@
-package ryver.app.ryverbankintegratedtests;
+package ryver.app.ryverbankintegrationtests;
 
 import ryver.app.account.AccountRepository;
 import ryver.app.account.Account;
@@ -109,7 +109,6 @@ class AccountIntegrationTest {
         URI getUri = new URI(baseUrl + port + "/accounts/" + acc.getBody().getId());
 
 		ResponseEntity<Account> result = restTemplate.withBasicAuth("User_1", "password").getForEntity(getUri, Account.class);
-
 
 		assertEquals(200, result.getStatusCode().value());
     }

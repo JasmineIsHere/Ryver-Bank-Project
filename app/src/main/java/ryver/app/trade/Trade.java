@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.*;
 
@@ -32,7 +33,7 @@ public class Trade {
 
     private double bid; //for buying
     private double ask; //for selling
-    
+
     private double avg_price; // the average filled price, as one trade can be matched by several other trades
     private int filled_quantity; //# of quantity successfully sold/bought out of total "quantity"
 
@@ -43,10 +44,12 @@ public class Trade {
 
     @NotNull(message = "Account ID should not be null. ")
     @Column(name = "account_id")
+    @JsonProperty("account_id")
     private Long accountId; //account used to submit buy/sell request
 
     @NotNull(message = "Customer ID should not be null. ")
     @Column(name = "customer_id")
+    @JsonProperty("customer_id")
     private Long customerId;//customer submitting the buy/sell request
 
     @ManyToOne

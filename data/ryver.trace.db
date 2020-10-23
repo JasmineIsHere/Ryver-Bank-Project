@@ -236,3 +236,351 @@ alter table transaction add constraint FK6g20fcr3bhr6bihgy24rq1r1b foreign key (
 2020-10-15 15:12:09 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CUSTOMER" not found; SQL statement:
 insert into customer (id, active, address, authorities, full_name, nric, password, phone, username) values (null, ?, ?, ?, ?, ?, ?, ?, ?) [42102-200]
+2020-10-23 17:20:33 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CUSTOMER" not found; SQL statement:
+insert into customer (id, active, address, authorities, full_name, nric, password, phone, username) values (null, ?, ?, ?, ?, ?, ?, ?, ?) [42102-200]
+2020-10-23 17:21:11 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNT" not found; SQL statement:
+alter table transaction add constraint FK6g20fcr3bhr6bihgy24rq1r1b foreign key (account_id) references account [42102-200]
+2020-10-23 17:21:11 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNT" not found; SQL statement:
+alter table trade add constraint FK1f6xqrujtohsvah0raq6s8958 foreign key (account) references account [42102-200]
+2020-10-23 17:21:11 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRADE" not found; SQL statement:
+alter table trade add constraint FKrsqgu6g15orunparpdvsvc7ld foreign key (portfolio_id) references portfolio [42102-200]
+2020-10-23 17:21:11 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRADE" not found; SQL statement:
+alter table trade add constraint FKkvwhtxrgemt5emfhqfhy9fqdc foreign key (stock_id) references custom_stock [42102-200]
+2020-10-23 17:21:11 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION" not found; SQL statement:
+alter table transaction add constraint FK6g20fcr3bhr6bihgy24rq1r1b foreign key (account_id) references account [42102-200]
+2020-10-23 17:21:11 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CUSTOMER" not found; SQL statement:
+insert into customer (id, active, address, authorities, full_name, nric, password, phone, username) values (null, ?, ?, ?, ?, ?, ?, ?, ?) [42102-200]
+2020-10-23 17:21:43 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: General error: "java.lang.NullPointerException"; SQL statement:
+drop table if exists asset CASCADE  [50000-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:505)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	at org.h2.message.DbException.get(DbException.java:194)
+	at org.h2.message.DbException.convert(DbException.java:347)
+	at org.h2.command.Command.executeUpdate(Command.java:259)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:228)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:201)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:54)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.applySqlString(SchemaDropperImpl.java:375)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.applySqlStrings(SchemaDropperImpl.java:359)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropFromMetadata(SchemaDropperImpl.java:241)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.performDrop(SchemaDropperImpl.java:154)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:126)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:112)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:145)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:73)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:316)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:469)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1259)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:391)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:830)
+Caused by: java.lang.NullPointerException
+	at org.h2.mvstore.db.MVTable.doLock1(MVTable.java:211)
+	at org.h2.mvstore.db.MVTable.lock(MVTable.java:166)
+	at org.h2.command.ddl.DropTable.prepareDrop(DropTable.java:102)
+	at org.h2.command.ddl.DropTable.update(DropTable.java:124)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:198)
+	at org.h2.command.Command.executeUpdate(Command.java:251)
+	... 23 more
+2020-10-23 17:21:43 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CUSTOMER" not found; SQL statement:
+insert into customer (id, active, address, authorities, full_name, nric, password, phone, username) values (null, ?, ?, ?, ?, ?, ?, ?, ?) [42102-200]
+2020-10-23 17:21:46 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CUSTOMER" not found; SQL statement:
+insert into customer (id, active, address, authorities, full_name, nric, password, phone, username) values (null, ?, ?, ?, ?, ?, ?, ?, ?) [42102-200]
+2020-10-23 17:29:06 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLTransactionRollbackException: Deadlock detected. The current transaction was rolled back. Details: "
+Session #39 (user: SA, RUNNING) on thread task-1 is waiting to lock PUBLIC.TRANSACTION (exclusive) while locking PUBLIC.SYS (exclusive).
+Session #38 (user: SA, RUNNING) on thread task-1 is waiting to lock PUBLIC.SYS (exclusive) while locking PUBLIC.TRANSACTION (exclusive)."; SQL statement:
+drop table if exists transaction CASCADE  [40001-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:463)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.message.DbException.get(DbException.java:181)
+	at org.h2.mvstore.db.MVTable.doLock1(MVTable.java:193)
+	at org.h2.mvstore.db.MVTable.lock(MVTable.java:166)
+	at org.h2.engine.Database.lockMeta(Database.java:1000)
+	at org.h2.command.ddl.DropTable.executeDrop(DropTable.java:115)
+	at org.h2.command.ddl.DropTable.update(DropTable.java:125)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:198)
+	at org.h2.command.Command.executeUpdate(Command.java:251)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:228)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:201)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:54)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.applySqlString(SchemaDropperImpl.java:375)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.applySqlStrings(SchemaDropperImpl.java:359)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropFromMetadata(SchemaDropperImpl.java:241)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.performDrop(SchemaDropperImpl.java:154)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:126)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:112)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:145)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:73)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:316)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:469)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1259)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:391)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:830)
+2020-10-23 17:29:06 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLTransactionRollbackException: Deadlock detected. The current transaction was rolled back. Details: "
+Session #38 (user: SA, RUNNING) on thread task-1 is waiting to lock PUBLIC.SYS (exclusive) while locking PUBLIC.TRANSACTION (exclusive).
+Session #39 (user: SA, RUNNING) on thread task-1 is waiting to lock PUBLIC.TRANSACTION (exclusive) while locking PUBLIC.SYS (exclusive)."; SQL statement:
+create table transaction (id bigint generated by default as identity, amount double not null, "from" bigint, to bigint, account_id bigint not null, primary key (id)) [40001-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:463)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.message.DbException.get(DbException.java:181)
+	at org.h2.mvstore.db.MVTable.doLock1(MVTable.java:193)
+	at org.h2.mvstore.db.MVTable.lock(MVTable.java:166)
+	at org.h2.command.ddl.AlterTableAddConstraint.tryUpdate(AlterTableAddConstraint.java:119)
+	at org.h2.command.ddl.AlterTableAddConstraint.update(AlterTableAddConstraint.java:78)
+	at org.h2.command.ddl.CommandWithColumns.createConstraints(CommandWithColumns.java:83)
+	at org.h2.command.ddl.CreateTable.update(CreateTable.java:133)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:198)
+	at org.h2.command.Command.executeUpdate(Command.java:251)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:228)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:201)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:54)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.applySqlString(SchemaCreatorImpl.java:439)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.applySqlStrings(SchemaCreatorImpl.java:423)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.createFromMetadata(SchemaCreatorImpl.java:314)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:166)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:135)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:121)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:156)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:73)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:316)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:469)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1259)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:391)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:830)
+2020-10-23 17:29:06 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNT" not found; SQL statement:
+alter table account add constraint FK8b6nou36bcycey2spg7xer75w foreign key (customer) references customer [42102-200]
+2020-10-23 17:29:06 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PORTFOLIO" not found; SQL statement:
+alter table asset add constraint FK6n6rcwlesgwma1kyxc9c1iwh3 foreign key (portfolio_id) references portfolio [42102-200]
+2020-10-23 17:29:06 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PORTFOLIO" not found; SQL statement:
+alter table portfolio add constraint FKilej70bv0ch4914bwgouvfjw2 foreign key (customer) references customer [42102-200]
+2020-10-23 17:29:06 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNT" not found; SQL statement:
+alter table trade add constraint FK1f6xqrujtohsvah0raq6s8958 foreign key (account) references account [42102-200]
+2020-10-23 17:29:06 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRADE" not found; SQL statement:
+alter table trade add constraint FKrsqgu6g15orunparpdvsvc7ld foreign key (portfolio_id) references portfolio [42102-200]
+2020-10-23 17:29:06 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRADE" not found; SQL statement:
+alter table trade add constraint FKkvwhtxrgemt5emfhqfhy9fqdc foreign key (stock_id) references custom_stock [42102-200]
+2020-10-23 17:29:06 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION" not found; SQL statement:
+alter table transaction add constraint FK6g20fcr3bhr6bihgy24rq1r1b foreign key (account_id) references account [42102-200]
+2020-10-23 17:29:06 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CUSTOMER" not found; SQL statement:
+insert into customer (id, active, address, authorities, full_name, nric, password, phone, username) values (null, ?, ?, ?, ?, ?, ?, ?, ?) [42102-200]
+2020-10-23 17:29:11 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNT" not found; SQL statement:
+alter table trade add constraint FK1f6xqrujtohsvah0raq6s8958 foreign key (account) references account [42102-200]
+2020-10-23 17:29:11 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRADE" not found; SQL statement:
+alter table trade add constraint FKrsqgu6g15orunparpdvsvc7ld foreign key (portfolio_id) references portfolio [42102-200]
+2020-10-23 17:29:11 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRADE" not found; SQL statement:
+alter table trade add constraint FKkvwhtxrgemt5emfhqfhy9fqdc foreign key (stock_id) references custom_stock [42102-200]
+2020-10-23 17:29:11 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION" not found; SQL statement:
+alter table transaction add constraint FK6g20fcr3bhr6bihgy24rq1r1b foreign key (account_id) references account [42102-200]
+2020-10-23 17:29:11 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CUSTOMER" not found; SQL statement:
+insert into customer (id, active, address, authorities, full_name, nric, password, phone, username) values (null, ?, ?, ?, ?, ?, ?, ?, ?) [42102-200]
+2020-10-23 17:29:14 jdbc[43]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNT" not found; SQL statement:
+alter table transaction add constraint FK6g20fcr3bhr6bihgy24rq1r1b foreign key (account_id) references account [42102-200]
+2020-10-23 17:29:14 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNT" already exists; SQL statement:
+create table account (id bigint generated by default as identity, available_balance double not null, balance double not null, customer_id bigint not null, customer bigint not null, primary key (id)) [42101-200]
+2020-10-23 17:29:14 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ASSET" already exists; SQL statement:
+create table asset (id bigint generated by default as identity, avg_price decimal(19,2), code varchar(255), current_price decimal(19,2), gain_loss decimal(19,2), quantity bigint not null, value bigint not null, portfolio_id bigint not null, primary key (id)) [42101-200]
+2020-10-23 17:29:14 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNT" not found; SQL statement:
+alter table account add constraint FK8b6nou36bcycey2spg7xer75w foreign key (customer) references customer [42102-200]
+2020-10-23 17:29:14 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRADE" already exists; SQL statement:
+create table trade (id bigint generated by default as identity, account_id bigint not null, action varchar(255) not null, ask double not null, avg_price double not null, bid double not null, customer_id bigint not null, date bigint not null, filled_quantity integer not null, quantity integer not null, status varchar(255), symbol varchar(255) not null, account bigint not null, portfolio_id bigint, stock_id varchar(255) not null, primary key (id)) [42101-200]
+2020-10-23 17:29:14 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION" already exists; SQL statement:
+create table transaction (id bigint generated by default as identity, amount double not null, "from" bigint, to bigint, account_id bigint not null, primary key (id)) [42101-200]
+2020-10-23 17:29:14 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ASSET" not found; SQL statement:
+alter table asset add constraint FK6n6rcwlesgwma1kyxc9c1iwh3 foreign key (portfolio_id) references portfolio [42102-200]
+2020-10-23 17:29:14 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNT" not found; SQL statement:
+alter table account add constraint FK8b6nou36bcycey2spg7xer75w foreign key (customer) references customer [42102-200]
+2020-10-23 17:29:14 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNT" not found; SQL statement:
+alter table trade add constraint FK1f6xqrujtohsvah0raq6s8958 foreign key (account) references account [42102-200]
+2020-10-23 17:29:14 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ASSET" not found; SQL statement:
+alter table asset add constraint FK6n6rcwlesgwma1kyxc9c1iwh3 foreign key (portfolio_id) references portfolio [42102-200]
+2020-10-23 17:29:14 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Constraint "FKILEJ70BV0CH4914BWGOUVFJW2" already exists; SQL statement:
+alter table portfolio add constraint FKilej70bv0ch4914bwgouvfjw2 foreign key (customer) references customer [90045-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:576)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.message.DbException.get(DbException.java:181)
+	at org.h2.command.ddl.AlterTableAddConstraint.tryUpdate(AlterTableAddConstraint.java:114)
+	at org.h2.command.ddl.AlterTableAddConstraint.update(AlterTableAddConstraint.java:78)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:198)
+	at org.h2.command.Command.executeUpdate(Command.java:251)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:228)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:201)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:54)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.applySqlString(SchemaCreatorImpl.java:439)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.applySqlStrings(SchemaCreatorImpl.java:423)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.createFromMetadata(SchemaCreatorImpl.java:374)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:166)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:135)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:121)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:156)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:73)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:316)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:469)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1259)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:391)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:830)
+2020-10-23 17:29:14 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNT" not found; SQL statement:
+alter table transaction add constraint FK6g20fcr3bhr6bihgy24rq1r1b foreign key (account_id) references account [42102-200]
+2020-10-23 17:29:14 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNT" not found; SQL statement:
+alter table trade add constraint FK1f6xqrujtohsvah0raq6s8958 foreign key (account) references account [42102-200]
+2020-10-23 17:29:14 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Constraint "FKRSQGU6G15ORUNPARPDVSVC7LD" already exists; SQL statement:
+alter table trade add constraint FKrsqgu6g15orunparpdvsvc7ld foreign key (portfolio_id) references portfolio [90045-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:576)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.message.DbException.get(DbException.java:181)
+	at org.h2.command.ddl.AlterTableAddConstraint.tryUpdate(AlterTableAddConstraint.java:114)
+	at org.h2.command.ddl.AlterTableAddConstraint.update(AlterTableAddConstraint.java:78)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:198)
+	at org.h2.command.Command.executeUpdate(Command.java:251)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:228)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:201)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:54)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.applySqlString(SchemaCreatorImpl.java:439)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.applySqlStrings(SchemaCreatorImpl.java:423)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.createFromMetadata(SchemaCreatorImpl.java:374)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:166)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:135)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:121)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:156)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:73)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:316)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:469)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1259)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:391)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:830)
+2020-10-23 17:29:14 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRADE" not found; SQL statement:
+alter table trade add constraint FKkvwhtxrgemt5emfhqfhy9fqdc foreign key (stock_id) references custom_stock [42102-200]
+2020-10-23 17:29:14 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION" not found; SQL statement:
+alter table transaction add constraint FK6g20fcr3bhr6bihgy24rq1r1b foreign key (account_id) references account [42102-200]
+2020-10-23 17:29:14 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CUSTOMER" not found; SQL statement:
+insert into customer (id, active, address, authorities, full_name, nric, password, phone, username) values (null, ?, ?, ?, ?, ?, ?, ?, ?) [42102-200]
+2020-10-23 17:29:21 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNT" not found; SQL statement:
+alter table trade add constraint FK1f6xqrujtohsvah0raq6s8958 foreign key (account) references account [42102-200]
+2020-10-23 17:29:21 jdbc[44]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNT" already exists; SQL statement:
+create table account (id bigint generated by default as identity, available_balance double not null, balance double not null, customer_id bigint not null, customer bigint not null, primary key (id)) [42101-200]
+2020-10-23 17:29:21 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRADE" not found; SQL statement:
+alter table trade add constraint FKrsqgu6g15orunparpdvsvc7ld foreign key (portfolio_id) references portfolio [42102-200]
+2020-10-23 17:29:21 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRADE" not found; SQL statement:
+alter table trade add constraint FKkvwhtxrgemt5emfhqfhy9fqdc foreign key (stock_id) references custom_stock [42102-200]
+2020-10-23 17:29:21 jdbc[44]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ASSET" already exists; SQL statement:
+create table asset (id bigint generated by default as identity, avg_price decimal(19,2), code varchar(255), current_price decimal(19,2), gain_loss decimal(19,2), quantity bigint not null, value bigint not null, portfolio_id bigint not null, primary key (id)) [42101-200]
+2020-10-23 17:29:21 jdbc[44]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CONTENT" already exists; SQL statement:
+create table content (id bigint generated by default as identity, approved boolean not null, content varchar(255), link varchar(255), summary varchar(255), title varchar(255), primary key (id)) [42101-200]
+2020-10-23 17:29:21 jdbc[43]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNT" not found; SQL statement:
+alter table trade add constraint FK1f6xqrujtohsvah0raq6s8958 foreign key (account) references account [42102-200]
+2020-10-23 17:29:21 jdbc[43]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRADE" not found; SQL statement:
+alter table trade add constraint FKrsqgu6g15orunparpdvsvc7ld foreign key (portfolio_id) references portfolio [42102-200]
+2020-10-23 17:29:21 jdbc[43]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION" not found; SQL statement:
+alter table transaction add constraint FK6g20fcr3bhr6bihgy24rq1r1b foreign key (account_id) references account [42102-200]
+2020-10-23 17:29:21 jdbc[44]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNT" not found; SQL statement:
+alter table account add constraint FK8b6nou36bcycey2spg7xer75w foreign key (customer) references customer [42102-200]
+2020-10-23 17:29:21 jdbc[44]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ASSET" not found; SQL statement:
+alter table asset add constraint FK6n6rcwlesgwma1kyxc9c1iwh3 foreign key (portfolio_id) references portfolio [42102-200]
+2020-10-23 17:29:21 jdbc[44]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CUSTOMER" not found; SQL statement:
+alter table portfolio add constraint FKilej70bv0ch4914bwgouvfjw2 foreign key (customer) references customer [42102-200]
+2020-10-23 17:29:21 jdbc[44]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNT" not found; SQL statement:
+alter table trade add constraint FK1f6xqrujtohsvah0raq6s8958 foreign key (account) references account [42102-200]
+2020-10-23 17:29:21 jdbc[44]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRADE" not found; SQL statement:
+alter table trade add constraint FKrsqgu6g15orunparpdvsvc7ld foreign key (portfolio_id) references portfolio [42102-200]
+2020-10-23 17:29:21 jdbc[44]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRADE" not found; SQL statement:
+alter table trade add constraint FKkvwhtxrgemt5emfhqfhy9fqdc foreign key (stock_id) references custom_stock [42102-200]
+2020-10-23 17:29:21 jdbc[44]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION" not found; SQL statement:
+alter table transaction add constraint FK6g20fcr3bhr6bihgy24rq1r1b foreign key (account_id) references account [42102-200]
+2020-10-23 17:29:22 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CUSTOMER" not found; SQL statement:
+insert into customer (id, active, address, authorities, full_name, nric, password, phone, username) values (null, ?, ?, ?, ?, ?, ?, ?, ?) [42102-200]

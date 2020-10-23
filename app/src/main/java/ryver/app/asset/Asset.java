@@ -1,6 +1,5 @@
 package ryver.app.asset;
 
-import java.math.BigDecimal;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -17,20 +16,20 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Asset{
-    private  @Id @GeneratedValue (strategy = GenerationType.IDENTITY) Long id;
+    private  @Id @GeneratedValue (strategy = GenerationType.IDENTITY) int id;
     private String code; //symbol of stock eg. A17U
     private int quantity;
-    private BigDecimal avg_price; 
-    private BigDecimal current_price; 
+    private double avg_price; 
+    private double current_price; 
     private double value; 
-    private BigDecimal gain_loss;
+    private double gain_loss;
 
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "portfolio_id", nullable = false)
     private Portfolio portfolio;
 
-    public Asset(String code, int quantity, BigDecimal avg_price, BigDecimal current_price, double value, BigDecimal gain_loss){
+    public Asset(String code, int quantity, double avg_price, double current_price, double value, double gain_loss) {
         this.code = code;
         this.quantity = quantity;
         this.avg_price = avg_price;
