@@ -48,7 +48,15 @@ public class PortfolioController {
         }
         return portfolios.findById(portfolioId).map(portfolio -> {
             portfolio.setTotal_gain_loss(updatedPortfolio.getTotal_gain_loss());
-            portfolio.setUnrealized_gain_loss(updatedPortfolio.getUnrealized_gain_loss());
+
+            double unrealized_gain_loss = 0.0;
+
+            for (Asset asset : updatedPortfolio.getAssets()) {
+                asset.setGain_loss((asset.getCurrent_price() * asset.getQuantity()) - (asset.getAvg_price() * asset.getQuantity()));
+                unrealized_gain_loss += asset.getGain_loss();
+            }
+
+            portfolio.setUnrealized_gain_loss(unrealized_gain_loss);
             return portfolios.save(portfolio);
         }).orElseThrow(() -> new ryver.app.asset.PortfolioNotFoundException(portfolioId));
     }
