@@ -587,8 +587,8 @@ Authorization: Basic good_user_1 01_user_01
     "bid": 3.28,
     "ask": 3.27, 
     "status":"cancelled",
-    "account_Id": 2, 
-    "customer_Id": 4
+    "account_id": 2, 
+    "customer_id": 4
 
 }
 
