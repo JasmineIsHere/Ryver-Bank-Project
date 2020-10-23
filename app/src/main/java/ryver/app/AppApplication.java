@@ -17,8 +17,6 @@ import ryver.app.customer.CustomerRepository;
 import ryver.app.stock.CustomStock;
 import ryver.app.stock.StockController;
 import ryver.app.stock.StockRepository;
-import ryver.app.portfolio.PortfolioController;
-import ryver.app.portfolio.PortfolioRepository;
 
 import ryver.app.account.Account;
 import ryver.app.account.AccountRepository;
@@ -94,10 +92,15 @@ public class AppApplication {
 			trade1.setStock(stock);
 			trades.save(trade1);
 			
+			assetCtrl.createAssetForAppApplication(stock, trade1, portfolio);
+			System.out.println("[Add Inital Stocks]: " + trades.save(trade1));
+
+			
 			Trade trade2 = new Trade("buy", stock.getSymbol(), (int)stock.getBid_volume(), stock.getBid(), 0.0, 0, "open", 1L, 3L);
 			trade2.setAccount(account);
 			trade2.setStock(stock);
-			trades.save(trade2);
+			System.out.println("[Add Inital Stocks]: " + trades.save(trade2));
+
 
 			DecimalFormat df = new DecimalFormat("#.#");
 			// random -> 0 to 1
@@ -152,6 +155,8 @@ public class AppApplication {
 				trade.setStock(stock);
 				System.out.println("[Add market maker's trades]: " + trades.save(trade));
 				
+				assetCtrl.createAssetForAppApplication(stock, trade, portfolio);
+
 				// if this trade's ask is higher than the stock's previous bid
 				// if this trade's ask is lower than the stock's previous ask 
 				// -> save new ask price and quantity into the stocks database

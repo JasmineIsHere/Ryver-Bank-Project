@@ -553,9 +553,9 @@ Authorization: Basic good_user_1 01_user_01
 {
     "action": "buy", 
     "symbol": "A17U", 
-    "quantity": 12000, 
+    "quantity": 2000, 
     "bid": 0,
-    "ask": 0.0, 
+    "ask": 2, 
     "account_id": 2, 
     "customer_id": 4
 }
@@ -572,11 +572,11 @@ Authorization: Basic good_user_2 02_user_02
 {
     "action": "buy", 
     "symbol": "A17U", 
-    "quantity": 6000, 
+    "quantity": 2000, 
     "bid": 0.0,
-    "ask": 0.0, 
-    "accountId": 3,
-    "customerId": 5
+    "ask": 2, 
+    "account_id": 3,
+    "customer_id": 5
 }
 
 ###
@@ -588,11 +588,11 @@ Authorization: Basic good_user_1 01_user_01
 {
     "action": "sell", 
     "symbol": "A17U", 
-    "quantity": 1000, 
+    "quantity": 2000, 
     "bid": 0.0,
-    "ask": 1, 
-    "accountId": 2, 
-    "customerId": 4
+    "ask": 0, 
+    "account_id": 2, 
+    "customer_id": 4
 }
 
 ###
@@ -661,5 +661,12 @@ Authorization: Basic good_user_1 01_user_01
 GET http://localhost:8080/portfolio
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
+
+###
+# A customer can view their own portfolio
+# Returns: 200 OK
+GET http://localhost:8080/portfolio
+Accept: application/json
+Authorization: Basic testuser_01 01_testuser_01
 
 ################### End Portfolio Testing #########################################

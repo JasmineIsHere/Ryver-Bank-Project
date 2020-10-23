@@ -16,7 +16,7 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Asset{
-    private  @Id @GeneratedValue (strategy = GenerationType.IDENTITY) int id;
+    private  @Id @GeneratedValue (strategy = GenerationType.IDENTITY) Long id;
     private String code; //symbol of stock eg. A17U
     private int quantity;
     private double avg_price; 
