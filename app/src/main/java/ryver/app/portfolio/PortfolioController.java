@@ -12,11 +12,10 @@ import org.springframework.security.access.prepost.*;
 @RestController
 public class PortfolioController {
     private PortfolioRepository portfolios;
-    private AssetRepository assets;
+    private AssetController assetsCtrl;
 
-    public PortfolioController(PortfolioRepository portfolios, AssetRepository assets) {
+    public PortfolioController(PortfolioRepository portfolios) {
         this.portfolios = portfolios;
-        this.assets = assets;
     }
 
     @GetMapping("/portfolio")
@@ -32,13 +31,13 @@ public class PortfolioController {
         
         // Calculate unrealized gain/loss
         double unrealized_gain_loss = 0.0;
-        List<Asset> assetList = assets.findByPortfolioId(portfolio.getId());
+        List<Asset> assetList = assetsCtrl.getAssetsByPortfolioId(portfolio.getId());
 
         for (Asset asset : assetList) {
-            unrealized_gain_loss += asset.getGain_loss().doubleValue();
+            asset.setGain_loss((asset.getCurrent_price() * asset.getQuantity()) - (asset.getAvg_price() * asset.getQuantity()));
+            unrealized_gain_loss += asset.getGain_loss();
         }
 
-        // Portfolio takes in double, asset gain_loss is BigDecimal
         portfolio.setUnrealized_gain_loss(unrealized_gain_loss);
         return portfolios.save(portfolio);
     }

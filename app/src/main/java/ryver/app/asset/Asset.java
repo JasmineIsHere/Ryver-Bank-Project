@@ -2,8 +2,6 @@ package ryver.app.asset;
 
 import ryver.app.portfolio.*;
 
-import java.math.BigDecimal;
-
 import javax.persistence.*;
 
 import lombok.*;
@@ -16,19 +14,19 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Asset{
-    private  @Id @GeneratedValue (strategy = GenerationType.IDENTITY) Long id;
+    private  @Id @GeneratedValue (strategy = GenerationType.IDENTITY) int id;
     private String code; //symbol of stock eg. A17U
-    private long quantity;
-    private BigDecimal avg_price; 
-    private BigDecimal current_price; 
-    private long value; 
-    private BigDecimal gain_loss;
+    private int quantity;
+    private double avg_price; 
+    private double current_price; 
+    private double value; 
+    private double gain_loss;
 
     @ManyToOne
     @JoinColumn(name = "portfolio_id", nullable = false)
     private Portfolio portfolio;
 
-    public Asset(String code, long quantity, BigDecimal avg_price, BigDecimal current_price, long value, BigDecimal gain_loss, Portfolio portfolio) {
+    public Asset(String code, int quantity, double avg_price, double current_price, long value, double gain_loss, Portfolio portfolio) {
         this.code = code;
         this.quantity = quantity;
         this.avg_price = avg_price;
