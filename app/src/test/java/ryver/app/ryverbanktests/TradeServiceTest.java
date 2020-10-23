@@ -43,8 +43,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
  *      T E S T
  *  W   1.getSpecificStockOpenAndPartialFilledBuyTrade_Found_ReturnListOfTrades
  *  W   2.getSpecificStockOpenAndPartialFilledSellTrade_Found_ReturnListOfTrades 
- * Notes:
- * none
 */
 
 @ExtendWith(MockitoExtension.class)
