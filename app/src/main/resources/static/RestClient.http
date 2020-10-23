@@ -181,8 +181,8 @@ Authorization: Basic manager_1 01_manager_01
 
 {
     "customer_id": 5,
-    "balance": 100000.0,
-    "available_balance": 100000.0
+    "balance": 5000000.0,
+    "available_balance": 5000000.0
 }
 
 ###
@@ -543,7 +543,7 @@ Authorization: Basic good_user_1 01_user_01
 
 ###
 
-# A customer create a trade
+# A customer can buy stocks
 # NEED CHANGE TO ACCOUNT_ID
 # NEED CHANGE TO CUSTOMER_ID
 POST http://localhost:8080/trades
@@ -553,9 +553,44 @@ Authorization: Basic good_user_1 01_user_01
 {
     "action": "buy", 
     "symbol": "A17U", 
-    "quantity": 21000, 
-    "bid": 1,
-    "ask": 0.0, 
+    "quantity": 2000, 
+    "bid": 0,
+    "ask": 2, 
+    "account_id": 2, 
+    "customer_id": 4
+}
+
+###
+
+# A customer can buy stocks
+# NEED CHANGE TO ACCOUNT_ID
+# NEED CHANGE TO CUSTOMER_ID
+POST http://localhost:8080/trades
+Content-Type: application/json
+Authorization: Basic good_user_2 02_user_02
+
+{
+    "action": "buy", 
+    "symbol": "A17U", 
+    "quantity": 2000, 
+    "bid": 0.0,
+    "ask": 2, 
+    "account_id": 3,
+    "customer_id": 5
+}
+
+###
+# customer can sell his stocks if he has it in his portfolio
+POST http://localhost:8080/trades
+Content-Type: application/json
+Authorization: Basic good_user_1 01_user_01
+
+{
+    "action": "sell", 
+    "symbol": "A17U", 
+    "quantity": 2000, 
+    "bid": 0.0,
+    "ask": 0, 
     "account_id": 2, 
     "customer_id": 4
 }
@@ -614,15 +649,24 @@ Authorization: Basic good_user_1 01_user_01
 ################### Begin Portfolio Testing #########################################
 
 ###
+# # A customer can view their own portfolio
+# # Returns: 200 OK
+# GET http://localhost:8080/portfolio/4
+# Accept: application/json
+# Authorization: Basic good_user_1 01_user_01
+
+###
 # A customer can view their own portfolio
 # Returns: 200 OK
-GET http://localhost:8080/portfolio/4
+GET http://localhost:8080/portfolio
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 
 ###
+# A customer can view their own portfolio
+# Returns: 200 OK
 GET http://localhost:8080/portfolio
 Accept: application/json
-Authorization: Basic good_user_1 01_user_01
+Authorization: Basic testuser_01 01_testuser_01
 
 ################### End Portfolio Testing #########################################

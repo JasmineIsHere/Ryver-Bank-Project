@@ -20,7 +20,8 @@ import ryver.app.stock.StockRepository;
 
 import ryver.app.account.Account;
 import ryver.app.account.AccountRepository;
-
+import ryver.app.asset.AssetController;
+import ryver.app.asset.AssetRepository;
 import ryver.app.trade.Trade;
 import ryver.app.trade.TradeController;
 import ryver.app.trade.TradeRepository;
@@ -40,12 +41,18 @@ public class AppApplication {
         CustomerRepository customers = ctx.getBean(CustomerRepository.class);
 		AccountRepository accounts = ctx.getBean(AccountRepository.class);
 		StockRepository stocks = ctx.getBean(StockRepository.class);
-		TradeRepository trades = ctx.getBean(TradeRepository.class);
-		PortfolioRepository portfolios = ctx.getBean(PortfolioRepository.class);
 
+		PortfolioRepository portfolios = ctx.getBean(PortfolioRepository.class);
+		PortfolioController portfolioCtrl = new PortfolioController(portfolios);
+
+		AssetRepository assets = ctx.getBean(AssetRepository.class);
+		AssetController assetCtrl = new AssetController(assets, portfolios);
+
+		TradeRepository trades = ctx.getBean(TradeRepository.class);
+		TradeController tradesCtrl = new TradeController(trades, customers, accounts, stocks, portfolios, portfolioCtrl, assets, assetCtrl);
+		
 		BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
 
-		TradeController tradesCtrl = new TradeController(trades, customers, accounts, stocks);
 		StockController stocksCtrl = new StockController(stocks);
 
 		//create the initial manager and analyst per requirement
@@ -85,10 +92,15 @@ public class AppApplication {
 			trade1.setStock(stock);
 			trades.save(trade1);
 			
+			assetCtrl.createAssetForAppApplication(stock, trade1, portfolio);
+			System.out.println("[Add Inital Stocks]: " + trades.save(trade1));
+
+			
 			Trade trade2 = new Trade("buy", stock.getSymbol(), (int)stock.getBid_volume(), stock.getBid(), 0.0, 0, "open", 1L, 3L);
 			trade2.setAccount(account);
 			trade2.setStock(stock);
-			trades.save(trade2);
+			System.out.println("[Add Inital Stocks]: " + trades.save(trade2));
+
 
 			DecimalFormat df = new DecimalFormat("#.#");
 			// random -> 0 to 1
@@ -143,6 +155,8 @@ public class AppApplication {
 				trade.setStock(stock);
 				System.out.println("[Add market maker's trades]: " + trades.save(trade));
 				
+				assetCtrl.createAssetForAppApplication(stock, trade, portfolio);
+
 				// if this trade's ask is higher than the stock's previous bid
 				// if this trade's ask is lower than the stock's previous ask 
 				// -> save new ask price and quantity into the stocks database

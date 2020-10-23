@@ -10,6 +10,7 @@ import ryver.app.portfolio.*;
 
 import ryver.app.stock.CustomStock;
 import ryver.app.stock.StockRepository;
+import ryver.app.trade.Trade;
 
 @RestController
 public class AssetController {
@@ -37,6 +38,46 @@ public class AssetController {
         }
         return assetList;
     }
+
+    public void createAssetForAppApplication (CustomStock stock, Trade trade, Portfolio portfolio) {
+        
+        long portfolioId = portfolio.getId();
+        
+        String code = trade.getSymbol();
+
+        Optional<Asset> nothing = Optional.empty();
+        // asset already exist in portfolio -> update asset
+        if (assets.findByCodeAndPortfolioId(code, portfolioId) != nothing) {
+            Asset asset = assets.findByCodeAndPortfolioId(code, portfolioId)
+                .orElseThrow(() -> new AssetCodeNotFoundException(code));
+
+            long assetId = asset.getId();
+            int prevQuantity = asset.getQuantity();
+            double prevAvg_price = asset.getAvg_price();
+            double prevTotalPrice = prevQuantity * prevAvg_price;
+            
+            int newQuantity = prevQuantity + trade.getQuantity();
+            double newTotalPrice = prevTotalPrice + (trade.getQuantity() * stock.getAsk());
+            double newAvg_price = newTotalPrice / newQuantity;
+            
+            Asset newAsset = asset;
+            newAsset.setQuantity(newQuantity);
+            newAsset.setAvg_price(newAvg_price);
+            updateAsset(portfolioId, assetId, newAsset);
+
+        } else {
+            // asset does not exist in portfolio -> add trade to asset
+            int quantity = trade.getQuantity();
+            double avg_price = stock.getAsk();
+            double current_price = stock.getAsk();
+            double value = current_price * quantity;
+            double gain_loss = value - (avg_price * quantity);
+            
+            Asset asset = new Asset(code, quantity, avg_price, current_price, value, gain_loss);
+            asset.setPortfolio(portfolio);
+            addAsset(portfolioId, asset);
+        }
+    }
     
     public Asset addAsset(Long portfolioId, Asset asset) {
         return portfolios.findById(portfolioId).map(portfolio ->{
@@ -56,7 +97,7 @@ public class AssetController {
             asset.setValue(asset.getCurrent_price() * asset.getQuantity());
             asset.setGain_loss(newAsset.getGain_loss());
             return assets.save(asset);
-        }).orElseThrow(() -> new AssetNotFoundException(assetId));
+        }).orElseThrow(() -> new AssetIdNotFoundException(assetId));
     }
 
     public ResponseEntity<?> deleteAsset(Long portfolioId, Long assetId) {
@@ -66,6 +107,6 @@ public class AssetController {
         return assets.findByIdAndPortfolioId(assetId, portfolioId).map(asset -> {
             assets.delete(asset);
             return ResponseEntity.ok().build();
-        }).orElseThrow(() -> new AssetNotFoundException(assetId));
+        }).orElseThrow(() -> new AssetIdNotFoundException(assetId));
     }
 }

@@ -92,8 +92,6 @@ public class Trade {
 
     @Override public String toString() {
         String string = "Trade(tradeid=" + this.id + ", action=" + this.action + ", symbol=" + this.symbol +  ", quantity=" + this.quantity +  ", bid=" + this.bid +  ", ask=" + this.ask +  ", avg_price=" + this.avg_price +  ", filled_quantity=" + this.filled_quantity +  ", date=" + this.date +  ", account_id=" + this.accountId +  ", customer_id=" + this.customerId +  ", status=" + this.status + ")";
-        // string = string.substring(0, 600);
-        
         return string;
     }
 }
