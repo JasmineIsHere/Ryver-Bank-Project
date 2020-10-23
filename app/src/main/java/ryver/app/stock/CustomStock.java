@@ -24,11 +24,12 @@ public class CustomStock {
     // best price - lowest ask, highest bid. if same price -> get the earlier submitted trade
 
     private @Id String symbol; //symbol of stock eg. A17U
-    private BigDecimal last_price; //$$
-    private long bid_volume; //qty
-    private BigDecimal bid; //$$
-    private long ask_volume; //qty
-    private BigDecimal ask; //$$
+    private double last_price; //$$
+    private int bid_volume; //qty
+    private double bid; //$$
+    private int ask_volume; //qty
+    private double ask; //$$
+    private long timestamp;
 
     @OneToMany(mappedBy = "stock",
     // orphanRemoval = true,
@@ -36,7 +37,7 @@ public class CustomStock {
     @JsonIgnore
     private List<Trade> trades;
 
-    public CustomStock(String symbol, BigDecimal last_price, long bid_volume, long ask_volume, BigDecimal ask, List<Trade> trades){
+    public CustomStock(String symbol, double last_price, int bid_volume, double bid,int ask_volume, double ask, List<Trade> trades){
         this.symbol = symbol;
         this.last_price = last_price;
         this.bid_volume = bid_volume;

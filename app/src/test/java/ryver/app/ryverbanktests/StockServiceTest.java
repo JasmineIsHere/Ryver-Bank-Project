@@ -55,7 +55,7 @@ public class StockServiceTest {
     void getStockBySymbol_Found_returnStocks(){
         //arrange
         CustomStock stock = new CustomStock(
-            "V03", BigDecimal.valueOf(20.97), 20000, BigDecimal.valueOf(20.59), 20000, BigDecimal.valueOf(20.6), null);
+            "V03", 20.97, 20000, 20.59, 20000, 20.6, null);
         when(stocks.findBySymbol(stock.getSymbol())).thenReturn(Optional.of(stock));
 
         //act

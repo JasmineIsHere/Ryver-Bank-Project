@@ -1,5 +1,6 @@
 ################### Start User (Customer) Testing #############################################
 # In the beginning there is a test customer
+# needed to manipulate market
 GET http://localhost:8080/customers
 Accept: application/json
 Authorization: Basic manager_1 01_manager_01
@@ -126,7 +127,7 @@ Authorization: Basic good_user_1 01_user_01
 # Validation fail - Customers cannot view list of all customers
 
 ###
-# we now have 2 customers as shown here
+# we now have 3 customers as shown here
 GET http://localhost:8080/customers
 Accept: application/json
 Authorization: Basic manager_1 01_manager_01
@@ -211,7 +212,7 @@ Authorization: Basic good_user_1 01_user_01
 ###
 # A customer cannot view another customer's account
 # Returns: 403 Forbidden 
-# Note: Account 2 belongs to customer 2
+# Note: Account 3 belongs to customer 2
 GET http://localhost:8080/accounts/3
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
@@ -264,28 +265,34 @@ Authorization: Basic manager_1 01_manager_01
 ################ Begin Transaction Testing #######################################
 
 # A customer can make transaction if he have sufficient value
-# customer 1 has 100 bucks
+# customer 1 has 1000000.0 bucks
 # Param: sender Account Id, Receiver Account Id, Value to transfer
 # Returns: 200 OK with transaction details
-POST http://localhost:8080/accounts/1/transactions
+POST http://localhost:8080/accounts/2/transactions
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
 
 {
     "from": 2,
     "to": 3,
-    "amount": 2.0
+    "amount": 200.0
 }
 
 ###
-# Check customer 1 account 1 now have 98 bucks
+# Check customer 1 account 2 now have 999800.0 bucks
 GET http://localhost:8080/accounts/2
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 
 ###
+# Check customer 2 account 3 now have 100200.0 bucks
+GET http://localhost:8080/accounts/3
+Accept: application/json
+Authorization: Basic good_user_2 02_user_02
+
+###
 # A customer cannot make transaction if he have insufficient value
-# Customer 1 now have 98 bucks
+# Customer 1 now have 999800.0 bucks
 # Param: sender Account Id, Receiver Account Id, Value to transfer
 # Returns: 400 Bad Request Insufficient Balance in account
 POST http://localhost:8080/accounts/2/transactions
@@ -300,9 +307,9 @@ Authorization: Basic good_user_1 01_user_01
 
 ###
 # A customer cannot make transaction if the receiver account does not exist
-# Account 3 does not exist
+# Account 4 does not exist
 # Param: sender Account Id, Receiver Account Id, Value to transfer
-# Returns: 404 Resource not found: Could not find account 3
+# Returns: 404 Resource not found: Could not find account 4
 POST http://localhost:8080/accounts/2/transactions
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
@@ -568,14 +575,14 @@ Authorization: Basic testuser_01 01_testuser_01
 
 ###
 # A customer can view his own specific trade
-GET http://localhost:8080/trades/89
+GET http://localhost:8080/trades/119
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 
 ###
 
 # A customer cancel a trade (status) if the trade is still open, other fields will be ignored
-PUT http://localhost:8080/trades/89
+PUT http://localhost:8080/trades/119
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
 
