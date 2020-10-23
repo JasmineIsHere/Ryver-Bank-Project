@@ -1,4 +1,4 @@
-package csd.testclient;
+package ryver.app.profTests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

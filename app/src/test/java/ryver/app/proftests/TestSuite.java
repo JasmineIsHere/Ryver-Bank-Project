@@ -1,4 +1,4 @@
-package csd.testclient;
+package ryver.app.profTests;
 
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.platform.suite.api.SelectClasses;

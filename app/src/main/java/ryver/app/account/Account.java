@@ -6,9 +6,6 @@ import ryver.app.trade.*;
 
 import java.util.*;
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import java.lang.Object;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

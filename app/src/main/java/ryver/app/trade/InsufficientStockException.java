@@ -8,6 +8,6 @@ public class InsufficientStockException extends RuntimeException{
     private static final long serialVersionUID = 1L;
 
     public InsufficientStockException() {
-        super("There is insufficient stock in your portfolio");
+        super("There are insufficient stocks in your portfolio");
     }
 }

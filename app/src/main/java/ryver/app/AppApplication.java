@@ -1,8 +1,6 @@
 package ryver.app;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.*;
 import java.sql.Timestamp;
@@ -26,7 +24,7 @@ import ryver.app.trade.Trade;
 import ryver.app.trade.TradeController;
 import ryver.app.trade.TradeRepository;
 
-import ryver.app.portfolio.*;
+//import ryver.app.portfolio.*;
 
 @SpringBootApplication
 public class AppApplication {
@@ -50,7 +48,7 @@ public class AppApplication {
 
 		StockRepository stocks = ctx.getBean(StockRepository.class);
 
-		PortfolioRepository portfolios = ctx.getBean(PortfolioRepository.class);
+		//PortfolioRepository portfolios = ctx.getBean(PortfolioRepository.class);
 
 		TradeRepository trades = ctx.getBean(TradeRepository.class);
 		// TradeController tradesCtrl = new TradeController(trades, customers, accounts, stocks, portfolios);

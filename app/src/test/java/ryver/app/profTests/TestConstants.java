@@ -1,4 +1,4 @@
-package csd.testclient;
+package ryver.app.profTests;
 
 /**
  * The user acceptance test suite is written in rest-assured (https://rest-assured.io/).

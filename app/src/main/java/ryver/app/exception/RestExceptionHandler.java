@@ -22,8 +22,6 @@ import java.util.Map;
  */
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
-
-    
     /**
      * Construct a new ResponseEntity to customize the Http error messages
      * This method handles the case in which validation failed for

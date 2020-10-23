@@ -1,4 +1,4 @@
-package csd.testclient;
+package ryver.app.profTests;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;

@@ -25,14 +25,10 @@ import ryver.app.stock.StockRepository;
 import ryver.app.transaction.InsufficientBalanceException;
 import ryver.app.stock.InvalidStockException;
 
-import javax.validation.Valid;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.*;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 

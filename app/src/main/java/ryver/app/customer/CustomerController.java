@@ -1,23 +1,20 @@
 package ryver.app.customer;
 
+import ryver.app.portfolio.*;
+import ryver.app.asset.Asset;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
-import ryver.app.portfolio.*;
-import ryver.app.asset.Asset;
-import ryver.app.customer.UsernameAlreadyExistException;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.*;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.access.prepost.*;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
-import org.springframework.http.HttpStatus;
 
 
 @RestController
@@ -26,7 +23,7 @@ public class CustomerController {
     private PortfolioRepository portfolios;
     private BCryptPasswordEncoder encoder;
 
-    public CustomerController(CustomerRepository customers, PortfolioRepository portfolios, BCryptPasswordEncoder encoder){
+    public CustomerController(CustomerRepository customers, PortfolioRepository portfolios, BCryptPasswordEncoder encoder) {
         this.customers = customers;
         this.portfolios = portfolios;
         this.encoder = encoder;
@@ -42,7 +39,7 @@ public class CustomerController {
     // Deactivated customer cannot update OWN information
     @PreAuthorize("authentication.principal.active == true and (hasRole('MANAGER') or #customerId == authentication.principal.id)")
     @PutMapping("/customers/{customerId}")
-    public Customer updateCustomer(@PathVariable (value = "customerId") Long customerId, @Valid @RequestBody Customer updatedCustomerInfo){
+    public Customer updateCustomer(@PathVariable (value = "customerId") Long customerId, @Valid @RequestBody Customer updatedCustomerInfo) {
         
         Customer customer = customers.findById(customerId)
             .orElseThrow(() -> new CustomerNotFoundException(customerId));
@@ -68,24 +65,21 @@ public class CustomerController {
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/customers")
-    public Customer addCustomer(@Valid @RequestBody Customer customer){
+    public Customer addCustomer(@Valid @RequestBody Customer customer) {
       customer.setPassword(encoder.encode(customer.getPassword()));
       if (!validateNric(customer.getNric())) 
           throw new InvalidNricException();
-      
-      if(customers.findByUsername(customer.getUsername()) != null)
-        throw new UsernameAlreadyExistException(customer.getUsername());
-
+    
       // Only customers have portfolios
-      //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-      // System.out.println(customer.getAuthorities());
       ArrayList<SimpleGrantedAuthority> a = new ArrayList(customer.getAuthorities());
       if (a.get(0).getAuthority().equals("ROLE_USER")) {
         Customer createdCustomer = customers.save(customer);
         Portfolio portfolio = new Portfolio();
+
         portfolio.setCustomer(createdCustomer);
         portfolio.setCustomer_id(createdCustomer.getId());
         portfolio.setAssets(new ArrayList<Asset>());
+        
         portfolios.save(portfolio);
         createdCustomer.setPortfolio(portfolio);
         return customers.save(createdCustomer);
@@ -93,7 +87,7 @@ public class CustomerController {
         return customers.save(customer);
     }
 
-    public static boolean validateNric(String nric){
+    public static boolean validateNric(String nric) {
         int total = 0;
         int arr[] = {2,7,6,5,4,3,2};
         char charArr[] = nric.toCharArray();
