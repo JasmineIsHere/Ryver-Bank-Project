@@ -549,8 +549,8 @@ Authorization: Basic good_user_1 01_user_01
     "quantity": 21000, 
     "bid": 1,
     "ask": 0.0, 
-    "accountId": 2, 
-    "customerId": 4
+    "account_id": 2, 
+    "customer_id": 4
 }
 
 ###
@@ -587,8 +587,8 @@ Authorization: Basic good_user_1 01_user_01
     "bid": 3.28,
     "ask": 3.27, 
     "status":"cancelled",
-    "accountId": 2, 
-    "customerId": 4
+    "account_Id": 2, 
+    "customer_Id": 4
 
 }
 
