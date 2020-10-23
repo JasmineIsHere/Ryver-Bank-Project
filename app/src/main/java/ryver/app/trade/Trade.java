@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.*;
 
@@ -43,10 +44,12 @@ public class Trade {
 
     @NotNull(message = "Account ID should not be null. ")
     @Column(name = "account_id")
+    @JsonProperty("account_id")
     private Long accountId; //account used to submit buy/sell request
 
     @NotNull(message = "Customer ID should not be null. ")
     @Column(name = "customer_id")
+    @JsonProperty("customer_id")
     private Long customerId;//customer submitting the buy/sell request
 
     @ManyToOne
@@ -89,8 +92,6 @@ public class Trade {
 
     @Override public String toString() {
         String string = "Trade(tradeid=" + this.id + ", action=" + this.action + ", symbol=" + this.symbol +  ", quantity=" + this.quantity +  ", bid=" + this.bid +  ", ask=" + this.ask +  ", avg_price=" + this.avg_price +  ", filled_quantity=" + this.filled_quantity +  ", date=" + this.date +  ", account_id=" + this.accountId +  ", customer_id=" + this.customerId +  ", status=" + this.status + ")";
-        // string = string.substring(0, 600);
-        
         return string;
     }
 }

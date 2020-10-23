@@ -1,7 +1,9 @@
 package ryver.app.portfolio;
 
+import ryver.app.asset.*;
 import ryver.app.customer.CustomerNotFoundException;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +12,7 @@ import org.springframework.security.access.prepost.*;
 @RestController
 public class PortfolioController {
     private PortfolioRepository portfolios;
+    private AssetController assetsCtrl;
 
     public PortfolioController(PortfolioRepository portfolios) {
         this.portfolios = portfolios;
@@ -26,7 +29,17 @@ public class PortfolioController {
         Portfolio portfolio = portfolios.findByCustomerId(customerId)
             .orElseThrow(() -> new CustomerNotFoundException(customerId));
         
-        return portfolio;
+        // Calculate unrealized gain/loss
+        double unrealized_gain_loss = 0.0;
+        List<Asset> assetList = assetsCtrl.getAssetsByPortfolioId(portfolio.getId());
+
+        for (Asset asset : assetList) {
+            asset.setGain_loss((asset.getCurrent_price() * asset.getQuantity()) - (asset.getAvg_price() * asset.getQuantity()));
+            unrealized_gain_loss += asset.getGain_loss();
+        }
+
+        portfolio.setUnrealized_gain_loss(unrealized_gain_loss);
+        return portfolios.save(portfolio);
     }
 
     public Portfolio updatePortfolio(long portfolioId, Portfolio updatedPortfolio) {

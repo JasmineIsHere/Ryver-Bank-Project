@@ -1,16 +1,21 @@
 package ryver.app.asset;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import ryver.app.portfolio.*;
 
+import ryver.app.stock.CustomStock;
+import ryver.app.stock.StockRepository;
+
 @RestController
 public class AssetController {
     private AssetRepository assets;
     private PortfolioRepository portfolios;
+    private StockRepository stocks;
 
     public AssetController(AssetRepository assets, PortfolioRepository portfolios) {
         this.assets = assets;
@@ -21,7 +26,16 @@ public class AssetController {
         if(!portfolios.existsById(portfolioId)) 
             throw new PortfolioNotFoundException(portfolioId);
         
-        return assets.findByPortfolioId(portfolioId);
+        List<Asset> assetList = assets.findByPortfolioId(portfolioId);
+
+        for(Asset asset : assetList){
+            Optional<CustomStock> stock = stocks.findBySymbol(asset.getCode());
+            stock.ifPresent(s -> {
+                asset.setCurrent_price(s.getBid());
+                asset.setValue(asset.getCurrent_price() * asset.getQuantity());
+            });
+        }
+        return assetList;
     }
     
     public Asset addAsset(Long portfolioId, Asset asset) {
@@ -42,7 +56,7 @@ public class AssetController {
             asset.setValue(newAsset.getValue());
             asset.setGain_loss(newAsset.getGain_loss());
             return assets.save(asset);
-        }).orElseThrow(() -> new AssetNotFoundException(assetId));
+        }).orElseThrow(() -> new AssetIdNotFoundException(assetId));
     }
 
     public ResponseEntity<?> deleteAsset(Long portfolioId, Long assetId) {
@@ -52,6 +66,6 @@ public class AssetController {
         return assets.findByIdAndPortfolioId(assetId, portfolioId).map(asset -> {
             assets.delete(asset);
             return ResponseEntity.ok().build();
-        }).orElseThrow(() -> new AssetNotFoundException(assetId));
+        }).orElseThrow(() -> new AssetIdNotFoundException(assetId));
     }
 }
