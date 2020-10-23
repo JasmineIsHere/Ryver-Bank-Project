@@ -27,17 +27,4 @@ public class Content{
         this.link = link;
         this.approved = approved;
     }
-
-    public String getTitle(){
-        return title;
-    }
-    public String getSummary(){
-        return summary;
-    }
-    public String getContent(){
-        return content;
-    }
-    public String getLink(){
-        return link;
-    }
 }

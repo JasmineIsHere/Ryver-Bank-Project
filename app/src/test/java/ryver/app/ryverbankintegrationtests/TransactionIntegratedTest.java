@@ -2,6 +2,8 @@
 
 // import ryver.app.account.AccountRepository;
 // import ryver.app.account.Account;
+// import ryver.app.account.TransactionRepository;
+// import ryver.app.account.Transaction;
 // import ryver.app.customer.*;
 
 // import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +28,7 @@
 
 // /** Start an actual HTTP server listening at a random port */
 // @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-// class AccountIntegrationTest {
+// class TransactionIntegrationTest {
 
 // 	@LocalServerPort
 // 	private int port;
@@ -40,6 +42,9 @@
 //     private AccountRepository accounts;
     
 //     @Autowired
+//     private TransactionRepository transactions;
+    
+//     @Autowired
 //     private CustomerRepository customers;
 
 // 	@Autowired
@@ -49,14 +54,15 @@
 // 	void tearDown() {
 //         // clear the database after each test
 //         customers.deleteAll();
-// 		accounts.deleteAll();
+//         accounts.deleteAll();
+//         transactions.deleteAll();
 //     }
     
 //     @Test
 //     public void addAccount_ROLEManager_Success() throws Exception{
 //         customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "Manager One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); // the manager that will retrieve customer account
 // 		Customer customer = customers.save(new Customer("User_1", encoder.encode("password"), "ROLE_USER", "Jerry Loh",
-//                 "T0046822Z", "82345678", "address", true)); //target customer
+//                 "T0046822Z", "82345678", "address", true));
         
 // 		String createAccountJSON = 
 // 		"{\"customer_id\":" + customer.getId() + ",\"balance\":" + 10000.0 + ",\"available_balance\":" + 10000.0 + "}";

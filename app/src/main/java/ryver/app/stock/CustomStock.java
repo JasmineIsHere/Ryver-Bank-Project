@@ -36,13 +36,13 @@ public class CustomStock {
     @JsonIgnore
     private List<Trade> trades;
 
-    // public CustomStock(String symbol, BigDecimal last_price, long bid_volume, long ask_volume, BigDecimal ask, List<Trade> trades){
-    //     this.symbol = symbol;
-    //     this.last_price = last_price;
-    //     this.bid_volume = bid_volume;
-    //     this.bid = bid;
-    //     this.ask_volume = ask_volume;
-    //     this.ask = ask;
-    //     this.trades = trades;
-    // } 
+    public CustomStock(String symbol, BigDecimal last_price, long bid_volume, long ask_volume, BigDecimal ask, List<Trade> trades){
+        this.symbol = symbol;
+        this.last_price = last_price;
+        this.bid_volume = bid_volume;
+        this.bid = bid;
+        this.ask_volume = ask_volume;
+        this.ask = ask;
+        this.trades = trades;
+    } 
 }

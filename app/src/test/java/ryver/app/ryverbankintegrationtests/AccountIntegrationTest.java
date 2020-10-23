@@ -110,7 +110,6 @@ class AccountIntegrationTest {
 
 		ResponseEntity<Account> result = restTemplate.withBasicAuth("User_1", "password").getForEntity(getUri, Account.class);
 
-
 		assertEquals(200, result.getStatusCode().value());
     }
 }

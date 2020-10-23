@@ -32,7 +32,7 @@ public class Trade {
 
     private double bid; //for buying
     private double ask; //for selling
-    
+
     private double avg_price; // the average filled price, as one trade can be matched by several other trades
     private int filled_quantity; //# of quantity successfully sold/bought out of total "quantity"
 
