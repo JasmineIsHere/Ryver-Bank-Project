@@ -20,6 +20,7 @@ import lombok.*;
 @EqualsAndHashCode
 public class Portfolio {
     private @Id @GeneratedValue (strategy = GenerationType.IDENTITY) Long id;
+    
     private long customer_id;
     private double unrealized_gain_loss; // for stocks currently owned
     private double total_gain_loss;     // for all the trades made so far
