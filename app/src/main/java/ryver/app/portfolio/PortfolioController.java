@@ -1,31 +1,47 @@
 package ryver.app.portfolio;
 
 import ryver.app.asset.*;
-import ryver.app.customer.CustomerNotFoundException;
+import ryver.app.customer.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class PortfolioController {
     private PortfolioRepository portfolios;
     private AssetController assetsCtrl;
+    private CustomerRepository customers;
 
-    public PortfolioController(PortfolioRepository portfolios) {
+    public PortfolioController(PortfolioRepository portfolios, AssetController assetsCtrl, CustomerRepository customers) {
         this.portfolios = portfolios;
+        this.assetsCtrl = assetsCtrl;
+        this.customers = customers;
     }
+
+    // @GetMapping("/portfolio")
+    // public List<Portfolio> getPortfolios() {
+    //     return portfolios.findAll();
+    // }
 
     @GetMapping("/portfolio")
-    public List<Portfolio> getPortfolios() {
-        return portfolios.findAll();
-    }
+   // @PreAuthorize("authentication.principal.active == true and (hasRole('USER') and #customerId == authentication.principal.id)")
+    public Portfolio getPortfolio() {
+        System.out.println("In method");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String customerUsername = authentication.getName();
+        System.out.println("Test1");
+        Customer customer = customers.findByUsername(customerUsername)
+            .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
+        System.out.println("Test2");
+        long customerId = customer.getId();
 
-    @GetMapping("/portfolio/{customerId}")
-    @PreAuthorize("authentication.principal.active == true and (hasRole('USER') and #customerId == authentication.principal.id)")
-    public Portfolio getPortfolio(@PathVariable (value = "customerId") Long customerId) {
+        System.out.println("got customer id");
         Portfolio portfolio = portfolios.findByCustomerId(customerId)
             .orElseThrow(() -> new CustomerNotFoundException(customerId));
         

@@ -43,10 +43,11 @@ public class AppApplication {
 		StockRepository stocks = ctx.getBean(StockRepository.class);
 
 		PortfolioRepository portfolios = ctx.getBean(PortfolioRepository.class);
-		PortfolioController portfolioCtrl = new PortfolioController(portfolios);
 
 		AssetRepository assets = ctx.getBean(AssetRepository.class);
 		AssetController assetCtrl = new AssetController(assets, portfolios);
+
+		PortfolioController portfolioCtrl = new PortfolioController(portfolios, assetCtrl, customers);
 
 		TradeRepository trades = ctx.getBean(TradeRepository.class);
 		TradeController tradesCtrl = new TradeController(trades, customers, accounts, stocks, portfolios, portfolioCtrl, assets, assetCtrl);
