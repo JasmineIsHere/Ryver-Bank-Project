@@ -9,7 +9,6 @@ import ryver.app.account.Account.*;
 import ryver.app.trade.Trade.*;
 import ryver.app.stock.CustomStock.*;
 
-import java.math.*;
 import java.sql.*;
 
 import org.springframework.boot.test.context.SpringBootTest;
@@ -71,7 +70,7 @@ public class TradeServiceTest {
         Account account = new Account(40000.0, 40000.0, 1L, customer);
         
         CustomStock stock = new CustomStock(
-            "V03", BigDecimal.valueOf(20.97), 20000, BigDecimal.valueOf(20.59), 20000, BigDecimal.valueOf(20.6), null);
+            "V03", 20.97, 20000, 20.59, 20000, 20.6, null);
 
         long timestamp = new Timestamp(System.currentTimeMillis()).getTime();
 
@@ -104,7 +103,7 @@ public class TradeServiceTest {
         Account account = new Account(40000.0, 40000.0, 1L, customer);
         
         CustomStock stock = new CustomStock(
-            "V03", BigDecimal.valueOf(20.97), 20000, BigDecimal.valueOf(20.59), 20000, BigDecimal.valueOf(20.6), null);
+            "V03", 20.97, 20000, 20.59, 20000, 20.6, null);
 
         long timestamp = new Timestamp(System.currentTimeMillis()).getTime();
 

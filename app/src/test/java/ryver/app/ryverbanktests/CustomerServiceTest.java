@@ -85,50 +85,23 @@ public class CustomerServiceTest {
         when(customers.save(any(Customer.class))).thenReturn(updatedCustomer);         
         when(encoder.encode(updatedCustomer.getPassword())).thenReturn(updatedCustomer.getPassword());
     
-//         //act
-//         Customer savedCustomer = customerController.updateCustomer(customer.getId(), updatedCustomer);
+        //act
+        Customer savedCustomer = customerController.updateCustomer(customer.getId(), updatedCustomer);
 
-//         //assert
-//         // fields which customers and managers can update - password, phone, address
-//         assertEquals(updatedCustomer.getAuthorities(), savedCustomer.getAuthorities());
-//         assertEquals(updatedCustomer.getAddress(), savedCustomer.getAddress());
-//         assertEquals(updatedCustomer.getPhone(), savedCustomer.getPhone());
-//         assertEquals(updatedCustomer.getPassword(), savedCustomer.getPassword());
-//         assertEquals(updatedCustomer.getUsername(), savedCustomer.getUsername());
-//         assertEquals(updatedCustomer.getFullName(), savedCustomer.getFullName());
-//         assertEquals(updatedCustomer.getNric(), savedCustomer.getNric());
-//         //IsActive not working
+        //assert
+        // fields which customers and managers can update - password, phone, address
+        assertEquals(updatedCustomer.getAuthorities(), savedCustomer.getAuthorities());
+        assertEquals(updatedCustomer.getAddress(), savedCustomer.getAddress());
+        assertEquals(updatedCustomer.getPhone(), savedCustomer.getPhone());
+        assertEquals(updatedCustomer.getPassword(), savedCustomer.getPassword());
+        assertEquals(updatedCustomer.getUsername(), savedCustomer.getUsername());
+        assertEquals(updatedCustomer.getFullName(), savedCustomer.getFullName());
+        assertEquals(updatedCustomer.getNric(), savedCustomer.getNric());
+        //IsActive not working
     
         verify(customers).findById(customer.getId());
         verify(customers).save(savedCustomer);
     }
-
-    // @Test
-    // void updateCustomer_NotFound_returnNull(){
-    //     //arrange        
-    //     Customer customer = new Customer(
-    //         "good_user_1", "01_user_01", "ROLE_USER", "User One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", false);
-    //     customer.setId(1L);
-
-    //     Customer updatedCustomer = new Customer(
-    //         "good_user_1", "01_user_01", "ROLE_USER", "User One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
-    //     updatedCustomer.setId(1L);
-
-    //     when(customers.findById(customerId)).thenReturn(Optional.empty()); 
-    //     when(encoder.encode(updatedCustomer.getPassword())).thenReturn(updatedCustomer.getPassword());
-            
-    //     //act
-    //     Customer savedCustomer = null;
-    //     try{
-    //         savedCustomer = customerController.updateCustomer(1L, updatedCustomer);
-    //     } catch (CustomerNotFoundException e){
-    //     }
-
-    //     //assert
-    //     assertThrows(CustomerNotFoundException.class, () -> {customerController.updateCustomer(updatedCustomer);});
-    //     assertNull(savedCustomer);
-    //     verify(customers, never()).save(updatedCustomer); 
-    // }
 
     @Test
     void addCustomer_NewCustomerWithValidNric_ReturnSavedCustomer(){
@@ -143,8 +116,8 @@ public class CustomerServiceTest {
         portfolio.setAssets(new ArrayList<Asset>());
         when(portfolios.save(any(Portfolio.class))).thenReturn(new Portfolio());
         
-//         //act
-//         Customer savedCustomer = customerController.addCustomer(customer);
+        //act
+        Customer savedCustomer = customerController.addCustomer(customer);
         
         //assert
         assertNotNull(savedCustomer);
@@ -157,31 +130,31 @@ public class CustomerServiceTest {
         Customer customer = new Customer(
             "user_1", "01_user_01", "ROLE_USER", "User One", "T1234567Z", "12345678", "address", true);
             
-//         //act
-//         Customer savedCustomer = null;
-//         try{
-//             savedCustomer = customerController.addCustomer(customer);
-//         } catch (InvalidNricException e){
-//         }
+        //act
+        Customer savedCustomer = null;
+        try{
+            savedCustomer = customerController.addCustomer(customer);
+        } catch (InvalidNricException e){
+        }
         
-//         //assert
-//         assertThrows(InvalidNricException.class, () -> {customerController.addCustomer(customer);}); //asserts a InvalidNricException was thrown
-//         assertNull(savedCustomer); //asserts that no new customer is added
+        //assert
+        assertThrows(InvalidNricException.class, () -> {customerController.addCustomer(customer);}); //asserts a InvalidNricException was thrown
+        assertNull(savedCustomer); //asserts that no new customer is added
 
-//         verify(customers, never()).save(customer); //verify the save method was never executed because an exception was thrown
-//     }
+        verify(customers, never()).save(customer); //verify the save method was never executed because an exception was thrown
+    }
 
-//     @Test 
-//     void validateNric_ValidNric_ReturnTrue(){
-//         //arrange
-//         Customer manager = new Customer(
-//             "Jolene", "password", "manager", "Jolene Loh", "T1234567Z", "12345678", "address", true);
-//         //act
-//         boolean validNric = customerController.validateNric(manager.getNric());
-//         //assert
-//         assertNotNull(validNric);
-//     }
-// }
+    @Test 
+    void validateNric_ValidNric_ReturnTrue(){
+        //arrange
+        Customer manager = new Customer(
+            "Jolene", "password", "manager", "Jolene Loh", "T1234567Z", "12345678", "address", true);
+        //act
+        boolean validNric = customerController.validateNric(manager.getNric());
+        //assert
+        assertNotNull(validNric);
+    }
+}
 
 //     // @Test
 //     // void updateCustomer_NotFound_returnNull(){

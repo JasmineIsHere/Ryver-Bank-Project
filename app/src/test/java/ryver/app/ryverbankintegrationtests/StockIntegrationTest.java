@@ -26,7 +26,7 @@
 
 // /** Start an actual HTTP server listening at a random port */
 // @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-// class AccountIntegrationTest {
+// class StockIntegrationTest {
 
 // 	@LocalServerPort
 // 	private int port;

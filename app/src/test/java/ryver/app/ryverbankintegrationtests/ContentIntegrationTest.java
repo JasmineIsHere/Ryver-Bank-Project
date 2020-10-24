@@ -57,11 +57,15 @@
 //         Customer customer = customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "Manager One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); 
 //         // Content content = "The title of the advisory or news","The short summary of the content item", "The text of the content item", "https://link.to.externalcontent", false;
 
-//         String createContentJSON = "{\"title\":\"The title of the advisory or news\",\"summary\":\"The short summary of the content item\",\"content\":\"The text of the content item\",\"link\":\"https://link.to.externalcontent\",\"approved\":"+ false +"}";
+//         JSONObject requestParams = new JSONObject();
+//         requestParams.put("title", "The title of the article"); 
+//         requestParams.put("summary", "The summary of the article");
+//         requestParams.put("content", "The content of the article");
+//         requestParams.put("link",  "https://article.com/article1");
 		
 // 		HttpHeaders headers = new HttpHeaders();
 //         headers.setContentType(MediaType.APPLICATION_JSON);
-// 		HttpEntity<String> entity = new HttpEntity<>(createContentJSON, headers);
+// 		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
 //         URI postUri = new URI(baseUrl + port + "/contents");
 
 //         ResponseEntity<Content> result = restTemplate.withBasicAuth("manager_1", "01_manager_01")
