@@ -82,7 +82,6 @@ public class CustomerController {
     // Only customers have portfolios
     ArrayList<SimpleGrantedAuthority> a = new ArrayList(customer.getAuthorities());
     if (a.get(0).getAuthority().equals("ROLE_USER")) {
-      // Customer createdCustomer = customers.save(customer);
       Portfolio portfolio = new Portfolio();
 
       portfolio.setCustomer(customer);
@@ -90,10 +89,6 @@ public class CustomerController {
       portfolio.setCustomer_id(customer.getId());
       
       portfolio.setAssets(new ArrayList<Asset>());
-      
-      portfolios.save(portfolio);
-      
-      //customer.setPortfolio(portfolio);
       
       return portfolios.save(portfolio);
     } else

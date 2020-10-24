@@ -45,7 +45,7 @@ public class AppApplication {
 		PortfolioRepository portfolios = ctx.getBean(PortfolioRepository.class);
 
 		AssetRepository assets = ctx.getBean(AssetRepository.class);
-		AssetController assetCtrl = new AssetController(assets, portfolios);
+		AssetController assetCtrl = new AssetController(assets, portfolios,stocks);
 
 		PortfolioController portfolioCtrl = new PortfolioController(portfolios, assetCtrl, customers);
 
@@ -81,8 +81,6 @@ public class AppApplication {
 		portfolio.setCustomer(customer);
         System.out.println("[Add portfolio to test user]: " + portfolios.save(portfolio));
 		customer.setPortfolio(portfolio);
-		
-
 		
 		//manipulate the market
 		for (CustomStock stock: stockList){

@@ -29,19 +29,20 @@ public class PortfolioController {
     //     return portfolios.findAll();
     // }
 
+    //@PreAuthorize("authentication.principal.active == true and (hasRole('USER') and #customer_Id == authentication.principal.id)")
+    
+
+    @PreAuthorize("authentication.principal.active == true")
     @GetMapping("/portfolio")
-   // @PreAuthorize("authentication.principal.active == true and (hasRole('USER') and #customerId == authentication.principal.id)")
     public Portfolio getPortfolio() {
-        System.out.println("In method");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String customerUsername = authentication.getName();
-        System.out.println("Test1");
+        
         Customer customer = customers.findByUsername(customerUsername)
             .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
-        System.out.println("Test2");
+        
         long customerId = customer.getId();
 
-        System.out.println("got customer id");
         Portfolio portfolio = portfolios.findByCustomerId(customerId)
             .orElseThrow(() -> new CustomerNotFoundException(customerId));
         
@@ -53,8 +54,8 @@ public class PortfolioController {
             asset.setGain_loss((asset.getCurrent_price() * asset.getQuantity()) - (asset.getAvg_price() * asset.getQuantity()));
             unrealized_gain_loss += asset.getGain_loss();
         }
-
         portfolio.setUnrealized_gain_loss(unrealized_gain_loss);
+        
         return portfolios.save(portfolio);
     }
 
