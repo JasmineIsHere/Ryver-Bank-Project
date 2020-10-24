@@ -18,9 +18,10 @@ public class AssetController {
     private PortfolioRepository portfolios;
     private StockRepository stocks;
 
-    public AssetController(AssetRepository assets, PortfolioRepository portfolios) {
+    public AssetController(AssetRepository assets, PortfolioRepository portfolios, StockRepository stocks) {
         this.assets = assets;
         this.portfolios = portfolios;
+        this.stocks = stocks;
     }
 
     public List<Asset> getAssetsByPortfolioId(Long portfolioId) {
@@ -28,7 +29,7 @@ public class AssetController {
             throw new PortfolioNotFoundException(portfolioId);
         
         List<Asset> assetList = assets.findByPortfolioId(portfolioId);
-
+        
         for(Asset asset : assetList){
             Optional<CustomStock> stock = stocks.findBySymbol(asset.getCode());
             stock.ifPresent(s -> {
