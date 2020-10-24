@@ -51,6 +51,7 @@ class CustomerIntegrationTest {
 	public void addCustomer_Success() throws Exception {
 		// Customer newCustomer = new Customer("Jolene", encoder.encode("new_password"), "ROLE_USER", "Jolene Loh",
 		// 		"T0046822Z", "97123456", "updated_address", true);
+
 		String newCustomer = 
 		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"fullName\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": true}";
 		customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "Manager One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); // the manager that will be updated the customer details
@@ -61,8 +62,7 @@ class CustomerIntegrationTest {
 		//System.out.println(entity);
 		URI uri = new URI(baseUrl + port + "/customers");
 
-		ResponseEntity<Object> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").postForEntity(uri, entity, Object.class);
-		//System.out.println(result.getBody().getClass()); //returns a java.util.LinkedHashMap
+		ResponseEntity<LinkedHashMap> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").postForEntity(uri, entity, LinkedHashMap.class);
 		//ResponseEntity<Customer> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").postForEntity(uri, newCustomer, Customer.class);
 
 		assertEquals(201, result.getStatusCode().value());
@@ -78,10 +78,9 @@ class CustomerIntegrationTest {
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(newCustomer, headers);
-		//System.out.println(entity);
 		URI uri = new URI(baseUrl + port + "/customers");
 
-		ResponseEntity<Object> result = restTemplate.withBasicAuth("user_2", "02_user_02").postForEntity(uri, entity, Object.class);
+		ResponseEntity<LinkedHashMap> result = restTemplate.withBasicAuth("user_2", "02_user_02").postForEntity(uri, entity, LinkedHashMap.class);
 		
 		assertEquals(403, result.getStatusCode().value()); //Forbidden
 	}
@@ -104,9 +103,7 @@ class CustomerIntegrationTest {
 
 		ResponseEntity<LinkedHashMap> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").exchange(uri,
 				HttpMethod.PUT, entity, LinkedHashMap.class);
-		System.out.println("MANAGER: " + result.getBody());
-		System.out.println("Users: " + customers.count());
-		
+	
 		assertEquals(200, result.getStatusCode().value());
 
 		// assertEquals("999 Tampines Road S99999", result.getBody().get("address"));
@@ -158,9 +155,6 @@ class CustomerIntegrationTest {
 
 		ResponseEntity<LinkedHashMap> result = restTemplate.withBasicAuth("User_1", "password").exchange(uri,
 				HttpMethod.PUT, entity, LinkedHashMap.class);
-		System.out.println("CUSTOMER: " + result.getBody());
-		System.out.println("Users: " + customers.count());
-
 		
 		assertEquals(200, result.getStatusCode().value());
 		// assertEquals(updatedCustomer.getAddress(), result.getBody().getAddress());
