@@ -1,7 +1,7 @@
 // package ryver.app.ryverbankintegrationtests;
 
-// import ryver.app.account.AccountRepository;
-// import ryver.app.account.Account;
+// import ryver.app.account.StockRepository;
+// import ryver.app.account.CustomStock;
 // import ryver.app.customer.*;
 
 // import static org.junit.jupiter.api.Assertions.*;
@@ -37,7 +37,7 @@
 // 	private TestRestTemplate restTemplate;
 
 // 	@Autowired
-//     private AccountRepository accounts;
+//     private StockRepository stocks;
     
 //     @Autowired
 //     private CustomerRepository customers;
@@ -49,17 +49,18 @@
 // 	void tearDown() {
 //         // clear the database after each test
 //         customers.deleteAll();
-// 		accounts.deleteAll();
+// 		stocks.deleteAll();
 //     }
     
 //     @Test
-//     public void addAccount_ROLEManager_Success() throws Exception{
+//     public void getStockBySymbol_ROLEUser_Success() throws Exception{
 //         customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "Manager One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); // the manager that will retrieve customer account
 // 		Customer customer = customers.save(new Customer("User_1", encoder.encode("password"), "ROLE_USER", "Jerry Loh",
 //                 "T0046822Z", "82345678", "address", true)); //target customer
-        
-// 		String createAccountJSON = 
-// 		"{\"customer_id\":" + customer.getId() + ",\"balance\":" + 10000.0 + ",\"available_balance\":" + 10000.0 + "}";
+
+// 		String createStockJSON = 
+
+//         "{\"customer_id\":" + customer.getId() + ",\"balance\":" + 10000.0 + ",\"available_balance\":" + 10000.0 + "}";
 		
 // 		HttpHeaders headers = new HttpHeaders();
 //         headers.setContentType(MediaType.APPLICATION_JSON);
