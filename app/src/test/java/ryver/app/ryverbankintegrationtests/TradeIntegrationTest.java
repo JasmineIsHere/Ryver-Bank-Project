@@ -133,7 +133,6 @@ public class TradeIntegrationTest {
 		trade.setStock(stocks.findAll().get(0));
 		trades.save(trade);
 			
-		
 		URI uri = new URI(baseUrl + port + "/trades/" + trade.getId());
 
 		ResponseEntity<Trade> result = restTemplate.withBasicAuth("user_1", "password").getForEntity(uri, Trade.class);

@@ -1,117 +1,86 @@
-// package ryver.app.ryverbankintegrationtests;
+package ryver.app.ryverbankintegrationtests;
 
-// import ryver.app.account.StockRepository;
-// import ryver.app.account.CustomStock;
-// import ryver.app.customer.*;
+import ryver.app.stock.StockRepository;
+import ryver.app.trade.Trade;
+import ryver.app.customer.Customer;
+import ryver.app.customer.CustomerRepository;
+import ryver.app.stock.CustomStock;
 
-// import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-// import java.net.URI;
-// import java.util.LinkedHashMap;
-// import java.util.Optional;
+import java.net.URI;
+import java.util.ArrayList;
 
-// import org.junit.jupiter.api.AfterEach;
-// import org.junit.jupiter.api.Test;
-// import org.springframework.boot.test.context.SpringBootTest;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-// import org.springframework.boot.test.web.client.TestRestTemplate;
-// import org.springframework.boot.web.server.LocalServerPort;
-// import org.springframework.http.HttpEntity;
-// import org.springframework.http.HttpHeaders;
-// import org.springframework.http.HttpMethod;
-// import org.springframework.http.MediaType;
-// import org.springframework.http.ResponseEntity;
-// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-// /** Start an actual HTTP server listening at a random port */
-// @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-// class StockIntegrationTest {
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
-// 	@LocalServerPort
-// 	private int port;
 
-// 	private final String baseUrl = "http://localhost:";
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-// 	@Autowired
-// 	private TestRestTemplate restTemplate;
+import net.minidev.json.JSONObject;
 
-// 	@Autowired
-//     private StockRepository stocks;
+/** Start an actual HTTP server listening at a random port */
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+class StockIntegrationTest {
+
+	@LocalServerPort
+	private int port;
+
+	private final String baseUrl = "http://localhost:";
+
+	@Autowired
+	private TestRestTemplate restTemplate;
+
+	@Autowired
+    private StockRepository stocks;
+
+    @Autowired
+    private CustomerRepository customers;
+
+    @Autowired
+    private BCryptPasswordEncoder encoder;
+
+	@AfterEach
+	void tearDown() {
+        // clear the database after each test
+		stocks.deleteAll();
+    }
     
-//     @Autowired
-//     private CustomerRepository customers;
+    @Test
+    public void getStockBySymbol_ROLEUser_Success() throws Exception{
+        Customer customer = new Customer("user_1", encoder.encode("password"), "ROLE_USER", "user_fullname", "S7812345A", "91234567", "address", true);
+        customer.setId(1L);
+        customers.save(customer);
+        
+        CustomStock stock = new CustomStock(
+            "V03", 20.55, 20000, 20.60, 20000, 20.65, new ArrayList<Trade>());
+        stocks.save(stock);
 
-// 	@Autowired
-// 	private BCryptPasswordEncoder encoder;
+        URI postUri = new URI(baseUrl + port + "/stocks/" + stock.getSymbol());
 
-// 	@AfterEach
-// 	void tearDown() {
-//         // clear the database after each test
-//         customers.deleteAll();
-// 		stocks.deleteAll();
-//     }
+        ResponseEntity<CustomStock> result = restTemplate.withBasicAuth("user_1", "password").getForEntity(postUri, CustomStock.class);
+
+        assertEquals(200, result.getStatusCode().value());
+    }
     
-//     @Test
-//     public void getStockBySymbol_ROLEUser_Success() throws Exception{
-//         customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "Manager One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); // the manager that will retrieve customer account
-// 		Customer customer = customers.save(new Customer("User_1", encoder.encode("password"), "ROLE_USER", "Jerry Loh",
-//                 "T0046822Z", "82345678", "address", true)); //target customer
+    // @Test
+    // public void getStockBySymbol_ROLEUser_Failure() throws Exception{
+    //     URI uri = new URI(baseUrl + port + "/stocks/" + 1);
 
-// 		String createStockJSON = 
-
-//         "{\"customer_id\":" + customer.getId() + ",\"balance\":" + 10000.0 + ",\"available_balance\":" + 10000.0 + "}";
+	// 	ResponseEntity<CustomStock> result = restTemplate.withBasicAuth("user_1", "password").getForEntity(uri, CustomStock.class);
 		
-// 		HttpHeaders headers = new HttpHeaders();
-//         headers.setContentType(MediaType.APPLICATION_JSON);
-// 		HttpEntity<String> entity = new HttpEntity<>(createAccountJSON, headers);
-//         URI postUri = new URI(baseUrl + port + "/accounts");
-
-//         ResponseEntity<Account> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").postForEntity(postUri, entity, Account.class);
-
-//         assertEquals(201, result.getStatusCode().value());
-//         assertEquals(customer.getId(), result.getBody().getCustomer_id());
-//     }
-
-//     @Test
-//     public void addAccount_ROLECustomer_Failure() throws Exception{
-// 		Customer customer = customers.save(new Customer("User_1", encoder.encode("password"), "ROLE_USER", "Jerry Loh",
-//                 "T0046822Z", "82345678", "address", true)); //target customer
-        
-// 		String createAccountJSON = 
-// 		"{\"customer_id\":" + customer.getId() + ",\"balance\":" + 10000.0 + ",\"available_balance\":" + 10000.0 + "}";
-		
-// 		HttpHeaders headers = new HttpHeaders();
-//         headers.setContentType(MediaType.APPLICATION_JSON);
-// 		HttpEntity<String> entity = new HttpEntity<>(createAccountJSON, headers);
-//         URI postUri = new URI(baseUrl + port + "/accounts");
-
-//         ResponseEntity<Account> result = restTemplate.withBasicAuth("User_1", "password").postForEntity(postUri, entity, Account.class);
-
-//         assertEquals(403, result.getStatusCode().value());
-//     }
-
-// 	@Test
-// 	public void getAccountByAccountIdAndCustomerId_ROLECustomer_Success() throws Exception {
-//         customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "Manager One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); // the manager that will retrieve customer account
-// 		Customer customer = customers.save(new Customer("User_1", encoder.encode("password"), "ROLE_USER", "Jerry Loh",
-//                 "T0046822Z", "82345678", "address", true)); //target customer
-        
-// 		String createAccountJSON = 
-// 		"{\"customer_id\":" + customer.getId() + ",\"balance\":" + 10000.0 + ",\"available_balance\":" + 10000.0 + "}";
-		
-// 		HttpHeaders headers = new HttpHeaders();
-//         headers.setContentType(MediaType.APPLICATION_JSON);
-// 		HttpEntity<String> entity = new HttpEntity<>(createAccountJSON, headers);
-//         URI postUri = new URI(baseUrl + port + "/accounts");
-
-//         ResponseEntity<Account> acc = restTemplate.withBasicAuth("manager_1", "01_manager_01").postForEntity(postUri, entity, Account.class);
-
-//         URI getUri = new URI(baseUrl + port + "/accounts/" + acc.getBody().getId());
-
-// 		ResponseEntity<Account> result = restTemplate.withBasicAuth("User_1", "password").getForEntity(getUri, Account.class);
-
-
-// 		assertEquals(200, result.getStatusCode().value());
-//     }
-// }
+	// 	//requested trade not found
+	// 	assertEquals(404, result.getStatusCode().value());
+    // }
+}
