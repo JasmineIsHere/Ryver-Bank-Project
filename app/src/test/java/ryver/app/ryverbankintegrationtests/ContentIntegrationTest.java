@@ -11,7 +11,10 @@
 // import java.util.Optional;
 
 // import org.junit.jupiter.api.AfterEach;
+// import org.junit.jupiter.api.BeforeAll;
 // import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.api.TestInstance;
+// import org.junit.jupiter.api.TestInstance.Lifecycle;
 // import org.springframework.boot.test.context.SpringBootTest;
 // import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -23,6 +26,8 @@
 // import org.springframework.http.MediaType;
 // import org.springframework.http.ResponseEntity;
 // import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+// import net.minidev.json.JSONObject;
+
 
 // /** Start an actual HTTP server listening at a random port */
 // @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -62,7 +67,8 @@
 //         requestParams.put("summary", "The summary of the article");
 //         requestParams.put("content", "The content of the article");
 //         requestParams.put("link",  "https://article.com/article1");
-		
+//         requestParams.put("approved",  false);
+
 // 		HttpHeaders headers = new HttpHeaders();
 //         headers.setContentType(MediaType.APPLICATION_JSON);
 // 		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
@@ -91,23 +97,23 @@
 //     //     assertEquals(201, result.getStatusCode().value());
 //     // }
 
-//     // @Test
-//     // public void addContent_ROLECustomer_Failure() throws Exception{
-// 	// 	Customer customer = customers.save(new Customer("User_1", encoder.encode("password"), "ROLE_USER", "Jerry Loh",
-//     //             "T0046822Z", "82345678", "address", true)); 
+//     @Test
+//     public void addContent_ROLECustomer_Failure() throws Exception{
+// 		Customer customer = customers.save(new Customer("User_1", encoder.encode("password"), "ROLE_USER", "Jerry Loh",
+//                 "T0046822Z", "82345678", "address", true)); 
         
-//     //     String createContentJSON = 
-//     //     "{\"title\":\"The title of the advisory or news\",\"summary\":\"The short summary of the content item\",\"content\":\"The text of the content item\",\"link\":\"https://link.to.externalcontent\",\"approved\":"+ false +"}";
+//         String createContentJSON = 
+//         "{\"title\":\"The title of the advisory or news\",\"summary\":\"The short summary of the content item\",\"content\":\"The text of the content item\",\"link\":\"https://link.to.externalcontent\",\"approved\":"+ false +"}";
             
-//     //     HttpHeaders headers = new HttpHeaders();
-//     //     headers.setContentType(MediaType.APPLICATION_JSON);
-//     //     HttpEntity<String> entity = new HttpEntity<>(createContentJSON, headers);
-//     //     URI postUri = new URI(baseUrl + port + "/contents");
+//         HttpHeaders headers = new HttpHeaders();
+//         headers.setContentType(MediaType.APPLICATION_JSON);
+//         HttpEntity<String> entity = new HttpEntity<>(createContentJSON, headers);
+//         URI postUri = new URI(baseUrl + port + "/contents");
     
-//     //     ResponseEntity<Content> result = restTemplate.withBasicAuth("analyst_1", "01_analyst_01").postForEntity(postUri, entity, Content.class);
+//         ResponseEntity<Content> result = restTemplate.withBasicAuth("analyst_1", "01_analyst_01").postForEntity(postUri, entity, Content.class);
 
-//     //     assertEquals(403, result.getStatusCode().value());
-//     // }
+//         assertEquals(403, result.getStatusCode().value());
+//     }
 
 // 	// @Test
 // 	// public void getAccountByAccountIdAndCustomerId_ROLECustomer_Success() throws Exception {
