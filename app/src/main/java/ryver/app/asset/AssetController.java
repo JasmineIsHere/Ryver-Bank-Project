@@ -32,7 +32,6 @@ public class AssetController {
         
         for(Asset asset : assetList){
             Optional<CustomStock> stock = stocks.findBySymbol(asset.getCode());
-            System.out.println(stock.get().getSymbol());
             stock.ifPresent(s -> {
                 asset.setCurrent_price(s.getBid());
                 asset.setValue(asset.getCurrent_price() * asset.getQuantity());
