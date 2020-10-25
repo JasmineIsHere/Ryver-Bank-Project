@@ -17,7 +17,7 @@ public class ContentController {
         this.contents = contents;
     }
 
-    @GetMapping("/content")
+    @GetMapping("/contents")
     public List<Content> getContent() {
 
         //Users can only see approved content
@@ -31,13 +31,13 @@ public class ContentController {
     
     // Approved is false by default
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/content")
+    @PostMapping("/contents")
     public Content addContent(@Valid @RequestBody Content content) {
         content.setApproved(false);
         return contents.save(content);
     }
 
-    @PutMapping("/content/{contentId}")
+    @PutMapping("/contents/{contentId}")
     public Content updateContent(@PathVariable (value = "contentId") Long contentId, @Valid @RequestBody Content updatedContentInfo) {
 
         Content content = contents.findById(contentId)
@@ -58,7 +58,7 @@ public class ContentController {
         return contents.save(content);
     }
 
-    @DeleteMapping("/content/{contentId}")
+    @DeleteMapping("/contents/{contentId}")
     public void deleteContent(@PathVariable (value = "contentId") Long contentId) {
         Content content = contents.findById(contentId)
             .orElseThrow(() -> new ContentNotFoundException(contentId));
