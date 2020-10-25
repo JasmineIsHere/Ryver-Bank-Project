@@ -544,7 +544,7 @@ Authorization: Basic good_user_1 01_user_01
 ###
 
 # A customer can buy stocks
-# Returns: 201 OK with Trade information
+# Returns: 201 with trade information
 POST http://localhost:8080/trades
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
@@ -562,7 +562,7 @@ Authorization: Basic good_user_1 01_user_01
 ###
 
 # A customer can buy stocks
-# Returns: 201 OK with Trade Information 
+# Returns: 201 with trade information 
 POST http://localhost:8080/trades
 Content-Type: application/json
 Authorization: Basic good_user_2 02_user_02
@@ -578,8 +578,8 @@ Authorization: Basic good_user_2 02_user_02
 }
 
 ###
-# customer can sell his stocks if he has it in his portfolio
-# Returns: 201 OK with Trade Information
+# A customer can sell his stocks if he has it in his portfolio
+# Returns: 201 with trade information
 POST http://localhost:8080/trades
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
@@ -611,6 +611,7 @@ Authorization: Basic testuser_01 01_testuser_01
 
 ###
 # A customer can view his own specific trade
+# tradeId must change according to the trade created
 # Returns: 200 OK with Trade Information 
 GET http://localhost:8080/trades/119
 Accept: application/json
@@ -618,7 +619,8 @@ Authorization: Basic good_user_1 01_user_01
 
 ###
 # A customer cancel a trade (status) if the trade is still open, other fields will be ignored
-# Problem here 200 ok when its filled 
+# tradeId must change according to the trade created
+# Returns: 400 bad request because trade has already been filled 
 PUT http://localhost:8080/trades/119
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
@@ -649,13 +651,6 @@ Authorization: Basic good_user_1 01_user_01
 
 
 ################### Begin Portfolio Testing #########################################
-
-###
-# # A customer can view their own portfolio
-# # Returns: 200 OK
-# GET http://localhost:8080/portfolio/4
-# Accept: application/json
-# Authorization: Basic good_user_1 01_user_01
 
 ###
 # A customer can view their own portfolio

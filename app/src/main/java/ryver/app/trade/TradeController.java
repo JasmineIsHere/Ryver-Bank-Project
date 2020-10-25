@@ -66,7 +66,7 @@ public class TradeController {
         
     }
 
-    // CREATED FOR TESTING. NOT NEEDED FOR SUBMISSION
+    // customers can get all a list of all their trade
     @PreAuthorize("authentication.principal.active == true")
     @GetMapping("/trades")
     public List<Trade> getAllTrades(){
@@ -83,8 +83,7 @@ public class TradeController {
 
     }
 
-    
-
+    // customers can get their specific trade
     @PreAuthorize("authentication.principal.active == true")
     @GetMapping("/trades/{tradeId}")
     public Trade getSpecificTrade(@PathVariable (value = "tradeId") Long tradeId){
@@ -1070,6 +1069,9 @@ public class TradeController {
         // customer can cancel a trade if its open
         if (trade.getStatus().equals("open") && updatedTradeInfo.getStatus().equals("cancelled")) {
             trade.setStatus("cancelled");
+        } else {
+            // if trade is already filled or partial filled
+            throw new WrongStatusException();
         }
 
         long accountId = trade.getAccountId();

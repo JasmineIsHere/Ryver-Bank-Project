@@ -24,14 +24,6 @@ public class PortfolioController {
         this.customers = customers;
     }
 
-    // @GetMapping("/portfolio")
-    // public List<Portfolio> getPortfolios() {
-    //     return portfolios.findAll();
-    // }
-
-    //@PreAuthorize("authentication.principal.active == true and (hasRole('USER') and #customer_Id == authentication.principal.id)")
-    
-
     @PreAuthorize("authentication.principal.active == true")
     @GetMapping("/portfolio")
     public Portfolio getPortfolio() {
