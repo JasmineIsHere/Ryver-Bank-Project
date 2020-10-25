@@ -1,20 +1,18 @@
 package ryver.app.ryverbankintegrationtests;
 
 import ryver.app.stock.StockRepository;
+import ryver.app.trade.Trade;
+import ryver.app.customer.Customer;
+import ryver.app.customer.CustomerRepository;
 import ryver.app.stock.CustomStock;
-import ryver.app.customer.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.URI;
-import java.util.LinkedHashMap;
-import java.util.Optional;
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,42 +42,51 @@ class StockIntegrationTest {
 
 	@Autowired
     private StockRepository stocks;
-    
+
     @Autowired
     private CustomerRepository customers;
 
-	@Autowired
-	private BCryptPasswordEncoder encoder;
+    @Autowired
+    private BCryptPasswordEncoder encoder;
 
 	@AfterEach
 	void tearDown() {
         // clear the database after each test
-        customers.deleteAll();
 		stocks.deleteAll();
     }
     
     @Test
     public void getStockBySymbol_ROLEUser_Success() throws Exception{
+        Customer customer = new Customer("user_1", encoder.encode("password"), "ROLE_USER", "user_fullname", "S7812345A", "91234567", "address", true);
+        customer.setId(1L);
+        customers.save(customer);
+        
         CustomStock stock = new CustomStock(
-            "V03", 20.55, 20000, 20.60, 20000, 20.65, null);
+            "V03", 20.55, 20000, 20.60, 20000, 20.65, new ArrayList<Trade>());
         stocks.save(stock);
-
-        System.out.println(stock.getSymbol());
 
         URI postUri = new URI(baseUrl + port + "/stocks/" + stock.getSymbol());
 
-        ResponseEntity<CustomStock> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").getForEntity(postUri, CustomStock.class);
+        ResponseEntity<CustomStock> result = restTemplate.withBasicAuth("user_1", "password").getForEntity(postUri, CustomStock.class);
 
-        assertEquals(201, result.getStatusCode().value());
+        assertEquals(200, result.getStatusCode().value());
     }
     
     // @Test
     // public void getStockBySymbol_ROLEUser_Failure() throws Exception{
-    //     URI uri = new URI(baseUrl + port + "/stocks/" + 1);
+    //     Customer customer = new Customer("user_1", encoder.encode("password"), "ROLE_USER", "user_fullname", "S7812345A", "91234567", "address", true);
+    //     customer.setId(1L);
+    //     customers.save(customer);
+
+    //     CustomStock stock = new CustomStock(
+    //         "V03", 20.55, 20000, 20.60, 20000, 20.65, new ArrayList<Trade>());
+    //     stocks.save(stock);
+
+    //     URI uri = new URI(baseUrl + port + "/stocks/" + stock.getSymbol());
 
 	// 	ResponseEntity<CustomStock> result = restTemplate.withBasicAuth("user_1", "password").getForEntity(uri, CustomStock.class);
 		
 	// 	//requested trade not found
-	// 	assertEquals(404, result.getStatusCode().value());
+	// 	assertEquals(200, result.getStatusCode().value());
     // }
 }

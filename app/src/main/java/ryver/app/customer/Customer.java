@@ -51,7 +51,7 @@ public class Customer implements UserDetails{
     private String password;
 
     @NotNull(message = "Authorities should not be null")
-    // We define two roles/authorities: ROLE_USER, ROLE_MANAGER or ROLE_ANALYST
+    // We define three roles/authorities: ROLE_USER, ROLE_MANAGER or ROLE_ANALYST
     private String authorities;
 
     @NotNull(message = "Full Name should not be null")
@@ -80,6 +80,7 @@ public class Customer implements UserDetails{
     private List<Account> accounts;
 
     @OneToOne(mappedBy="customer", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Portfolio portfolio;
 
     public Customer(String username, String password, String authorities, String fullName, String nric, String phone, String address, boolean active){
