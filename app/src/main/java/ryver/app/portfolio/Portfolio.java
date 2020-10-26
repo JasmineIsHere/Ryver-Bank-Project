@@ -2,12 +2,14 @@ package ryver.app.portfolio;
 
 import ryver.app.customer.*;
 import ryver.app.asset.Asset;
+import ryver.app.util.jsonDoubleSerializer;
 
 import java.util.List;
 
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.*;
 
@@ -22,7 +24,11 @@ public class Portfolio {
     private @Id @GeneratedValue (strategy = GenerationType.IDENTITY) Long id;
     
     private long customer_id;
+
+    @JsonSerialize(using = jsonDoubleSerializer.class)
     private double unrealized_gain_loss; // for stocks currently owned
+
+    @JsonSerialize(using = jsonDoubleSerializer.class)
     private double total_gain_loss;     // for all the trades made so far
 
     @OneToOne

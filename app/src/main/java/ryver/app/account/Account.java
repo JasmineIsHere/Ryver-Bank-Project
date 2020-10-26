@@ -2,12 +2,14 @@ package ryver.app.account;
 
 import ryver.app.customer.*;
 import ryver.app.transaction.*;
+import ryver.app.util.jsonDoubleSerializer;
 import ryver.app.trade.*;
 
 import java.util.*;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.*;
 
@@ -21,7 +23,10 @@ import lombok.*;
 public class Account {
     private  @Id @GeneratedValue (strategy = GenerationType.IDENTITY) Long id;
     
+    @JsonSerialize(using = jsonDoubleSerializer.class)
     private double balance;
+
+    @JsonSerialize(using = jsonDoubleSerializer.class)
     private double available_balance;
     private long customer_id;
 

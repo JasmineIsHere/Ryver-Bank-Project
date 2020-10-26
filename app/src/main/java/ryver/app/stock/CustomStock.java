@@ -1,6 +1,7 @@
 package ryver.app.stock;
 
 import ryver.app.trade.*;
+import ryver.app.util.jsonDoubleSerializer;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -8,6 +9,7 @@ import java.util.*;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.*;
 
@@ -24,11 +26,19 @@ public class CustomStock {
     // best price - lowest ask, highest bid. if same price -> get the earlier submitted trade
 
     private @Id String symbol; //symbol of stock eg. A17U
+
+    @JsonSerialize(using = jsonDoubleSerializer.class)
     private double last_price; //$$
-    private int bid_volume; //qty
+    
+
+    @JsonSerialize(using = jsonDoubleSerializer.class)
     private double bid; //$$
-    private int ask_volume; //qty
+    private int bid_volume; //qty
+
+    @JsonSerialize(using = jsonDoubleSerializer.class)
     private double ask; //$$
+    private int ask_volume; //qty
+
     private long timestamp;
 
     @OneToMany(mappedBy = "stock",

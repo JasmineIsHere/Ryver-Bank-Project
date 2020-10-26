@@ -3,12 +3,14 @@ package ryver.app.trade;
 import ryver.app.portfolio.Portfolio;
 import ryver.app.account.*;
 import ryver.app.stock.*;
+import ryver.app.util.jsonDoubleSerializer;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.*;
 
@@ -31,9 +33,13 @@ public class Trade {
     @NotNull(message = "Symbol should not be null. ")
     private int quantity; //in multiples of 100
 
+    @JsonSerialize(using = jsonDoubleSerializer.class)
     private double bid; //for buying
+
+    @JsonSerialize(using = jsonDoubleSerializer.class)
     private double ask; //for selling
 
+    @JsonSerialize(using = jsonDoubleSerializer.class)
     private double avg_price; // the average filled price, as one trade can be matched by several other trades
     private int filled_quantity; //# of quantity successfully sold/bought out of total "quantity"
 

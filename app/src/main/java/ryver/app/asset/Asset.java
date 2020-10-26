@@ -3,9 +3,10 @@ package ryver.app.asset;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import ryver.app.portfolio.*;
-
+import ryver.app.util.jsonDoubleSerializer;
 import lombok.*;
 
 @Entity
@@ -19,9 +20,17 @@ public class Asset{
     private  @Id @GeneratedValue (strategy = GenerationType.IDENTITY) Long id;
     private String code; //symbol of stock eg. A17U
     private int quantity;
+    
+    @JsonSerialize(using = jsonDoubleSerializer.class)
     private double avg_price; 
-    private double current_price; 
+    
+    @JsonSerialize(using = jsonDoubleSerializer.class)
+    private double current_price;
+    
+    @JsonSerialize(using = jsonDoubleSerializer.class)
     private double value; 
+    
+    @JsonSerialize(using = jsonDoubleSerializer.class)
     private double gain_loss;
 
     @ManyToOne
