@@ -34,6 +34,15 @@ public class CustomerController {
     return customers.findByAuthorities("ROLE_USER");
   }
 
+  // ERROR HERE BUT WE NEED THIS LINE THOUGH
+  @PreAuthorize("authentication.principal.active == true and (hasRole('MANAGER') or #customerId == authentication.principal.id)")
+  @GetMapping("/customers/{customerId}")
+  public Customer getSpecificCustomer(@PathVariable(value = "customerId") Long customerId) {
+    Customer customer = customers.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
+    
+    return customer;
+  }
+
   // Managers can update (active or not active) customers information (phone,
   // address, password, active)
   // Active customer can update OWN information (phone, address, password)

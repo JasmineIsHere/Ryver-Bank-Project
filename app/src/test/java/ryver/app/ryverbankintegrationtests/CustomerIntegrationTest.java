@@ -53,7 +53,7 @@ class CustomerIntegrationTest {
 		// 		"T0046822Z", "97123456", "updated_address", true);
 
 		String newCustomer = 
-		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"fullName\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": true}";
+		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"full_name\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": true}";
 		customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "Manager One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); // the manager that will be updated the customer details
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -72,7 +72,7 @@ class CustomerIntegrationTest {
 	public void addCustomer_ROLEUser_Failure() throws Exception {
 
 		String newCustomer = 
-		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"fullName\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": true}";
+		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"full_name\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": true}";
 		customers.save(new Customer("user_2", encoder.encode("02_user_02"), "ROLE_USER", "User One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); // the manager that will be updated the customer details
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -96,7 +96,7 @@ class CustomerIntegrationTest {
 		URI uri = new URI(baseUrl + port + "/customers/" + customer.getId());
 
 		String updatedCustomer = 
-		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"fullName\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": true}";
+		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"full_name\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": true}";
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(updatedCustomer, headers);
@@ -128,7 +128,7 @@ class CustomerIntegrationTest {
 		URI uri = new URI(baseUrl + port + "/customers/" + customer.getId());
 
 		String updatedCustomer = 
-		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"fullName\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": false}";
+		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"full_name\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": false}";
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(updatedCustomer, headers);
@@ -148,7 +148,7 @@ class CustomerIntegrationTest {
 		URI uri = new URI(baseUrl + port + "/customers/" + customer.getId());
 
 		String updatedCustomer = 
-		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"fullName\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": false}";
+		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"full_name\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": false}";
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(updatedCustomer, headers);
@@ -176,7 +176,7 @@ class CustomerIntegrationTest {
 		URI uri = new URI(baseUrl + port + "/customers/" + customer.getId());
 
 		String updatedCustomer = 
-		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"fullName\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": false}";
+		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"full_name\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": false}";
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(updatedCustomer, headers);
@@ -200,7 +200,7 @@ class CustomerIntegrationTest {
 		URI uri = new URI(baseUrl + port + "/customers/" + customer.getId());
 
 		String updatedCustomer = 
-		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"fullName\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": false}";
+		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"full_name\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": false}";
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(updatedCustomer, headers);

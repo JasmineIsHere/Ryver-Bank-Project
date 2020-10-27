@@ -19,6 +19,7 @@ import javax.validation.constraints.Size;
 import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -54,6 +55,7 @@ public class Customer implements UserDetails{
     // We define three roles/authorities: ROLE_USER, ROLE_MANAGER or ROLE_ANALYST
     private String authorities;
 
+    @JsonProperty("full_name")
     @NotNull(message = "Full Name should not be null")
     @Size(min = 5, max = 20, message = "Username should be between 5 and 20 characters. ")
     private String fullName;

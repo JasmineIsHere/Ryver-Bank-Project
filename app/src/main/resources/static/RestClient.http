@@ -20,12 +20,14 @@ Authorization: Basic manager_1 01_manager_01
     "username": "good_user_1",
     "password": "01_user_01",
     "authorities": "ROLE_USER",
-    "fullName": "User One",
+    "full_name": "User One",
     "nric": "S9942296C",
     "phone": "90123456",
     "address": "999 Tampines Road S999999",
-    "active": false
+    "active": false 
 }
+
+
 
 ###
 # A customer cannot create a new customer
@@ -40,7 +42,7 @@ Authorization: Basic good_user_1 01_user_01
     "username": "good_user_2",
     "password": "02_user_02",
     "authorities": "ROLE_USER",
-    "fullName": "User Two",
+    "full_name": "User Two",
     "nric": "T0046822Z",
     "phone": "92123262",
     "address": "222 Paya Lebar Road S222222",
@@ -61,7 +63,7 @@ Authorization: Basic manager_1 01_manager_01
     "username": "good_user_2",
     "password": "02_user_02",
     "authorities": "ROLE_USER",
-    "fullName": "User Two",
+    "full_name": "User Two",
     "nric": "T0046822Z",
     "phone": "92123262",
     "address": "222 Paya Lebar Road S222222",
@@ -83,7 +85,7 @@ Authorization: Basic manager_1 01_manager_01
     "username": "Cant Update",
     "password": "01_user_01",
     "authorities": "ROLE_USER",
-    "fullName": "Cant Update",
+    "full_name": "Cant Update",
     "nric": "S9111111B",
     "phone": "91111111",
     "address": "111 Tampines Road S111111",
@@ -104,12 +106,21 @@ Authorization: Basic good_user_1 01_user_01
     "username": "Cant Update",
     "password": "01_user_01",
     "authorities": "ROLE_USER",
-    "fullName": "Cant Update",
+    "full_name": "Cant Update",
     "nric": "S9111111B",
     "phone": "92222222",
     "address": "222 Tampines Road S222222",
     "active": true
 }
+
+
+###
+# customer can view his own information at his id
+# Returns: 200 OK with customer's details
+GET http://localhost:8080/customers/4
+Accept: application/json
+Authorization: Basic good_user_1 01_user_01
+# Validation pass - customer can view his own information at his id
 
 ###
 # a invalid manager cannot get the list of customers
