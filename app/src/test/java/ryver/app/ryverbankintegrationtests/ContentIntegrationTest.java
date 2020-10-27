@@ -101,28 +101,27 @@ class ContentIntegrationTest {
         assertEquals(201, result.getStatusCode().value());
     }
 
-    // @Test
-    // public void addContent_ROLECustomer_Failure() throws Exception{
-	// 	Customer customer = customers.save(new Customer("user_1", encoder.encode("01_user_01"), "ROLE_USER", "Jerry Loh",
-    //             "T0046822Z", "82345678", "address", true)); 
+    @Test
+    public void addContent_ROLECustomer_Failure() throws Exception{
+		Customer customer = customers.save(new Customer("user_1", encoder.encode("01_user_01"), "ROLE_USER", "Jerry Loh",
+                "T0046822Z", "82345678", "address", true)); 
         
-    //     JSONObject requestParams = new JSONObject();
-    //     requestParams.put("title", "The title of the article"); 
-    //     requestParams.put("summary", "The summary of the article");
-    //     requestParams.put("content", "The content of the article");
-    //     requestParams.put("link",  "https://article.com/article1");
-    //     requestParams.put("approved",  false);
+        JSONObject requestParams = new JSONObject();
+        requestParams.put("title", "The title of the article"); 
+        requestParams.put("summary", "The summary of the article");
+        requestParams.put("content", "The content of the article");
+        requestParams.put("link",  "https://article.com/article1");
+        requestParams.put("approved",  false);
 
-    //     HttpHeaders headers = new HttpHeaders();
-    //     headers.setContentType(MediaType.APPLICATION_JSON);
-    //     HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
-    //     URI postUri = new URI(baseUrl + port + "/contents");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
+        URI postUri = new URI(baseUrl + port + "/contents");
 
-    //     ResponseEntity<Content> result = restTemplate.withBasicAuth("user_1", "01_user_01")
-    //         .postForEntity(postUri, entity, Content.class);
+        ResponseEntity<Content> result = restTemplate.withBasicAuth("user_1", "01_user_01").postForEntity(postUri, entity, Content.class);
 
-    //     assertEquals(403, result.getStatusCode().value());
-    // }
+        assertEquals(403, result.getStatusCode().value());
+    }
 
     // @Test
     // public void getContent_ROLEUser_Success() throws Exception{
@@ -192,32 +191,29 @@ class ContentIntegrationTest {
 		assertEquals(200, result.getStatusCode().value());
     }
 
-    // @Test
-	// public void updateContent_RoleUser_Failure() throws Exception{
- 	// 	Customer customer = customers.save(new Customer("user_1", encoder.encode("01_user_01"), "ROLE_USER", "Jerry Loh",
-    //             "T0046822Z", "82345678", "address", true)); 
+    @Test
+	public void updateContent_RoleUser_Failure() throws Exception{
+ 		Customer customer = customers.save(new Customer("user_1", encoder.encode("01_user_01"), "ROLE_USER", "Jerry Loh", "T0046822Z", "82345678", "address", true)); 
 
-    //     Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
-    //     contents.save(content);
+        Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
+        contents.save(content);
 
-	// 	//custmer cancels trade 
-	// 	JSONObject requestParams = new JSONObject();
-    //     requestParams.put("title", "The updated title of the article"); 
-    //     requestParams.put("summary", "The updated summary of the article");
-    //     requestParams.put("content", "The updated content of the article");
-    //     requestParams.put("link",  "https://article.com/article1");
-    //     requestParams.put("approved",  false);
+		JSONObject requestParams = new JSONObject();
+        requestParams.put("title", "The updated title of the article"); 
+        requestParams.put("summary", "The updated summary of the article");
+        requestParams.put("content", "The updated content of the article");
+        requestParams.put("link",  "https://article.com/article1");
+        requestParams.put("approved",  false);
 
-	// 	HttpHeaders headers = new HttpHeaders();
-    //     headers.setContentType(MediaType.APPLICATION_JSON);
-	// 	HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
-	// 	URI uri = new URI(baseUrl + port + "/contents/" + content.getId());
+		HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
+		URI uri = new URI(baseUrl + port + "/contents/" + content.getId());
 
-	// 	ResponseEntity<Content> result = restTemplate.withBasicAuth("user_1", "01_user_01").exchange(uri, HttpMethod.PUT, entity, Content.class);
+		ResponseEntity<Content> result = restTemplate.withBasicAuth("user_1", "01_user_01").exchange(uri, HttpMethod.PUT, entity, Content.class);
  
-	// 	//requested trade updated
-	// 	assertEquals(403, result.getStatusCode().value());
-    // }
+		assertEquals(403, result.getStatusCode().value());
+    }
 
     @Test
     public void deleteContent_RoleManager_Success() throws Exception {
@@ -238,7 +234,8 @@ class ContentIntegrationTest {
 
     @Test
     public void deleteContent_RoleUser_Failure() throws Exception {
-cccccccccc
+ 		Customer customer = customers.save(new Customer("user_1", encoder.encode("01_user_01"), "ROLE_USER", "Jerry Loh", "T0046822Z", "82345678", "address", true));
+
         Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
         contents.save(content);
 

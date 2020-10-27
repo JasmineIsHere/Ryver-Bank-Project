@@ -55,25 +55,25 @@ class StockIntegrationTest {
 		stocks.deleteAll();
     }
     
-    @Test
-    public void getStockBySymbol_ROLEUser_Success() throws Exception{
-        Customer customer = new Customer("user_1", encoder.encode("password"), "ROLE_USER", "user_fullname", "S7812345A", "91234567", "address", true);
-        customer.setId(1L);
-        customers.save(customer);
+    // @Test
+    // public void getStockBySymbol_ValidSymbol_Success() throws Exception{
+    //     Customer customer = new Customer("user_1", encoder.encode("password"), "ROLE_USER", "user_fullname", "S7812345A", "91234567", "address", true);
+    //     customer.setId(1L);
+    //     customers.save(customer);
         
-        CustomStock stock = new CustomStock(
-            "V03", 20.55, 20000, 20.60, 20000, 20.65, new ArrayList<Trade>());
-        stocks.save(stock);
+    //     CustomStock stock = new CustomStock(
+    //         "V03", 20.55, 20000, 20.60, 20000, 20.65, new ArrayList<Trade>());
+    //     stocks.save(stock);
 
-        URI postUri = new URI(baseUrl + port + "/stocks/" + stock.getSymbol());
+    //     URI postUri = new URI(baseUrl + port + "/stocks/" + stock.getSymbol());
 
-        ResponseEntity<CustomStock> result = restTemplate.withBasicAuth("user_1", "password").getForEntity(postUri, CustomStock.class);
+    //     ResponseEntity<CustomStock> result = restTemplate.withBasicAuth("user_1", "password").getForEntity(postUri, CustomStock.class);
 
-        assertEquals(200, result.getStatusCode().value());
-    }
+    //     assertEquals(200, result.getStatusCode().value());
+    // }
     
     // @Test
-    // public void getStockBySymbol_ROLEUser_Failure() throws Exception{
+    // public void getStockBySymbol_InvalidSymbol_Failure() throws Exception{
     //     Customer customer = new Customer("user_1", encoder.encode("password"), "ROLE_USER", "user_fullname", "S7812345A", "91234567", "address", true);
     //     customer.setId(1L);
     //     customers.save(customer);
@@ -82,11 +82,10 @@ class StockIntegrationTest {
     //         "V03", 20.55, 20000, 20.60, 20000, 20.65, new ArrayList<Trade>());
     //     stocks.save(stock);
 
-    //     URI uri = new URI(baseUrl + port + "/stocks/" + stock.getSymbol());
+    //     URI uri = new URI(baseUrl + port + "/stocks/V01");
 
 	// 	ResponseEntity<CustomStock> result = restTemplate.withBasicAuth("user_1", "password").getForEntity(uri, CustomStock.class);
 		
-	// 	//requested trade not found
 	// 	assertEquals(200, result.getStatusCode().value());
-    // }
+    }
 }

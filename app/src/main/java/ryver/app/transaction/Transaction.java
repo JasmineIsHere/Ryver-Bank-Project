@@ -18,7 +18,7 @@ import lombok.*;
 @EqualsAndHashCode
 public class Transaction {
     private  @Id @GeneratedValue (strategy = GenerationType.IDENTITY) Long id;
-    
+
     @Column(name = "\"from\"")
     private Long from; // sender's account id
     private Long to; // receiver's account id
@@ -30,4 +30,11 @@ public class Transaction {
     @JoinColumn(name = "account_id", nullable = false)
     @JsonIgnore
     private Account account;
+
+    public Transaction(long from, long to, double amount, Account account){
+        this.from = from;
+        this.to = to;
+        this.amount = amount;
+        this.account = account;
+    }
 }
