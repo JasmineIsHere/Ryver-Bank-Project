@@ -57,20 +57,24 @@
 //         accounts.deleteAll();
 //         transactions.deleteAll();
 //     }
+// /**
+//  * getAllTransactionsByAccountId
+//  * addTransaction 
+//  */
     
 //     @Test
-//     public void addAccount_ROLEManager_Success() throws Exception{
-//         customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "Manager One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); // the manager that will retrieve customer account
-// 		Customer customer = customers.save(new Customer("User_1", encoder.encode("password"), "ROLE_USER", "Jerry Loh",
-//                 "T0046822Z", "82345678", "address", true));
-        
-// 		String createAccountJSON = 
-// 		"{\"customer_id\":" + customer.getId() + ",\"balance\":" + 10000.0 + ",\"available_balance\":" + 10000.0 + "}";
+//     public void getAllTransactionsByAccountId_ROLEUser_Success() throws Exception{
+//         Customer customer = customers.save(new Customer("user_1", encoder.encode("01_user_01"), "ROLE_USER", "Jerry Loh",
+//         "T0046822Z", "82345678", "address", true)); 
+//         Customer customer = customers.save(new Customer("user_2", encoder.encode("02_user_02"), "ROLE_USER", "User two","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); 
+
+//         Account account = new Account(10000.0, 10000.0, 1L, customer1);
+//         Account account = new Account(10000.0, 10000.0, 2L, customer2);
 		
 // 		HttpHeaders headers = new HttpHeaders();
 //         headers.setContentType(MediaType.APPLICATION_JSON);
 // 		HttpEntity<String> entity = new HttpEntity<>(createAccountJSON, headers);
-//         URI postUri = new URI(baseUrl + port + "/accounts");
+//         URI postUri = new URI(baseUrl + port + "/accounts/2/transactions");
 
 //         ResponseEntity<Account> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").postForEntity(postUri, entity, Account.class);
 

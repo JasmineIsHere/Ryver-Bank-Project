@@ -52,10 +52,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET, "/accounts").hasAnyRole("MANAGER", "USER")
             .antMatchers(HttpMethod.POST, "/accounts").hasRole("MANAGER")
 
-            .antMatchers(HttpMethod.GET, "/content").hasAnyRole("MANAGER", "USER", "ANALYST")
-            .antMatchers(HttpMethod.POST, "/content").hasAnyRole("MANAGER", "ANALYST")
-            .antMatchers(HttpMethod.PUT, "/content/*").hasAnyRole("MANAGER", "ANALYST")
-            .antMatchers(HttpMethod.DELETE, "/content/*").hasAnyRole("MANAGER", "ANALYST")
+            .antMatchers(HttpMethod.GET, "/contents").hasAnyRole("MANAGER", "USER", "ANALYST")
+            .antMatchers(HttpMethod.POST, "/contents").hasAnyRole("MANAGER", "ANALYST")
+            .antMatchers(HttpMethod.PUT, "/contents/*").hasAnyRole("MANAGER", "ANALYST")
+            .antMatchers(HttpMethod.DELETE, "/contents/*").hasAnyRole("MANAGER", "ANALYST")
 
             .antMatchers(HttpMethod.GET, "/portfolio").hasRole("USER")
             .and()

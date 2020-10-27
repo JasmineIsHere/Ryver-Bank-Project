@@ -214,8 +214,38 @@ class ContentIntegrationTest {
 	// 	URI uri = new URI(baseUrl + port + "/contents/" + content.getId());
 
 	// 	ResponseEntity<Content> result = restTemplate.withBasicAuth("user_1", "01_user_01").exchange(uri, HttpMethod.PUT, entity, Content.class);
-
+ 
 	// 	//requested trade updated
 	// 	assertEquals(403, result.getStatusCode().value());
     // }
+
+    @Test
+    public void deleteContent_RoleManager_Success() throws Exception {
+        Customer customer = customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "Manager One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); 
+
+        Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
+        contents.save(content);
+
+        URI uri = new URI(baseUrl + port + "/contents/" + content.getId());
+        
+        ResponseEntity<Void> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").exchange(uri, HttpMethod.DELETE, null, Void.class);
+
+        assertEquals(200, result.getStatusCode().value());
+        // An empty Optional should be returned by "findById" after deletion
+        Optional<Content> emptyValue = Optional.empty();
+        assertEquals(emptyValue, contents.findById(content.getId()));
+    }
+
+    @Test
+    public void deleteContent_RoleUser_Failure() throws Exception {
+cccccccccc
+        Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
+        contents.save(content);
+
+        URI uri = new URI(baseUrl + port + "/contents/1");
+        
+        ResponseEntity<Void> result = restTemplate.withBasicAuth("user_1", "01_user_01").exchange(uri, HttpMethod.DELETE, null, Void.class);
+      
+        assertEquals(403, result.getStatusCode().value());
+    }
 }
