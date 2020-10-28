@@ -60,6 +60,7 @@ public class ContentController {
 
     @DeleteMapping("/contents/{contentId}")
     public void deleteContent(@PathVariable (value = "contentId") Long contentId) {
+        // To check if content exists
         Content content = contents.findById(contentId)
             .orElseThrow(() -> new ContentNotFoundException(contentId));
 

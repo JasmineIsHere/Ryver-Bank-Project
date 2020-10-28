@@ -3,7 +3,6 @@ package ryver.app.stock;
 import ryver.app.trade.*;
 import ryver.app.util.jsonDoubleSerializer;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 import javax.persistence.*;
