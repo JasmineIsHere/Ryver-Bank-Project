@@ -87,5 +87,5 @@ class StockIntegrationTest {
 	// 	ResponseEntity<CustomStock> result = restTemplate.withBasicAuth("user_1", "password").getForEntity(uri, CustomStock.class);
 		
 	// 	assertEquals(200, result.getStatusCode().value());
-    }
+    // }
 }
