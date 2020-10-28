@@ -52,25 +52,26 @@ class StockIntegrationTest {
 	@AfterEach
 	void tearDown() {
         // clear the database after each test
-		stocks.deleteAll();
+        stocks.deleteAll();
+        customers.deleteAll();
     }
     
-    // @Test
-    // public void getStockBySymbol_ValidSymbol_Success() throws Exception{
-    //     Customer customer = new Customer("user_1", encoder.encode("password"), "ROLE_USER", "user_fullname", "S7812345A", "91234567", "address", true);
-    //     customer.setId(1L);
-    //     customers.save(customer);
+    @Test
+    public void getStockBySymbol_ValidSymbol_Success() throws Exception{
+        Customer customer = new Customer("user_1", encoder.encode("password"), "ROLE_USER", "user_fullname", "S7812345A", "91234567", "address", true);
+        customer.setId(1L);
+        customers.save(customer);
         
-    //     CustomStock stock = new CustomStock(
-    //         "V03", 20.55, 20000, 20.60, 20000, 20.65, new ArrayList<Trade>());
-    //     stocks.save(stock);
+        CustomStock stock = new CustomStock(
+            "V03", 20.55, 20000, 20.60, 20000, 20.65, new ArrayList<Trade>());
+        stocks.save(stock);
 
-    //     URI postUri = new URI(baseUrl + port + "/stocks/" + stock.getSymbol());
+        URI postUri = new URI(baseUrl + port + "/stocks/" + stock.getSymbol());
 
-    //     ResponseEntity<CustomStock> result = restTemplate.withBasicAuth("user_1", "password").getForEntity(postUri, CustomStock.class);
+        ResponseEntity<CustomStock> result = restTemplate.withBasicAuth("user_1", "password").getForEntity(postUri, CustomStock.class);
 
-    //     assertEquals(200, result.getStatusCode().value());
-    // }
+        assertEquals(200, result.getStatusCode().value());
+    }
     
     // @Test
     // public void getStockBySymbol_InvalidSymbol_Failure() throws Exception{
@@ -87,5 +88,5 @@ class StockIntegrationTest {
 	// 	ResponseEntity<CustomStock> result = restTemplate.withBasicAuth("user_1", "password").getForEntity(uri, CustomStock.class);
 		
 	// 	assertEquals(200, result.getStatusCode().value());
-    }
+    // }
 }
