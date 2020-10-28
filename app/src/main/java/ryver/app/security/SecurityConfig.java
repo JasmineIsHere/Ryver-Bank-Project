@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)  
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)  
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
             .antMatchers(HttpMethod.GET, "/customers").hasRole("MANAGER")
             .antMatchers(HttpMethod.POST, "/customers").hasRole("MANAGER")
-
+            .antMatchers(HttpMethod.GET, "/customers/*").hasAnyRole("MANAGER", "USER")
             .antMatchers(HttpMethod.GET, "/accounts").hasAnyRole("MANAGER", "USER")
             .antMatchers(HttpMethod.POST, "/accounts").hasRole("MANAGER")
 
@@ -58,6 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.DELETE, "/contents/*").hasAnyRole("MANAGER", "ANALYST")
 
             .antMatchers(HttpMethod.GET, "/portfolio").hasRole("USER")
+            .antMatchers(HttpMethod.POST, "/reset").hasAnyRole("MANAGER","USEER", "ANALYST")
             .and()
         .csrf().disable() // CSRF protection is needed only for browser based attacks
         .formLogin().disable()

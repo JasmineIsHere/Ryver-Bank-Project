@@ -35,11 +35,15 @@ public class CustomerController {
   }
 
   // ERROR HERE BUT WE NEED THIS LINE THOUGH
-  @PreAuthorize("authentication.principal.active == true and (hasRole('MANAGER') or #customerId == authentication.principal.id)")
+  // @PreAuthorize("authentication.principal.active == true and (hasRole('MANAGER') or #customerId == authentication.principal.id)")
   @GetMapping("/customers/{customerId}")
   public Customer getSpecificCustomer(@PathVariable(value = "customerId") Long customerId) {
+    String authorisedUser = SecurityContextHolder.getContext().getAuthentication().getName();
     Customer customer = customers.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
     
+    if(!customer.getUsername().equals(authorisedUser)){
+        throw new CustomerMismatchException();
+    }
     return customer;
   }
 
