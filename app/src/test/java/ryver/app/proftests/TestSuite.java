@@ -1,4 +1,4 @@
-// package ryver.app.proftests;
+// package ryver.app.profTests;
 
 // import org.junit.platform.runner.JUnitPlatform;
 // import org.junit.platform.suite.api.SelectClasses;
