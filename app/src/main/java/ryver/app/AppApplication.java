@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import ryver.app.customer.Customer;
@@ -35,10 +35,18 @@ import ryver.app.portfolio.PortfolioRepository;
 @SpringBootApplication
 public class AppApplication {
 
+	private static ConfigurableApplicationContext ctx;
+	
 	public static void main(String[] args) {
-		ApplicationContext ctx = SpringApplication.run(AppApplication.class, args);
+	
+		ctx = SpringApplication.run(AppApplication.class, args);
 
-        CustomerRepository customers = ctx.getBean(CustomerRepository.class);
+        load();
+	}
+
+	private static void load() {
+		
+		CustomerRepository customers = ctx.getBean(CustomerRepository.class);
 		AccountRepository accounts = ctx.getBean(AccountRepository.class);
 		StockRepository stocks = ctx.getBean(StockRepository.class);
 
@@ -163,7 +171,25 @@ public class AppApplication {
 			}
 
 		}
-		// RestTemplateClient client = ctx.getBean(RestTemplateClient.class);
 	}
+
+	public static void restart() {
+        CustomerRepository customers = ctx.getBean(CustomerRepository.class);
+		AccountRepository accounts = ctx.getBean(AccountRepository.class);
+		StockRepository stocks = ctx.getBean(StockRepository.class);
+
+		PortfolioRepository portfolios = ctx.getBean(PortfolioRepository.class);
+
+		AssetRepository assets = ctx.getBean(AssetRepository.class);
+		TradeRepository trades = ctx.getBean(TradeRepository.class);
+		customers.deleteAll();
+		accounts.deleteAll();
+		stocks.deleteAll();
+		portfolios.deleteAll();
+		assets.deleteAll();
+		trades.deleteAll();
+		load();
+
+    }
 
 }
