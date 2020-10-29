@@ -22,7 +22,6 @@ public class PortfolioController {
         this.customers = customers;
     }
 
-    @PreAuthorize("authentication.principal.active == true")
     @GetMapping("/portfolio")
     public Portfolio getPortfolio() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

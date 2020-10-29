@@ -65,13 +65,13 @@ public class TradeController {
     }
 
     // customers can get all a list of all their trade
-    @PreAuthorize("authentication.principal.active == true")
     @GetMapping("/trades")
     public List<Trade> getAllTrades(){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String customerUsername = authentication.getName();
         
+        //trades will be returned based on the user that was authenticated
         Customer customer = customers.findByUsername(customerUsername)
             .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
         
@@ -82,13 +82,13 @@ public class TradeController {
     }
 
     // customers can get their specific trade
-    @PreAuthorize("authentication.principal.active == true")
     @GetMapping("/trades/{tradeId}")
     public Trade getSpecificTrade(@PathVariable (value = "tradeId") Long tradeId){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String customerUsername = authentication.getName();
         
+        //trade will be returned based on the user that was authenticated
         Customer customer = customers.findByUsername(customerUsername)
             .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
         
@@ -703,11 +703,10 @@ public class TradeController {
         }
     }
 
-    @PreAuthorize("authentication.principal.active == true")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/trades")
     public Trade createTrade(@Valid @RequestBody Trade trade){
-        // check if logged in user == customerId
+        // check if logged in user == customerId in trade
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String customerUsername = authentication.getName();
         
@@ -884,18 +883,19 @@ public class TradeController {
         return trades.save(trade);
     }
 
-    @PreAuthorize("authentication.principal.active == true")
     @PutMapping("/trades/{tradeId}")
     public Trade updateSpecificTrade(@PathVariable (value = "tradeId") Long tradeId, @Valid @RequestBody Trade updatedTradeInfo){
         
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String customerUsername = authentication.getName();
         
+        // user that was authenticated
         Customer customer = customers.findByUsername(customerUsername)
             .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
         
         long customerId = customer.getId();
-
+        
+        // check if the trade has been made by the authenticated user before
         Trade trade = trades.findByIdAndCustomerId(tradeId, customerId)
             .orElseThrow(() -> new TradeNotFoundException(tradeId));
 
