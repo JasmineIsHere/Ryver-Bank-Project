@@ -678,3 +678,5 @@ Accept: application/json
 Authorization: Basic testuser_01 01_testuser_01
 
 ################### End Portfolio Testing #########################################
+POST http://localhost:8080/reset
+Accept: application/json
