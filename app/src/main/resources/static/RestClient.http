@@ -24,7 +24,7 @@ Authorization: Basic manager_1 01_manager_01
     "nric": "S9942296C",
     "phone": "90123456",
     "address": "999 Tampines Road S999999",
-    "active": false 
+    "active": true 
 }
 
 
@@ -176,8 +176,7 @@ Authorization: Basic manager_1 01_manager_01
 
 {
     "customer_id": 4,
-    "balance": 1000000.0,
-    "available_balance": 1000000.0
+    "balance": 1000000.0
 }
 
 ###
@@ -192,8 +191,7 @@ Authorization: Basic manager_1 01_manager_01
 
 {
     "customer_id": 5,
-    "balance": 5000000.0,
-    "available_balance": 5000000.0
+    "balance": 5000000.0
 }
 
 ###
@@ -239,8 +237,7 @@ Authorization: Basic good_user_1 01_user_01
 
 {
     "customer_id": 3,
-    "balance": 300.0,
-    "available_balance": 300.0
+    "balance": 300.0
 }
 
 ###
@@ -252,8 +249,7 @@ Authorization: Basic good_user_1 01_user_01
 
 {
     "customer_id": 3,
-    "balance": 10000.0,
-    "available_balance": 10000.0
+    "balance": 10000.0
 }
 
 ###
@@ -265,8 +261,7 @@ Authorization: Basic manager_1 01_manager_01
 
 {
     "customer_id": 3,
-    "balance": 300.0,
-    "available_balance": 300.0
+    "balance": 300.0
 }
 ###
 
@@ -278,7 +273,7 @@ Authorization: Basic manager_1 01_manager_01
 # A customer can make transaction if he have sufficient value
 # customer 1 has 1000000.0 bucks
 # Param: sender Account Id, Receiver Account Id, Value to transfer
-# Returns: 200 OK with transaction details
+# Returns: 201 OK with transaction details
 POST http://localhost:8080/accounts/2/transactions
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
@@ -286,7 +281,7 @@ Authorization: Basic good_user_1 01_user_01
 {
     "from": 2,
     "to": 3,
-    "amount": 200.0
+    "amount": 1.0
 }
 
 ###

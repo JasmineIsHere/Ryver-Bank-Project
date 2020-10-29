@@ -5,7 +5,7 @@ import java.util.*;
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.access.prepost.*;
+import org.springframework.http.HttpStatus;
 
 import ryver.app.customer.Customer;
 import ryver.app.customer.CustomerRepository;
@@ -25,180 +25,90 @@ public class TransactionController {
     private TransactionRepository transactions;
     private CustomerRepository customers;
 
-    public TransactionController(AccountRepository accounts, TransactionRepository transactions, CustomerRepository customers){
+    public TransactionController(AccountRepository accounts, TransactionRepository transactions,
+            CustomerRepository customers) {
         this.accounts = accounts;
         this.transactions = transactions;
         this.customers = customers;
     }
-    
-    @PreAuthorize("authentication.principal.active == true")
-    @GetMapping("/accounts/{accountId}/transactions")
-    public List<Transaction> getAllTransactionsByAccountId(@PathVariable (value = "accountId") Long accountId) {
 
+    @GetMapping("/accounts/{accountId}/transactions")
+    public List<Transaction> getAllTransactionsByAccountId(@PathVariable(value = "accountId") Long accountId) {
+
+        // user that was authenticated
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String customerUsername = authentication.getName();
 
+        // user that was authenticated
         Customer customer = customers.findByUsername(customerUsername)
-            .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
+                .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
+
 
         Long customerId = customer.getId();
 
-        Account account =  accounts.findByIdAndCustomerId(accountId, customerId)
-            .orElseThrow(() -> new AccountNotFoundException(accountId));
+        /* 
+         * try to find an account that has match specified account and user that was authenticated
+         * 
+         * if there is no match, either (1) the account does not exist
+         *  or (2) the account does not belong to the authenticated user 
+        */
+        //case 1
+        accounts.findById(accountId).orElseThrow(() -> new AccountNotFoundException(accountId));
+        //case 2
+        accounts.findByIdAndCustomerId(accountId, customerId)
+                .orElseThrow(() -> new AccountMismatchException());
 
         // return transactions.findByAccountId(accountId);
         return transactions.findByToOrFrom(accountId, accountId);
-        
+
     }
 
-    // @GetMapping("/customers/{customerId}/accounts/{accountId}")
-    // public Account getAccountByAccountIdAndCustomerId(@PathVariable (value = "accountId") Long accountId, 
-    //     @PathVariable (value = "customerId") Long customerId) {
-        
-    //     if(!customers.existsById(customerId)) {
-    //         throw new CustomerNotFoundException(customerId);
-    //     }
-    //     return accounts.findByIdAndCustomerId(accountId, customerId).orElseThrow(() -> new AccountNotFoundException(accountId));
-    // }
-
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/accounts/{accountId}/transactions")
-    public Transaction addTransaction (@PathVariable (value = "accountId") Long accountId, @Valid @RequestBody Transaction transaction) {
+    public Transaction addTransaction(@PathVariable(value = "accountId") Long accountId,
+            @Valid @RequestBody Transaction transaction) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String customerUsername = authentication.getName();
-        
+
+        // account accessed in the URL should be the same as the account used to sent money
         if (accountId != transaction.getFrom()) {
             throw new AccountMismatchException();
         }
 
-        if(transaction.getAmount() <= 0){
+        // transaction amount should be more than 0
+        if (transaction.getAmount() <= 0) {
             throw new BadBalanceException();
         }
-        Customer customer = customers.findByUsername(customerUsername) //user that log in and the sender
-            .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
 
-        //sender
+        Customer customer = customers.findByUsername(customerUsername) // user that log in and the sender
+                .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
+
+        // sender
         Long customerId = customer.getId();
 
-        Account senderAccount =  accounts.findByIdAndCustomerId(accountId, customerId)
-            .orElseThrow(() -> new AccountNotFoundException(accountId));
-        
-            //receiver
+        Account senderAccount = accounts.findByIdAndCustomerId(accountId, customerId)
+                .orElseThrow(() -> new AccountNotFoundException(accountId));
+
+        // receiver
         Long receiverAccountId = transaction.getTo();
 
-        Account receiverAccount =  accounts.findById(receiverAccountId)
-            .orElseThrow(() -> new AccountNotFoundException(receiverAccountId));
+        Account receiverAccount = accounts.findById(receiverAccountId)
+                .orElseThrow(() -> new AccountNotFoundException(receiverAccountId));
 
-        if (senderAccount.getAvailable_balance() < transaction.getAmount()){
+        //sender has not enough money to transfer
+        if (senderAccount.getAvailable_balance() < transaction.getAmount()) {
             throw new InsufficientBalanceException();
-        } 
-            
+        }
+
+        // updating the balance and available balance for sender and receiver accounts
         senderAccount.setBalance(senderAccount.getAvailable_balance() - transaction.getAmount());
         senderAccount.setAvailable_balance(senderAccount.getAvailable_balance() - transaction.getAmount());
 
         receiverAccount.setBalance(receiverAccount.getAvailable_balance() + transaction.getAmount());
         receiverAccount.setAvailable_balance(receiverAccount.getAvailable_balance() + transaction.getAmount());
-        
+
         transaction.setAccount(senderAccount);
         return transactions.save(transaction);
-
-
-        // return customers.findById(customerId).map(customer ->{
-        //     account.setCustomer(customer);
-        //     return accounts.save(account);
-        // }).orElseThrow(() -> new CustomerNotFoundException(customerId));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // MANY TO MANY STUFF
-    // // Deactivated customer returns 403 forbidden
-    // @PreAuthorize("authentication.principal.active == true")
-    // @GetMapping("/accounts/{accountId}/transactions")
-    // public List<Transaction> getAllTransactionsByAccountIdAndCustomerId(@PathVariable (value = "accountId") Long accountId) {
-    //     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    //     String customerUsername = authentication.getName();
-
-    //     Customer customer = customers.findByUsername(customerUsername)
-    //         .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
-
-    //     Long customerId = customer.getId();
-
-    //     Account account =  accounts.findByIdAndCustomerId(accountId, customerId)
-    //         .orElseThrow(() -> new AccountNotFoundException(accountId));
-
-    //     List<Transaction> transaction = transactions.findByAccountId(accountId);
-
-    //     for (Transaction t : transaction) {
-    //         System.out.println(t.getAccount());
-
-    //         // account is garbage collected?!?!?!?!
-    //     }
-
-    //     System.out.println(transaction);
-
-    //     return transaction;
-    //     // return transactions.findByAccountIdAndCustomerId(accountId, customerId);
-        
-    // }
-
-    // // Deactivated customer returns 403 forbidden
-    // @PreAuthorize("authentication.principal.active == true")
-    // @ResponseStatus(HttpStatus.CREATED)
-    // @PostMapping("/accounts/{accountId}/transactions")
-    // public Transaction addTransaction (@PathVariable (value = "accountId") Long accountId, @Valid @RequestBody Transaction transaction) {
-        
-    //     Set<Account> accountSet = new HashSet<>();
-
-    //     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    //     //will always be the sender that post a transfer request
-        
-    //     String customerUsername = authentication.getName(); // good_user_1
-
-    //     //System.out.println(customerUsername);
-    //     //SENDER STUFF
-    //     Customer customer = customers.findByUsername(customerUsername)
-    //         .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
-
-    //     Long customerId = customer.getId();
-
-    //     Account senderAccount =  accounts.findByIdAndCustomerId(accountId, customerId)
-    //         .orElseThrow(() -> new AccountNotFoundException(accountId));
-
-    //     //RECEIVER STUFF
-    //     Long receiverAccountId = transaction.getReceiver();
-
-    //     Account receiverAccount =  accounts.findById(receiverAccountId)
-    //         .orElseThrow(() -> new AccountNotFoundException(receiverAccountId));
-
-    //     //System.out.println("receiverAcc = " + accounts.findById(receiverAccountId));
-
-    //     senderAccount.setBalance(senderAccount.getAvailable_balance() - transaction.getAmount());
-    //     senderAccount.setAvailable_balance(senderAccount.getAvailable_balance() - transaction.getAmount());
-
-    //     receiverAccount.setBalance(receiverAccount.getAvailable_balance() + transaction.getAmount());
-    //     receiverAccount.setAvailable_balance(receiverAccount.getAvailable_balance() + transaction.getAmount());
- 
-    //     //something wrong here
-    //     accountSet.add(senderAccount);
-    //     accountSet.add(receiverAccount);
-    //     // problem is with the accounts ^^^^ when second posting of transaction
-
-    //     transaction.setAccount(accountSet);
-
-    //     return transactions.save(transaction);
-
-    // }
 
 }

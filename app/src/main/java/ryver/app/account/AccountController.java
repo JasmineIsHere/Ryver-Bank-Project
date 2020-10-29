@@ -26,10 +26,8 @@ public class AccountController {
     }
   
     // Deactivated customer returns 403 forbidden
-    @PreAuthorize("authentication.principal.active == true")
     @GetMapping("/accounts")
     public List<Account> getAllAccountsByCustomerId() {
-        // source:https://www.baeldung.com/get-user-in-spring-security
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String customerUsername = authentication.getName();
         
@@ -48,7 +46,6 @@ public class AccountController {
     }
 
     // Deactivated customer returns 403 forbidden
-    @PreAuthorize("authentication.principal.active == true")
     @GetMapping("/accounts/{accountId}")
     public Account getAccountByAccountIdAndCustomerId(@PathVariable (value = "accountId") Long accountId) {
         //source:https://www.baeldung.com/get-user-in-spring-security
@@ -75,6 +72,7 @@ public class AccountController {
         }
 
         account.setCustomer(customer);
+        account.setAvailable_balance(account.getBalance());
         return accounts.save(account);        
     }
 
