@@ -59,6 +59,7 @@ class ContentIntegrationTest {
     
     @Test
     public void addContent_ROLEManager_Success() throws Exception{
+        //create manager and content
         Customer customer = customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "Manager One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); 
 
         JSONObject requestParams = new JSONObject();
@@ -73,14 +74,17 @@ class ContentIntegrationTest {
 		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
         URI postUri = new URI(baseUrl + port + "/contents");
 
+        //Authority: Manager
         ResponseEntity<Content> result = restTemplate.withBasicAuth("manager_1", "01_manager_01")
             .postForEntity(postUri, entity, Content.class);
 
+        //return 201 succesful creation of article
         assertEquals(201, result.getStatusCode().value());
     }
 
     @Test
     public void addContent_ROLEAnalyst_Success() throws Exception{
+        //create analyst and content
         Customer customer = customers.save(new Customer("analyst_1", encoder.encode("01_analyst_01"), "ROLE_ANALYST", "Analyst One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); 
 
         JSONObject requestParams = new JSONObject();
@@ -95,14 +99,17 @@ class ContentIntegrationTest {
 		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
         URI postUri = new URI(baseUrl + port + "/contents");
 
+        //Authority: Analyst
         ResponseEntity<Content> result = restTemplate.withBasicAuth("analyst_1", "01_analyst_01")
             .postForEntity(postUri, entity, Content.class);
 
+        //Return 201 succesful creation of article
         assertEquals(201, result.getStatusCode().value());
     }
 
     @Test
     public void addContent_ROLECustomer_Failure() throws Exception{
+        //create customer and content
 		Customer customer = customers.save(new Customer("user_1", encoder.encode("01_user_01"), "ROLE_USER", "Jerry Loh",
                 "T0046822Z", "82345678", "address", true)); 
         
@@ -118,10 +125,156 @@ class ContentIntegrationTest {
         HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
         URI postUri = new URI(baseUrl + port + "/contents");
 
+        //Authority: User
         ResponseEntity<Content> result = restTemplate.withBasicAuth("user_1", "01_user_01").postForEntity(postUri, entity, Content.class);
 
+        //return 403 forbidden access, User cannot create article
         assertEquals(403, result.getStatusCode().value());
     }
+
+    @Test
+	public void updateContent_RoleManager_Success() throws Exception{
+        //create manager and content
+        Customer customer = customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "Manager One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); 
+
+        Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
+        contents.save(content);
+
+        //updated content
+		JSONObject requestParams = new JSONObject();
+        requestParams.put("title", "The updated title of the article"); 
+        requestParams.put("summary", "The updated summary of the article");
+        requestParams.put("content", "The updated content of the article");
+        requestParams.put("link",  "https://article.com/article1");
+        requestParams.put("approved",  false);
+
+		HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
+		URI uri = new URI(baseUrl + port + "/contents/" + content.getId());
+
+        //Authority: Manager
+		ResponseEntity<Content> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").exchange(uri, HttpMethod.PUT, entity, Content.class);
+
+		//return 200 succesful update of content
+		assertEquals(200, result.getStatusCode().value());
+    }
+    
+    @Test
+	public void updateContent_RoleAnalyst_Success() throws Exception{
+        //create Analyst and content
+        Customer customer = customers.save(new Customer("analyst_1", encoder.encode("01_analyst_01"), "ROLE_ANALYST", "Analyst One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); 
+
+        Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
+        contents.save(content);
+
+		//uodated content
+		JSONObject requestParams = new JSONObject();
+        requestParams.put("title", "The updated title of the article"); 
+        requestParams.put("summary", "The updated summary of the article");
+        requestParams.put("content", "The updated content of the article");
+        requestParams.put("link",  "https://article.com/article1");
+        requestParams.put("approved",  false);
+
+		HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
+        URI uri = new URI(baseUrl + port + "/contents/" + content.getId());
+        
+        //Authority: Analyst
+		ResponseEntity<Content> result = restTemplate.withBasicAuth("analyst_1", "01_analyst_01").exchange(uri, HttpMethod.PUT, entity, Content.class);
+
+        //return 200 succesful update of content
+        assertEquals(200, result.getStatusCode().value());
+    }
+
+    @Test
+	public void updateContent_RoleUser_Failure() throws Exception{
+        //create customer and content
+ 		Customer customer = customers.save(new Customer("user_1", encoder.encode("01_user_01"), "ROLE_USER", "Jerry Loh", "T0046822Z", "82345678", "address", true)); 
+
+        Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
+        contents.save(content);
+
+        //updated content
+		JSONObject requestParams = new JSONObject();
+        requestParams.put("title", "The updated title of the article"); 
+        requestParams.put("summary", "The updated summary of the article");
+        requestParams.put("content", "The updated content of the article");
+        requestParams.put("link",  "https://article.com/article1");
+        requestParams.put("approved",  false);
+
+		HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
+		URI uri = new URI(baseUrl + port + "/contents/" + content.getId());
+
+        //Authority: User
+		ResponseEntity<Content> result = restTemplate.withBasicAuth("user_1", "01_user_01").exchange(uri, HttpMethod.PUT, entity, Content.class);
+ 
+        //return 403 forbidden as User cannot update content
+		assertEquals(403, result.getStatusCode().value());
+    }
+
+    @Test
+    public void deleteContent_RoleManager_Success() throws Exception {
+        //create manager and content
+        Customer customer = customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "Manager One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); 
+
+        Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
+        contents.save(content);
+
+        URI uri = new URI(baseUrl + port + "/contents/" + content.getId());
+        
+        //Authority: Manager
+        ResponseEntity<Void> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").exchange(uri, HttpMethod.DELETE, null, Void.class);
+
+        //return 200 successful deletion of content
+        assertEquals(200, result.getStatusCode().value());
+        
+        // An empty Optional should be returned by "findById" after deletion
+        Optional<Content> emptyValue = Optional.empty();
+        assertEquals(emptyValue, contents.findById(content.getId()));
+    }
+
+    @Test
+    public void deleteContent_RoleAnalysr_Success() throws Exception {
+        //create analyst and content
+        Customer customer = customers.save(new Customer("analyst_1", encoder.encode("01_analyst_01"), "ROLE_ANALYST", "Analyst One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); 
+
+        Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
+        contents.save(content);
+
+        URI uri = new URI(baseUrl + port + "/contents/" + content.getId());
+        
+        //Authority: analyst
+        ResponseEntity<Void> result = restTemplate.withBasicAuth("analyst_1", "01_analyst_01").exchange(uri, HttpMethod.DELETE, null, Void.class);
+
+        //return 200 successful deletion of content
+        assertEquals(200, result.getStatusCode().value());
+        
+        // An empty Optional should be returned by "findById" after deletion
+        Optional<Content> emptyValue = Optional.empty();
+        assertEquals(emptyValue, contents.findById(content.getId()));
+    }
+
+    @Test
+    public void deleteContent_RoleUser_Failure() throws Exception {
+        //create customer and content
+ 		Customer customer = customers.save(new Customer("user_1", encoder.encode("01_user_01"), "ROLE_USER", "Jerry Loh", "T0046822Z", "82345678", "address", true));
+
+        Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
+        contents.save(content);
+
+        URI uri = new URI(baseUrl + port + "/contents/1");
+        
+        //Authority: customer
+        ResponseEntity<Void> result = restTemplate.withBasicAuth("user_1", "01_user_01").exchange(uri, HttpMethod.DELETE, null, Void.class);
+      
+        //return 403 forbidden customer cannot delete content
+        assertEquals(403, result.getStatusCode().value());
+    }
+}
 
     // @Test
     // public void getContent_ROLEUser_Success() throws Exception{
@@ -138,111 +291,3 @@ class ContentIntegrationTest {
 
     //     assertEquals(200, result.getStatusCode().value());
     // }
-
-    @Test
-	public void updateContent_RoleManager_Success() throws Exception{
-        Customer customer = customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "Manager One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); 
-
-        Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
-        contents.save(content);
-
-		//custmer cancels trade 
-		JSONObject requestParams = new JSONObject();
-        requestParams.put("title", "The updated title of the article"); 
-        requestParams.put("summary", "The updated summary of the article");
-        requestParams.put("content", "The updated content of the article");
-        requestParams.put("link",  "https://article.com/article1");
-        requestParams.put("approved",  false);
-
-		HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
-		URI uri = new URI(baseUrl + port + "/contents/" + content.getId());
-
-		ResponseEntity<Content> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").exchange(uri, HttpMethod.PUT, entity, Content.class);
-
-		//requested trade updated
-		assertEquals(200, result.getStatusCode().value());
-    }
-    
-    @Test
-	public void updateContent_RoleAnalyst_Success() throws Exception{
-        Customer customer = customers.save(new Customer("analyst_1", encoder.encode("01_analyst_01"), "ROLE_ANALYST", "Analyst One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); 
-
-        Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
-        contents.save(content);
-
-		//custmer cancels trade 
-		JSONObject requestParams = new JSONObject();
-        requestParams.put("title", "The updated title of the article"); 
-        requestParams.put("summary", "The updated summary of the article");
-        requestParams.put("content", "The updated content of the article");
-        requestParams.put("link",  "https://article.com/article1");
-        requestParams.put("approved",  false);
-
-		HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
-		URI uri = new URI(baseUrl + port + "/contents/" + content.getId());
-
-		ResponseEntity<Content> result = restTemplate.withBasicAuth("analyst_1", "01_analyst_01").exchange(uri, HttpMethod.PUT, entity, Content.class);
-
-		//requested trade updated
-		assertEquals(200, result.getStatusCode().value());
-    }
-
-    @Test
-	public void updateContent_RoleUser_Failure() throws Exception{
- 		Customer customer = customers.save(new Customer("user_1", encoder.encode("01_user_01"), "ROLE_USER", "Jerry Loh", "T0046822Z", "82345678", "address", true)); 
-
-        Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
-        contents.save(content);
-
-		JSONObject requestParams = new JSONObject();
-        requestParams.put("title", "The updated title of the article"); 
-        requestParams.put("summary", "The updated summary of the article");
-        requestParams.put("content", "The updated content of the article");
-        requestParams.put("link",  "https://article.com/article1");
-        requestParams.put("approved",  false);
-
-		HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
-		URI uri = new URI(baseUrl + port + "/contents/" + content.getId());
-
-		ResponseEntity<Content> result = restTemplate.withBasicAuth("user_1", "01_user_01").exchange(uri, HttpMethod.PUT, entity, Content.class);
- 
-		assertEquals(403, result.getStatusCode().value());
-    }
-
-    @Test
-    public void deleteContent_RoleManager_Success() throws Exception {
-        Customer customer = customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "Manager One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); 
-
-        Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
-        contents.save(content);
-
-        URI uri = new URI(baseUrl + port + "/contents/" + content.getId());
-        
-        ResponseEntity<Void> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").exchange(uri, HttpMethod.DELETE, null, Void.class);
-
-        assertEquals(200, result.getStatusCode().value());
-        // An empty Optional should be returned by "findById" after deletion
-        Optional<Content> emptyValue = Optional.empty();
-        assertEquals(emptyValue, contents.findById(content.getId()));
-    }
-
-    @Test
-    public void deleteContent_RoleUser_Failure() throws Exception {
- 		Customer customer = customers.save(new Customer("user_1", encoder.encode("01_user_01"), "ROLE_USER", "Jerry Loh", "T0046822Z", "82345678", "address", true));
-
-        Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
-        contents.save(content);
-
-        URI uri = new URI(baseUrl + port + "/contents/1");
-        
-        ResponseEntity<Void> result = restTemplate.withBasicAuth("user_1", "01_user_01").exchange(uri, HttpMethod.DELETE, null, Void.class);
-      
-        assertEquals(403, result.getStatusCode().value());
-    }
-}

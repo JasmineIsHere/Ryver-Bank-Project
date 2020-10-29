@@ -48,7 +48,7 @@ class CustomerIntegrationTest {
 	} 
 
 	@Test
-	public void addCustomer_Success() throws Exception {
+	public void addCustomer_RoleManager_Success() throws Exception {
 		// Customer newCustomer = new Customer("Jolene", encoder.encode("new_password"), "ROLE_USER", "Jolene Loh",
 		// 		"T0046822Z", "97123456", "updated_address", true);
 
@@ -59,18 +59,20 @@ class CustomerIntegrationTest {
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(newCustomer, headers);
-		//System.out.println(entity);
+
 		URI uri = new URI(baseUrl + port + "/customers");
 
+		//Authority: manager
 		ResponseEntity<LinkedHashMap> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").postForEntity(uri, entity, LinkedHashMap.class);
 		//ResponseEntity<Customer> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").postForEntity(uri, newCustomer, Customer.class);
 
+		//201 succesful creation of customer
 		assertEquals(201, result.getStatusCode().value());
 	}
 
 	@Test
-	public void addCustomer_ROLEUser_Failure() throws Exception {
-
+	public void addCustomer_RoleUser_Failure() throws Exception {
+		//create customer
 		String newCustomer = 
 		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"full_name\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": true}";
 		customers.save(new Customer("user_2", encoder.encode("02_user_02"), "ROLE_USER", "User One","S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); // the manager that will be updated the customer details
@@ -80,13 +82,16 @@ class CustomerIntegrationTest {
 		HttpEntity<String> entity = new HttpEntity<>(newCustomer, headers);
 		URI uri = new URI(baseUrl + port + "/customers");
 
+		//Authority: User
 		ResponseEntity<LinkedHashMap> result = restTemplate.withBasicAuth("user_2", "02_user_02").postForEntity(uri, entity, LinkedHashMap.class);
 		
-		assertEquals(403, result.getStatusCode().value()); //Forbidden
+		//403 forbidden, User cannot create a customer 
+		assertEquals(403, result.getStatusCode().value()); 
 	}
 
 	@Test
 	public void updateCustomer_ManagerUpdateCustomer_Success() throws Exception {
+		//create manager and customer
 		customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "Manager One",
 				"S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); // the manager that will be updated the
 																				// customer details
@@ -95,105 +100,98 @@ class CustomerIntegrationTest {
 				"T0046822Z", "82345678", "address", true)); //original customer
 		URI uri = new URI(baseUrl + port + "/customers/" + customer.getId());
 
+		//updated customer information
 		String updatedCustomer = 
 		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"full_name\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": true}";
+		
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(updatedCustomer, headers);
 
+		//authority: manager
 		ResponseEntity<LinkedHashMap> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").exchange(uri,
 				HttpMethod.PUT, entity, LinkedHashMap.class);
 	
+		//200 successful update of customer
 		assertEquals(200, result.getStatusCode().value());
-
-		// assertEquals("999 Tampines Road S99999", result.getBody().get("address"));
-		// assertEquals(updatedCustomer.getPhone(), result.getBody().get("phone"));
-		// assertEquals(updatedCustomer.getPassword(), result.getBody().get("password"));
-		// assertEquals("false", result.getBody().get("active"));
-
-		// assertNotEquals(updatedCustomer.getUsername(), result.getBody().getUsername());
-		// assertNotEquals(updatedCustomer.getFullName(), result.getBody().getFullName());
-		// assertNotEquals(updatedCustomer.getNric(), result.getBody().getNric());
-		// assertNotEquals(updatedCustomer.getAuthorities(), result.getBody().getAuthorities());
 	}
 
 	@Test
 	public void updateCustomer_ManagerInactivateCustomer_Success() throws Exception {
+		//creatae manager and customer
 		customers.save(new Customer("manager_1", encoder.encode("01_manager_01"), "ROLE_MANAGER", "Manager One",
 				"S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true)); // the manager that will be updated the
 																				// customer details
-
 		Customer customer = customers.save(new Customer("User_1", encoder.encode("password"), "ROLE_USER", "Jerry Loh",
 				"T0046822Z", "82345678", "address", true)); //original customer
 		URI uri = new URI(baseUrl + port + "/customers/" + customer.getId());
 
+		//updated customer information
 		String updatedCustomer = 
 		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"full_name\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": false}";
+		
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(updatedCustomer, headers);
 
+		//Authority: manager
 		ResponseEntity<LinkedHashMap> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").exchange(uri,
 				HttpMethod.PUT, entity, LinkedHashMap.class);
 		
+		//200 successful update of customer information
 		assertEquals(200, result.getStatusCode().value());
 		assertEquals(false, result.getBody().get("active"));
 	}
 
 	@Test
-	public void updateCustomer_CustomerUpdateItself_Success() throws Exception {																				// customer details
-
+	public void updateCustomer_CustomerUpdateItself_Success() throws Exception {																				
+		// customer details and updated information
 		Customer customer = customers.save(new Customer("User_1", encoder.encode("password"), "ROLE_USER", "Jerry Loh",
 				"T0046822Z", "82345678", "address", true)); //original customer
 		URI uri = new URI(baseUrl + port + "/customers/" + customer.getId());
 
 		String updatedCustomer = 
 		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"full_name\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": false}";
+	
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(updatedCustomer, headers);
 
+		//Authority: User
 		ResponseEntity<LinkedHashMap> result = restTemplate.withBasicAuth("User_1", "password").exchange(uri,
 				HttpMethod.PUT, entity, LinkedHashMap.class);
 		
+		//200 Successful Update of user information
 		assertEquals(200, result.getStatusCode().value());
-		// assertEquals(updatedCustomer.getAddress(), result.getBody().getAddress());
-		// assertEquals(updatedCustomer.getPhone(), result.getBody().getPhone());
-		// assertEquals(updatedCustomer.getPassword(), result.getBody().getPassword());
-		// assertEquals(updatedManager.isActive(), savedManager.isActive()); //still
-		// can't be tested
-
-		// assertNotEquals(updatedCustomer.getUsername(), result.getBody().getUsername());
-		// assertNotEquals(updatedCustomer.getFullName(), result.getBody().getFullName());
-		// assertNotEquals(updatedCustomer.getNric(), result.getBody().getNric());
-		// assertNotEquals(updatedCustomer.getAuthorities(), result.getBody().getAuthorities());
 	}
+
 	@Test
 	public void updateCustomer_CustomerInactivateItself_Ignored() throws Exception {																				// customer details
-
+		//create customer and updated info
 		Customer customer = customers.save(new Customer("User_1", encoder.encode("password"), "ROLE_USER", "Jerry Loh",
 				"T0046822Z", "82345678", "address", true)); //original customer
 		URI uri = new URI(baseUrl + port + "/customers/" + customer.getId());
 
 		String updatedCustomer = 
 		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"full_name\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": false}";
+		
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(updatedCustomer, headers);
 
+		//Authority: User
 		ResponseEntity<LinkedHashMap> result = restTemplate.withBasicAuth("User_1", "password").exchange(uri,
 				HttpMethod.PUT, entity, LinkedHashMap.class);
-		System.out.println("CUSTOMER: " + result.getBody());
-		System.out.println("Users: " + customers.count());
 
-		
+		//Return 200 succesful update of customer info
 		assertEquals(200, result.getStatusCode().value());
+		//the deactivation of account is ignored
 		assertEquals(true, result.getBody().get("active"));
 	}
 
 	@Test
 	public void updateCustomer_CustomerUpdateOtherCustomer_Failure() throws Exception {																				// customer details
-
+		//create customer and updated info
 		Customer customer = customers.save(new Customer("User_1", encoder.encode("password"), "ROLE_USER", "Jerry Loh",
 				"T0046822Z", "82345678", "address", true)); //original customer
 		customers.save(new Customer("User_2", encoder.encode("password"), "ROLE_USER", "Jessica", "S1234567D", "91234567", "address2", true)); //other customer
@@ -201,14 +199,16 @@ class CustomerIntegrationTest {
 
 		String updatedCustomer = 
 		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"full_name\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": false}";
+		
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(updatedCustomer, headers);
 
+		//authority: user
 		ResponseEntity<LinkedHashMap> result = restTemplate.withBasicAuth("User_2", "password").exchange(uri,
 				HttpMethod.PUT, entity, LinkedHashMap.class); //User_2 tries to update User_1
 
-		
+		//403 forbidden, customer cannot update other customer
 		assertEquals(403, result.getStatusCode().value());
 	}
 }
