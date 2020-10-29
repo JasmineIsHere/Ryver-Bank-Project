@@ -415,6 +415,13 @@ Authorization: Basic good_user_1 01_user_01
 # Validation pass - Customers can view only approved content
 
 ###
+# An unapproved content cannot be viewed
+# Returns: 404 Not Found
+GET http://localhost:8080/contents/1
+Accept: application/json
+Authorization: Basic good_user_1 01_user_01
+
+###
 # An analyst can view all contents
 # Returns: 200 OK with list of all contents
 # note: there is 2 article both of which has yet to be approved
@@ -678,5 +685,10 @@ Accept: application/json
 Authorization: Basic testuser_01 01_testuser_01
 
 ################### End Portfolio Testing #########################################
+
+################### RESET #########################################
+
 POST http://localhost:8080/reset
 Accept: application/json
+
+################### RESET #########################################

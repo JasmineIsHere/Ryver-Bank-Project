@@ -28,6 +28,18 @@ public class ContentController {
         }
         return contents.findAll();
     }
+
+    @GetMapping("/contents/{contentId}")
+    public Content getSpecificContent(@PathVariable (value = "contentId") Long contentId){
+        Content content = contents.findById(contentId)
+            .orElseThrow(() -> new ContentNotFoundException(contentId));
+
+        if (content.isApproved()){
+            return content;
+        } else{
+            throw new ContentNotFoundException(contentId);
+        }
+    }
     
     // Approved is false by default
     @ResponseStatus(HttpStatus.CREATED)
