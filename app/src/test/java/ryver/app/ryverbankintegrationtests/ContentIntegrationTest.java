@@ -276,18 +276,3 @@ class ContentIntegrationTest {
     }
 }
 
-    // @Test
-    // public void getContent_ROLEUser_Success() throws Exception{
-    //     Customer customer = new Customer("user_1", encoder.encode("password"), "ROLE_USER", "user_fullname", "S7812345A", "91234567", "address", true);
-    //     customer.setId(1L);
-    //     customers.save(customer);
-
-    //     Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
-    //     contents.save(content);
-    
-    //     URI postUri = new URI(baseUrl + port + "/contents");
-
-    //     ResponseEntity<Content> result = restTemplate.withBasicAuth("user_1", "password").getForEntity(postUri, Content.class);
-
-    //     assertEquals(200, result.getStatusCode().value());
-    // }

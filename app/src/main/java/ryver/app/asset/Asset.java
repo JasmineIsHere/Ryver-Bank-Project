@@ -48,6 +48,16 @@ public class Asset{
         // this.portfolio = portfolio;
     }
 
+    public Asset(String code, int quantity, double avg_price, double current_price, double value, double gain_loss, Portfolio portfolio) {
+        this.code = code;
+        this.quantity = quantity;
+        this.avg_price = avg_price;
+        this.current_price = current_price;
+        this.value = value;
+        this.gain_loss = gain_loss;
+        this.portfolio = portfolio;
+    }
+
     @Override public String toString() {
         String string = "Asset(assetid=" + this.id + ", code=" + this.code + ", quantity=" + this.quantity +  ", avg_price=" + this.avg_price +  ", current_price=" + this.current_price +  ", value=" + this.value +  ", gain_loss=" + this.gain_loss +")";
         return string;

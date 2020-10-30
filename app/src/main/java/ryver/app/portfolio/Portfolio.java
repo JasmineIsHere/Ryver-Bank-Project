@@ -40,6 +40,14 @@ public class Portfolio {
     orphanRemoval = true,
     cascade = CascadeType.ALL)
     private List<Asset> assets;
+
+    public Portfolio(long customer_id, double unrealized_gain_loss, double total_gain_loss, Customer customer, List<Asset> assets){
+        this.customer_id = customer_id;
+        this.unrealized_gain_loss = unrealized_gain_loss;
+        this.total_gain_loss = total_gain_loss;
+        this.customer =customer;
+        this.assets = assets;
+    }
 }
 
 

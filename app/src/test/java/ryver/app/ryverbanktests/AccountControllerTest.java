@@ -1,5 +1,6 @@
 package ryver.app.ryverbanktests;
 
+import java.nio.file.AccessDeniedException;
 import ryver.app.customer.*;
 import ryver.app.account.*;
 import ryver.app.customer.Customer.*;
@@ -14,9 +15,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.never;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,14 +38,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * 
  *      T E S T
  *  W   3.addAccount_NewAccount_ReturnSavedAccount
- *  X   4.addAccount_CustomerInactive_ReturnException
  * 
  * Notes:
  * none
 */
 
 @ExtendWith(MockitoExtension.class)
-public class AccountServiceTest {
+public class AccountControllerTest {
     @Mock
     BCryptPasswordEncoder encoder;
     @Mock
@@ -73,35 +75,4 @@ public class AccountServiceTest {
         verify(customers).findById(customer.getId());
         verify(accounts).save(account);
     }
-
-    // @Test
-    // void addAccount_CustomerInactive_ReturnException(){
-    // //arrange
-    // Customer customer = new Customer(
-    // "good_user_1", "01_user_01", "ROLE_USER", "User One", "S7812345A",
-    // "91234567", "123 Ang Mo Kio Road S456123", false);
-    // customer.setId(1L);
-
-    // Account account = new Account(400.0, 400.0, 1L, customer);
-
-    // when(customers.findById(customer.getId())).thenReturn(Optional.of(customer));
-    // when(accounts.save(any(Account.class))).thenReturn(account);
-
-    // //act
-    // Account savedAccount = null;
-    // try{
-    // savedAccount = accountController.addAccount(account);
-    // }
-    // // catch (CustomerNotFoundException e){}
-    // catch (AccessDeniedException e){}
-
-    // //assert
-    // assertThrows(AccessDeniedException.class, () ->
-    // {accountController.addAccount(account);});
-    // assertNull(savedAccount);
-    // verify(accounts, never()).save(account);
-
-    // // verify(customers).findById(customer.getId());
-    // // verify(accounts).save(account);
-    // }
 }

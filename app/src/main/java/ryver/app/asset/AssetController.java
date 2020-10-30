@@ -29,7 +29,7 @@ public class AssetController {
             throw new PortfolioNotFoundException(portfolioId);
         
         List<Asset> assetList = assets.findByPortfolioId(portfolioId);
-        
+
         for(Asset asset : assetList){
             Optional<CustomStock> stock = stocks.findBySymbol(asset.getCode());
             stock.ifPresent(s -> {

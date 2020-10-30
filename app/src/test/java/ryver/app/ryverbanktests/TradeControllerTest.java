@@ -45,7 +45,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 */
 
 @ExtendWith(MockitoExtension.class)
-public class TradeServiceTest {
+public class TradeControllerTest {
     @Mock
     BCryptPasswordEncoder encoder;
     @Mock

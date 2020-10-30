@@ -46,18 +46,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * 
  *      T E S T
  *  W   1.updateCustomer_Found_ReturnSavedCustomer
- *  X   2.updateCustomer_NotFound_returnNull 
- *  W   3.addCustomer_NewCustomerWithValidNric_ReturnSavedCustomer
- *  W   4.addCustomer_NewCustomerWithInvalidNric_ReturnNull
- *  W   5.validateNric_ValidNric_ReturnTrue
- * 
- * Notes:
- * - need to add a return null function for test2
- * - the isActive part of the assert does not work
+ *  W   2.addCustomer_NewCustomerWithValidNric_ReturnSavedCustomer
+ *  W   3.addCustomer_NewCustomerWithInvalidNric_ReturnNull
+ *  W   4.validateNric_ValidNric_ReturnTrue
 */
 
 @ExtendWith(MockitoExtension.class)
-public class CustomerServiceTest {
+public class CustomerControllerTest {
     @Mock
     private CustomerRepository customers;
 
@@ -155,31 +150,4 @@ public class CustomerServiceTest {
         assertNotNull(validNric);
     }
 }
-
-//     // @Test
-//     // void updateCustomer_NotFound_returnNull(){
-//     //     //arrange        
-//     //     Customer customer = new Customer(
-//     //         "good_user_1", "01_user_01", "ROLE_USER", "User One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", false);
-//     //     customer.setId(1L);
-
-//     //     Customer updatedCustomer = new Customer(
-//     //         "good_user_1", "01_user_01", "ROLE_USER", "User One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
-//     //     updatedCustomer.setId(1L);
-
-//     //     when(customers.findById(customerId)).thenReturn(Optional.empty()); 
-//     //     when(encoder.encode(updatedCustomer.getPassword())).thenReturn(updatedCustomer.getPassword());
-            
-//     //     //act
-//     //     Customer savedCustomer = null;
-//     //     try{
-//     //         savedCustomer = customerController.updateCustomer(1L, updatedCustomer);
-//     //     } catch (CustomerNotFoundException e){
-//     //     }
-
-//     //     //assert
-//     //     assertThrows(CustomerNotFoundException.class, () -> {customerController.updateCustomer(updatedCustomer);});
-//     //     assertNull(savedCustomer);
-//     //     verify(customers, never()).save(updatedCustomer); 
-//     // }
 

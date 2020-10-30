@@ -1,9 +1,11 @@
 package ryver.app.ryverbanktests;
 
 import ryver.app.customer.*;
-import ryver.app.content.*;
+import ryver.app.account.*;
+import ryver.app.stock.*;
 import ryver.app.customer.Customer.*;
-import ryver.app.content.Content.*;
+import ryver.app.account.Account.*;
+import ryver.app.stock.CustomStock.*;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.SpringApplication;
@@ -34,31 +36,29 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * X --> Doesnt work
  * 
  *      T E S T
- *  W   1.addContent_approveContent_returnSavedContent
- * 
- * Notes:
- * none
-*/
+ *  W   1.getStockBySymbol_Found_returnStocks
+ */
 
 @ExtendWith(MockitoExtension.class)
-public class ContentServiceTest {
+public class StockControllerTest {
     @Mock
-    private ContentRepository contents;
+    private StockRepository stocks;
 
     @InjectMocks
-    private ContentController contentController;
+    private StockController stockController;
 
     @Test
-    void addContent_approveContent_returnSavedContent(){
+    void getStockBySymbol_Found_returnStocks(){
         //arrange
-        Content content = new Content("title", "summary", "content", "link", false);
-        when(contents.save(any(Content.class))).thenReturn(content);      
-        
+        CustomStock stock = new CustomStock(
+            "V03", 20.97, 20000, 20.59, 20000, 20.6, null);
+        when(stocks.findBySymbol(stock.getSymbol())).thenReturn(Optional.of(stock));
+
         //act
-        Content savedContent = contentController.addContent(content);
-        
+        CustomStock getStock = stockController.getStockBySymbol(stock.getSymbol());
+
         //assert
-        assertNotNull(savedContent);
-        verify(contents).save(content);
+        assertNotNull(getStock);
+        verify(stocks).findBySymbol(stock.getSymbol());
     }
 }
