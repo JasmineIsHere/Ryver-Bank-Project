@@ -5,12 +5,14 @@ import ryver.app.customer.*;
 
 import java.util.List;
 
-import org.springframework.security.access.prepost.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
+@SecurityRequirement(name = "api")
 public class PortfolioController {
     private PortfolioRepository portfolios;
     private AssetController assetsCtrl;
@@ -22,8 +24,7 @@ public class PortfolioController {
         this.customers = customers;
     }
 
-    @PreAuthorize("authentication.principal.active == true")
-    @GetMapping("/portfolio")
+    @GetMapping("/api/portfolio")
     public Portfolio getPortfolio() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String customerUsername = authentication.getName();

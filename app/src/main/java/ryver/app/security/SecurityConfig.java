@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)  
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)  
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
@@ -46,18 +46,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .httpBasic()
             .and() 
         .authorizeRequests()
-            .antMatchers(HttpMethod.GET, "/customers").hasRole("MANAGER")
-            .antMatchers(HttpMethod.POST, "/customers").hasRole("MANAGER")
+            .antMatchers(HttpMethod.GET, "/api/customers").hasRole("MANAGER")
+            .antMatchers(HttpMethod.POST, "/api/customers").hasRole("MANAGER")
+            .antMatchers(HttpMethod.GET, "/api/customers/*").hasAnyRole("MANAGER", "USER")
+            .antMatchers(HttpMethod.PUT, "/api/customers/*").hasAnyRole("MANAGER", "USER")
+            
+            .antMatchers(HttpMethod.GET, "/api/accounts").hasAnyRole("MANAGER", "USER")
+            .antMatchers(HttpMethod.POST, "/api/accounts").hasRole("MANAGER")
+            .antMatchers(HttpMethod.GET, "/api/accounts/*").hasAnyRole("MANAGER", "USER")
+            .antMatchers(HttpMethod.POST, "/api/accounts/*/transactions").hasRole("USER")
+            .antMatchers(HttpMethod.GET, "/api/accounts/*/transactions").hasRole("USER")
 
-            .antMatchers(HttpMethod.GET, "/accounts").hasAnyRole("MANAGER", "USER")
-            .antMatchers(HttpMethod.POST, "/accounts").hasRole("MANAGER")
+            .antMatchers(HttpMethod.GET, "/api/contents").hasAnyRole("MANAGER", "USER", "ANALYST")
+            .antMatchers(HttpMethod.GET, "/api/contents/*").hasAnyRole("MANAGER", "USER", "ANALYST")
+            .antMatchers(HttpMethod.POST, "/api/contents").hasAnyRole("MANAGER", "ANALYST")
+            .antMatchers(HttpMethod.PUT, "/api/contents/*").hasAnyRole("MANAGER", "ANALYST")
+            .antMatchers(HttpMethod.DELETE, "/api/contents/*").hasAnyRole("MANAGER", "ANALYST")
 
-            .antMatchers(HttpMethod.GET, "/contents").hasAnyRole("MANAGER", "USER", "ANALYST")
-            .antMatchers(HttpMethod.POST, "/contents").hasAnyRole("MANAGER", "ANALYST")
-            .antMatchers(HttpMethod.PUT, "/contents/*").hasAnyRole("MANAGER", "ANALYST")
-            .antMatchers(HttpMethod.DELETE, "/contents/*").hasAnyRole("MANAGER", "ANALYST")
-
-            .antMatchers(HttpMethod.GET, "/portfolio").hasRole("USER")
+            .antMatchers(HttpMethod.GET, "/api/portfolio").hasRole("USER")
+            
+            .antMatchers(HttpMethod.GET, "/api/trades").hasRole("USER")
+            .antMatchers(HttpMethod.GET, "/api/trades/{tradeId}").hasRole("USER")
+            .antMatchers(HttpMethod.POST, "/api/trades").hasRole("USER")
+            .antMatchers(HttpMethod.PUT, "/api/trades/{tradeId}").hasRole("USER")
             .and()
         .csrf().disable() // CSRF protection is needed only for browser based attacks
         .formLogin().disable()

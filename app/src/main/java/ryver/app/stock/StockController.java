@@ -12,7 +12,10 @@ import yahoofinance.YahooFinance;
 import yahoofinance.quotes.stock.StockQuote;
 import yahoofinance.Stock;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
+@SecurityRequirement(name = "api")
 public class StockController {
     private StockRepository stocks;
    
@@ -61,13 +64,13 @@ public class StockController {
         return null;
     }  
 
-    @GetMapping("/stocks")
+    @GetMapping("/api/stocks")
     public List<CustomStock> getStocks() {
         // true as of 12/10/2020
         return stocks.findAll();
     }
 
-    @GetMapping("/stocks/{symbol}")
+    @GetMapping("/api/stocks/{symbol}")
     public CustomStock getStockBySymbol(@PathVariable (value = "symbol") String symbol){
         return stocks.findBySymbol(symbol)
             .orElseThrow(() -> new InvalidStockException(symbol));

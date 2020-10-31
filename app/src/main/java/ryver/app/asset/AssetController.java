@@ -11,8 +11,10 @@ import ryver.app.portfolio.*;
 import ryver.app.stock.CustomStock;
 import ryver.app.stock.StockRepository;
 import ryver.app.trade.Trade;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
+@SecurityRequirement(name = "api")
 public class AssetController {
     private AssetRepository assets;
     private PortfolioRepository portfolios;

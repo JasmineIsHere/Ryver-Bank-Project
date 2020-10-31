@@ -10,12 +10,13 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.*;
-import org.springframework.security.access.prepost.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
+@SecurityRequirement(name = "api")
 public class AccountController {
     private AccountRepository accounts;
     private CustomerRepository customers;
@@ -26,10 +27,8 @@ public class AccountController {
     }
   
     // Deactivated customer returns 403 forbidden
-    @PreAuthorize("authentication.principal.active == true")
-    @GetMapping("/accounts")
+    @GetMapping("/api/accounts")
     public List<Account> getAllAccountsByCustomerId() {
-        // source:https://www.baeldung.com/get-user-in-spring-security
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String customerUsername = authentication.getName();
         
@@ -48,8 +47,7 @@ public class AccountController {
     }
 
     // Deactivated customer returns 403 forbidden
-    @PreAuthorize("authentication.principal.active == true")
-    @GetMapping("/accounts/{accountId}")
+    @GetMapping("/api/accounts/{accountId}")
     public Account getAccountByAccountIdAndCustomerId(@PathVariable (value = "accountId") Long accountId) {
         //source:https://www.baeldung.com/get-user-in-spring-security
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -64,7 +62,7 @@ public class AccountController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/accounts")
+    @PostMapping("/api/accounts")
     public Account addAccount (@Valid @RequestBody Account account) {
         Customer customer = customers.findById(account.getCustomer_id())
             .orElseThrow(() -> new CustomerNotFoundException(account.getCustomer_id()));
@@ -75,7 +73,8 @@ public class AccountController {
         }
 
         account.setCustomer(customer);
-        return accounts.save(account);   
+        account.setAvailable_balance(account.getBalance());
+        return accounts.save(account);        
     }
 
 }
