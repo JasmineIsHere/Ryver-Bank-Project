@@ -78,13 +78,13 @@ class TransactionIntegrationTest {
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
-        URI postUri = new URI(baseUrl + port + "/accounts/"+ account1.getId() +"/transactions");
+        URI postUri = new URI(baseUrl + port + "/api/accounts/"+ account1.getId() +"/transactions");
 
         //Authority: user
         ResponseEntity<Transaction> result = restTemplate.withBasicAuth("user_1", "01_user_01").postForEntity(postUri, entity, Transaction.class);
 
-        //200 succesful addition of transaction
-        assertEquals(200, result.getStatusCode().value());
+        //201 succesful addition of transaction
+        assertEquals(201, result.getStatusCode().value());
     }
 
     @Test
@@ -101,11 +101,11 @@ class TransactionIntegrationTest {
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
-        URI postUri = new URI(baseUrl + port + "/accounts/"+ account1.getId() +"/transactions");
+        URI postUri = new URI(baseUrl + port + "/api/accounts/"+ account1.getId() +"/transactions");
 
         ResponseEntity<Transaction> result = restTemplate.withBasicAuth("user_1", "01_user_01").postForEntity(postUri, entity, Transaction.class);
 
-        assertEquals(404, result.getStatusCode().value());
+        assertEquals(401, result.getStatusCode().value());
     }
 }
 

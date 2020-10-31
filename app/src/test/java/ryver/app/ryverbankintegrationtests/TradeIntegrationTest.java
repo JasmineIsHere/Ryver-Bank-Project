@@ -97,7 +97,7 @@ public class TradeIntegrationTest {
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(newTrade, headers);
-		URI uri = new URI(baseUrl + port + "/trades");
+		URI uri = new URI(baseUrl + port + "/api/trades");
 
         //Authority: User
         ResponseEntity<Trade> result = restTemplate.withBasicAuth("user_1", "password").postForEntity(uri, entity, Trade.class);
@@ -123,7 +123,7 @@ public class TradeIntegrationTest {
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
-		URI uri = new URI(baseUrl + port + "/trades");
+		URI uri = new URI(baseUrl + port + "/api/trades");
 
         //Authority: User
 		ResponseEntity<Trade> result = restTemplate.withBasicAuth("user_1", "password").postForEntity(uri, entity, Trade.class);
@@ -141,7 +141,7 @@ public class TradeIntegrationTest {
 		trade.setStock(stocks.findAll().get(0));
 		trades.save(trade);
 			
-		URI uri = new URI(baseUrl + port + "/trades/" + trade.getId());
+		URI uri = new URI(baseUrl + port + "/api/trades/" + trade.getId());
 
         //Authority: user
 		ResponseEntity<Trade> result = restTemplate.withBasicAuth("user_1", "password").getForEntity(uri, Trade.class);
@@ -155,7 +155,7 @@ public class TradeIntegrationTest {
 		//retrieve a particular trade that a customer has made
 		//but no trade has been made yet			
 
-		URI uri = new URI(baseUrl + port + "/trades/" + 1);
+		URI uri = new URI(baseUrl + port + "/api/trades/" + 1);
 
         //Authority: User
 		ResponseEntity<Trade> result = restTemplate.withBasicAuth("user_1", "password").getForEntity(uri, Trade.class);
@@ -189,7 +189,7 @@ public class TradeIntegrationTest {
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
-		URI uri = new URI(baseUrl + port + "/trades/" + trade.getId());
+		URI uri = new URI(baseUrl + port + "/api/trades/" + trade.getId());
 
         //Authority: User
 		ResponseEntity<Trade> result = restTemplate.withBasicAuth("user_1", "password").exchange(uri, HttpMethod.PUT, entity, Trade.class);
@@ -223,7 +223,7 @@ public class TradeIntegrationTest {
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
-		URI uri = new URI(baseUrl + port + "/trades/" + trade.getId());
+		URI uri = new URI(baseUrl + port + "/api/trades/" + trade.getId());
 
         //Authority: User
 		ResponseEntity<Trade> result = restTemplate.withBasicAuth("user_2", "wrongpassword").exchange(uri, HttpMethod.PUT, entity, Trade.class);

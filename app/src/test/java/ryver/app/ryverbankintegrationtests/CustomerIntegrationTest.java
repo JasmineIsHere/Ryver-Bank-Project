@@ -60,7 +60,7 @@ class CustomerIntegrationTest {
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(newCustomer, headers);
 
-		URI uri = new URI(baseUrl + port + "/customers");
+		URI uri = new URI(baseUrl + port + "/api/customers");
 
 		//Authority: manager
 		ResponseEntity<LinkedHashMap> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").postForEntity(uri, entity, LinkedHashMap.class);
@@ -80,7 +80,7 @@ class CustomerIntegrationTest {
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(newCustomer, headers);
-		URI uri = new URI(baseUrl + port + "/customers");
+		URI uri = new URI(baseUrl + port + "/api/customers");
 
 		//Authority: User
 		ResponseEntity<LinkedHashMap> result = restTemplate.withBasicAuth("user_2", "02_user_02").postForEntity(uri, entity, LinkedHashMap.class);
@@ -98,7 +98,7 @@ class CustomerIntegrationTest {
 
 		Customer customer = customers.save(new Customer("User_1", encoder.encode("password"), "ROLE_USER", "Jerry Loh",
 				"T0046822Z", "82345678", "address", true)); //original customer
-		URI uri = new URI(baseUrl + port + "/customers/" + customer.getId());
+		URI uri = new URI(baseUrl + port + "/api/customers/" + customer.getId());
 
 		//updated customer information
 		String updatedCustomer = 
@@ -124,7 +124,7 @@ class CustomerIntegrationTest {
 																				// customer details
 		Customer customer = customers.save(new Customer("User_1", encoder.encode("password"), "ROLE_USER", "Jerry Loh",
 				"T0046822Z", "82345678", "address", true)); //original customer
-		URI uri = new URI(baseUrl + port + "/customers/" + customer.getId());
+		URI uri = new URI(baseUrl + port + "/api/customers/" + customer.getId());
 
 		//updated customer information
 		String updatedCustomer = 
@@ -148,7 +148,7 @@ class CustomerIntegrationTest {
 		// customer details and updated information
 		Customer customer = customers.save(new Customer("User_1", encoder.encode("password"), "ROLE_USER", "Jerry Loh",
 				"T0046822Z", "82345678", "address", true)); //original customer
-		URI uri = new URI(baseUrl + port + "/customers/" + customer.getId());
+		URI uri = new URI(baseUrl + port + "/api/customers/" + customer.getId());
 
 		String updatedCustomer = 
 		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"full_name\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": false}";
@@ -170,7 +170,7 @@ class CustomerIntegrationTest {
 		//create customer and updated info
 		Customer customer = customers.save(new Customer("User_1", encoder.encode("password"), "ROLE_USER", "Jerry Loh",
 				"T0046822Z", "82345678", "address", true)); //original customer
-		URI uri = new URI(baseUrl + port + "/customers/" + customer.getId());
+		URI uri = new URI(baseUrl + port + "/api/customers/" + customer.getId());
 
 		String updatedCustomer = 
 		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"full_name\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": false}";
@@ -195,7 +195,7 @@ class CustomerIntegrationTest {
 		Customer customer = customers.save(new Customer("User_1", encoder.encode("password"), "ROLE_USER", "Jerry Loh",
 				"T0046822Z", "82345678", "address", true)); //original customer
 		customers.save(new Customer("User_2", encoder.encode("password"), "ROLE_USER", "Jessica", "S1234567D", "91234567", "address2", true)); //other customer
-		URI uri = new URI(baseUrl + port + "/customers/" + customer.getId());
+		URI uri = new URI(baseUrl + port + "/api/customers/" + customer.getId());
 
 		String updatedCustomer = 
 		"{\"username\":\"good_user_1\",\"password\":\"01_user_01\",\"authorities\":\"ROLE_USER\",\"full_name\":\"User One\", \"nric\":\"S9942296C\",\"phone\":\"90123456\",\"address\":\"999 Tampines Road S99999\", \"active\": false}";

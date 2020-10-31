@@ -72,7 +72,7 @@ class ContentIntegrationTest {
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
-        URI postUri = new URI(baseUrl + port + "/contents");
+        URI postUri = new URI(baseUrl + port + "/api/contents");
 
         //Authority: Manager
         ResponseEntity<Content> result = restTemplate.withBasicAuth("manager_1", "01_manager_01")
@@ -97,7 +97,7 @@ class ContentIntegrationTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
-        URI postUri = new URI(baseUrl + port + "/contents");
+        URI postUri = new URI(baseUrl + port + "/api/contents");
 
         //Authority: Analyst
         ResponseEntity<Content> result = restTemplate.withBasicAuth("analyst_1", "01_analyst_01")
@@ -123,7 +123,7 @@ class ContentIntegrationTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
-        URI postUri = new URI(baseUrl + port + "/contents");
+        URI postUri = new URI(baseUrl + port + "/api/contents");
 
         //Authority: User
         ResponseEntity<Content> result = restTemplate.withBasicAuth("user_1", "01_user_01").postForEntity(postUri, entity, Content.class);
@@ -151,7 +151,7 @@ class ContentIntegrationTest {
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
-		URI uri = new URI(baseUrl + port + "/contents/" + content.getId());
+		URI uri = new URI(baseUrl + port + "/api/contents/" + content.getId());
 
         //Authority: Manager
 		ResponseEntity<Content> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").exchange(uri, HttpMethod.PUT, entity, Content.class);
@@ -179,7 +179,7 @@ class ContentIntegrationTest {
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
-        URI uri = new URI(baseUrl + port + "/contents/" + content.getId());
+        URI uri = new URI(baseUrl + port + "/api/contents/" + content.getId());
         
         //Authority: Analyst
 		ResponseEntity<Content> result = restTemplate.withBasicAuth("analyst_1", "01_analyst_01").exchange(uri, HttpMethod.PUT, entity, Content.class);
@@ -207,7 +207,7 @@ class ContentIntegrationTest {
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
-		URI uri = new URI(baseUrl + port + "/contents/" + content.getId());
+		URI uri = new URI(baseUrl + port + "/api/contents/" + content.getId());
 
         //Authority: User
 		ResponseEntity<Content> result = restTemplate.withBasicAuth("user_1", "01_user_01").exchange(uri, HttpMethod.PUT, entity, Content.class);
@@ -224,7 +224,7 @@ class ContentIntegrationTest {
         Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
         contents.save(content);
 
-        URI uri = new URI(baseUrl + port + "/contents/" + content.getId());
+        URI uri = new URI(baseUrl + port + "/api/contents/" + content.getId());
         
         //Authority: Manager
         ResponseEntity<Void> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").exchange(uri, HttpMethod.DELETE, null, Void.class);
@@ -245,7 +245,7 @@ class ContentIntegrationTest {
         Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
         contents.save(content);
 
-        URI uri = new URI(baseUrl + port + "/contents/" + content.getId());
+        URI uri = new URI(baseUrl + port + "/api/contents/" + content.getId());
         
         //Authority: analyst
         ResponseEntity<Void> result = restTemplate.withBasicAuth("analyst_1", "01_analyst_01").exchange(uri, HttpMethod.DELETE, null, Void.class);
@@ -266,7 +266,7 @@ class ContentIntegrationTest {
         Content content = new Content("The title of the article", "The summary of the article", "The content of the article", "https://article.com/article1", false);
         contents.save(content);
 
-        URI uri = new URI(baseUrl + port + "/contents/1");
+        URI uri = new URI(baseUrl + port + "/api/contents/1");
         
         //Authority: customer
         ResponseEntity<Void> result = restTemplate.withBasicAuth("user_1", "01_user_01").exchange(uri, HttpMethod.DELETE, null, Void.class);

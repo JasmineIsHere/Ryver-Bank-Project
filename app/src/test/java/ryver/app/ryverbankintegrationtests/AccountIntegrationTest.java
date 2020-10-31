@@ -65,7 +65,7 @@ class AccountIntegrationTest {
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(createAccountJSON, headers);
-        URI postUri = new URI(baseUrl + port + "/accounts");
+        URI postUri = new URI(baseUrl + port + "/api/accounts");
 
         //Authority: Manager
         ResponseEntity<Account> result = restTemplate.withBasicAuth("manager_1", "01_manager_01").postForEntity(postUri, entity, Account.class);
@@ -87,7 +87,7 @@ class AccountIntegrationTest {
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(createAccountJSON, headers);
-        URI postUri = new URI(baseUrl + port + "/accounts");
+        URI postUri = new URI(baseUrl + port + "/api/accounts");
 
         //Authority: User
         ResponseEntity<Account> result = restTemplate.withBasicAuth("User_1", "password").postForEntity(postUri, entity, Account.class);
@@ -108,12 +108,12 @@ class AccountIntegrationTest {
 		HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(createAccountJSON, headers);
-        URI postUri = new URI(baseUrl + port + "/accounts");
+        URI postUri = new URI(baseUrl + port + "/api/accounts");
 
         //Manager creates user account
         ResponseEntity<Account> acc = restTemplate.withBasicAuth("manager_1", "01_manager_01").postForEntity(postUri, entity, Account.class);
 
-        URI getUri = new URI(baseUrl + port + "/accounts/" + acc.getBody().getId());
+        URI getUri = new URI(baseUrl + port + "/api/accounts/" + acc.getBody().getId());
 
         //Authority: User
 		ResponseEntity<Account> result = restTemplate.withBasicAuth("User_1", "password").getForEntity(getUri, Account.class);

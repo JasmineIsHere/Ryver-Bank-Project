@@ -74,9 +74,8 @@ public class CustomerController {
     customer.setPhone(updatedCustomerInfo.getPhone());
     customer.setAddress(updatedCustomerInfo.getAddress());
 
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication(); // not testable
     // fields which only managers can update - active
-    if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"))) {
+    if (authority.equals("ROLE_MANAGER")) {
       customer.setActive(updatedCustomerInfo.isActive());
     }
     customers.save(customer);

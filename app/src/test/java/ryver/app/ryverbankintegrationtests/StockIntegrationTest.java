@@ -67,7 +67,7 @@ class StockIntegrationTest {
             "V03", 20.55, 20000, 20.60, 20000, 20.65, new ArrayList<Trade>());
         stocks.save(stock);
 
-        URI postUri = new URI(baseUrl + port + "/stocks/" + stock.getSymbol());
+        URI postUri = new URI(baseUrl + port + "/api/stocks/" + stock.getSymbol());
 
         //Authority: User
         ResponseEntity<CustomStock> result = restTemplate.withBasicAuth("user_1", "password").getForEntity(postUri, CustomStock.class);
