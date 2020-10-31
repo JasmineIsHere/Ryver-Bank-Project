@@ -1,8 +1,6 @@
 package ryver.app.account;
 
-import ryver.app.customer.Customer;
-import ryver.app.customer.CustomerRepository;
-import ryver.app.customer.CustomerNotFoundException;
+import ryver.app.customer.*;
 
 import java.util.List;
 

@@ -1,10 +1,9 @@
 package ryver.app.customer;
 
 import ryver.app.portfolio.*;
-import ryver.app.asset.Asset;
+import ryver.app.asset.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.validation.Valid;
 

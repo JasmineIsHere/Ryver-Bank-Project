@@ -215,11 +215,10 @@ public class TradeController {
             }
 
             if (tradeSellListOfSymbol.isEmpty()) {
+                // no more stock in the market 
                 stock.setAsk(0);
                 stock.setAsk_volume(0);
 
-                // no more selling stock in the market 
-                // throw new EmptySellingStockInMarket(); 
                 return;
             }
 
@@ -397,11 +396,10 @@ public class TradeController {
                 account.setBalance(balance - (stockAsk * stockAskVol));
 
                 // set stock
+                // no more stock in the market 
                 stock.setAsk(0);
                 stock.setAsk_volume(0);
             
-                // no more selling stock in the market 
-                // throw new EmptySellingStockInMarket(); 
             }
 
             
@@ -537,11 +535,10 @@ public class TradeController {
             }
         
             if (tradeBuyListOfSymbol.isEmpty()) {
+                // no more stock in the market 
                 stock.setBid(0);
                 stock.setBid_volume(0);
 
-                // no more selling stock in the market 
-                // throw new EmptySellingStockInMarket(); 
                 return;
             }
         
@@ -690,11 +687,10 @@ public class TradeController {
                 account.setBalance(balance + (stockBid * stockBidVol));
 
                 // set stock
+                // no more stock in the market 
                 stock.setAsk(0);
                 stock.setAsk_volume(0);
 
-                // no more selling stock in the market 
-                // throw new EmptySellingStockInMarket(); 
             }
         }
     }

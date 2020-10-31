@@ -1,15 +1,14 @@
 package ryver.app.portfolio;
 
 import ryver.app.customer.*;
-import ryver.app.asset.Asset;
-import ryver.app.util.jsonDoubleSerializer;
+import ryver.app.asset.*;
 
 import java.util.List;
-
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import ryver.app.util.jsonDoubleSerializer;
 
 import lombok.*;
 
@@ -29,7 +28,7 @@ public class Portfolio {
     private double unrealized_gain_loss; // for stocks currently owned
 
     @JsonSerialize(using = jsonDoubleSerializer.class)
-    private double total_gain_loss;     // for all the trades made so far
+    private double total_gain_loss; // for all the trades made so far
 
     @OneToOne
     @JoinColumn(name = "customer", nullable = false)
@@ -45,7 +44,7 @@ public class Portfolio {
         this.customer_id = customer_id;
         this.unrealized_gain_loss = unrealized_gain_loss;
         this.total_gain_loss = total_gain_loss;
-        this.customer =customer;
+        this.customer = customer;
         this.assets = assets;
     }
 }
