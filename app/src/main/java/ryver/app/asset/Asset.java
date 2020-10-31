@@ -1,18 +1,18 @@
 package ryver.app.asset;
 
+import ryver.app.portfolio.*;
+
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import ryver.app.portfolio.*;
 import ryver.app.util.jsonDoubleSerializer;
+
 import lombok.*;
 
 @Entity
 @Getter
 @Setter
-// @ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
@@ -45,7 +45,6 @@ public class Asset{
         this.current_price = current_price;
         this.value = value;
         this.gain_loss = gain_loss;
-        // this.portfolio = portfolio;
     }
 
     public Asset(String code, int quantity, double avg_price, double current_price, double value, double gain_loss, Portfolio portfolio) {

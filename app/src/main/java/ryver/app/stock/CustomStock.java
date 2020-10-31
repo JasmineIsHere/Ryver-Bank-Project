@@ -1,14 +1,13 @@
 package ryver.app.stock;
 
 import ryver.app.trade.*;
-import ryver.app.util.jsonDoubleSerializer;
 
 import java.util.*;
-
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import ryver.app.util.jsonDoubleSerializer;
 
 import lombok.*;
 

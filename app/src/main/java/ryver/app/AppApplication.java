@@ -1,7 +1,13 @@
 package ryver.app;
 
-import java.util.List;
-import java.util.ArrayList;
+import ryver.app.customer.*;
+import ryver.app.stock.*;
+import ryver.app.account.*;
+import ryver.app.asset.*;
+import ryver.app.trade.*;
+import ryver.app.portfolio.*;
+
+import java.util.*;
 import java.text.DecimalFormat;
 import java.time.*;
 import java.sql.Timestamp;
@@ -10,27 +16,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import ryver.app.customer.Customer;
-import ryver.app.customer.CustomerRepository;
-
-import ryver.app.stock.CustomStock;
-import ryver.app.stock.StockController;
-import ryver.app.stock.StockRepository;
-
-import ryver.app.account.Account;
-import ryver.app.account.AccountRepository;
-import ryver.app.asset.AssetController;
-import ryver.app.asset.AssetRepository;
-import ryver.app.trade.Trade;
-import ryver.app.trade.TradeController;
-import ryver.app.trade.TradeRepository;
-
-import ryver.app.asset.Asset;
-
-import ryver.app.portfolio.Portfolio;
-import ryver.app.portfolio.PortfolioController;
-import ryver.app.portfolio.PortfolioRepository;
 
 @SpringBootApplication
 public class AppApplication {

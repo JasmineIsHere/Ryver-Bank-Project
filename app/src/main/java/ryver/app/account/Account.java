@@ -2,7 +2,6 @@ package ryver.app.account;
 
 import ryver.app.customer.*;
 import ryver.app.transaction.*;
-import ryver.app.util.jsonDoubleSerializer;
 import ryver.app.trade.*;
 
 import java.util.*;
@@ -10,6 +9,7 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import ryver.app.util.jsonDoubleSerializer;
 
 import lombok.*;
 
@@ -41,8 +41,7 @@ public class Account {
         this.customer_id = customer_id;
     }
 
-    // for AppApplication 
-    // JOLENE: i think can just leave this here, used it for my testing
+    // for AppApplication and Testing
     public Account(double balance, double available_balance, long customer_id, Customer customer) {
         this.balance = balance;
         this.available_balance = available_balance;

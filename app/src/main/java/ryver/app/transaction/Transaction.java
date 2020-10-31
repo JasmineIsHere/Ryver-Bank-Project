@@ -1,11 +1,12 @@
 package ryver.app.transaction;
 
 import ryver.app.account.*;
-import ryver.app.util.jsonDoubleSerializer;
 
 import javax.persistence.*;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import ryver.app.util.jsonDoubleSerializer;
 
 import lombok.*;
 
