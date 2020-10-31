@@ -9,7 +9,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
+@SecurityRequirement(name = "api")
 public class ContentController {
     private ContentRepository contents;
 
@@ -17,7 +20,7 @@ public class ContentController {
         this.contents = contents;
     }
 
-    @GetMapping("/contents")
+    @GetMapping("/api/contents")
     public List<Content> getContent() {
 
         //Users can only see approved content
@@ -29,7 +32,7 @@ public class ContentController {
         return contents.findAll();
     }
 
-    @GetMapping("/contents/{contentId}")
+    @GetMapping("/api/contents/{contentId}")
     public Content getSpecificContent(@PathVariable (value = "contentId") Long contentId){
         Content content = contents.findById(contentId)
             .orElseThrow(() -> new ContentNotFoundException(contentId));
@@ -43,13 +46,13 @@ public class ContentController {
     
     // Approved is false by default
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/contents")
+    @PostMapping("/api/contents")
     public Content addContent(@Valid @RequestBody Content content) {
         content.setApproved(false);
         return contents.save(content);
     }
 
-    @PutMapping("/contents/{contentId}")
+    @PutMapping("/api/contents/{contentId}")
     public Content updateContent(@PathVariable (value = "contentId") Long contentId, @Valid @RequestBody Content updatedContentInfo) {
 
         Content content = contents.findById(contentId)
@@ -70,7 +73,7 @@ public class ContentController {
         return contents.save(content);
     }
 
-    @DeleteMapping("/contents/{contentId}")
+    @DeleteMapping("/api/contents/{contentId}")
     public void deleteContent(@PathVariable (value = "contentId") Long contentId) {
         // To check if content exists
         Content content = contents.findById(contentId)

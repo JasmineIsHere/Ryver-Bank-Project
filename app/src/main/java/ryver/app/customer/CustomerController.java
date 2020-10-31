@@ -4,21 +4,21 @@ import ryver.app.portfolio.*;
 import ryver.app.asset.Asset;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.*;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
+@SecurityRequirement(name = "api")
 public class CustomerController {
   private CustomerRepository customers;
   private PortfolioRepository portfolios;
@@ -31,12 +31,12 @@ public class CustomerController {
     this.encoder = encoder;
   }
 
-  @GetMapping("/customers")
+  @GetMapping("/api/customers")
   public List<Customer> getCustomers() {
     return customers.findByAuthorities("ROLE_USER");
   }
 
-  @GetMapping("/customers/{customerId}")
+  @GetMapping("/api/customers/{customerId}")
   public Customer getSpecificCustomer(@PathVariable(value = "customerId") Long customerId) {
     String authorisedUser = SecurityContextHolder.getContext().getAuthentication().getName();
     Object[] authorityArray = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
@@ -55,7 +55,7 @@ public class CustomerController {
   // address, password, active)
   // Active customer can update OWN information (phone, address, password)
   // Deactivated customer cannot update OWN information
-  @PutMapping("/customers/{customerId}")
+  @PutMapping("/api/customers/{customerId}")
   public Customer updateCustomer(@PathVariable(value = "customerId") Long customerId,
       @Valid @RequestBody Customer updatedCustomerInfo) {
 
@@ -90,7 +90,7 @@ public class CustomerController {
    * @return
    */
   @ResponseStatus(HttpStatus.CREATED)
-  @PostMapping("/customers")
+  @PostMapping("/api/customers")
   public Customer addCustomer(@Valid @RequestBody Customer customer) {
     customer.setPassword(encoder.encode(customer.getPassword()));
     if (!validateNric(customer.getNric()))

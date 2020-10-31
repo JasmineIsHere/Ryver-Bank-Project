@@ -19,7 +19,10 @@ import ryver.app.account.AccountMismatchException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
+@SecurityRequirement(name = "api")
 public class TransactionController {
     private AccountRepository accounts;
     private TransactionRepository transactions;
@@ -32,7 +35,7 @@ public class TransactionController {
         this.customers = customers;
     }
 
-    @GetMapping("/accounts/{accountId}/transactions")
+    @GetMapping("/api/accounts/{accountId}/transactions")
     public List<Transaction> getAllTransactionsByAccountId(@PathVariable(value = "accountId") Long accountId) {
 
         // user that was authenticated
@@ -64,7 +67,7 @@ public class TransactionController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/accounts/{accountId}/transactions")
+    @PostMapping("/api/accounts/{accountId}/transactions")
     public Transaction addTransaction(@PathVariable(value = "accountId") Long accountId,
             @Valid @RequestBody Transaction transaction) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -4,11 +4,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ryver.app.AppApplication;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
+@SecurityRequirement(name = "api")
 public class resetController {
 
-    @PostMapping("/reset")
+    @PostMapping("/api/reset")
     public void restart() {
         AppApplication.restart();
     } 

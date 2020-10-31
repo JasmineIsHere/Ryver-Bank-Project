@@ -35,13 +35,15 @@ import ryver.app.portfolio.PortfolioNotFoundException;
 import ryver.app.portfolio.PortfolioRepository;
 
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.access.prepost.*;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
+@SecurityRequirement(name = "api")
 public class TradeController {
     private TradeRepository trades;
     private CustomerRepository customers;
@@ -65,7 +67,7 @@ public class TradeController {
     }
 
     // customers can get all a list of all their trade
-    @GetMapping("/trades")
+    @GetMapping("/api/trades")
     public List<Trade> getAllTrades(){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -82,7 +84,7 @@ public class TradeController {
     }
 
     // customers can get their specific trade
-    @GetMapping("/trades/{tradeId}")
+    @GetMapping("/api/trades/{tradeId}")
     public Trade getSpecificTrade(@PathVariable (value = "tradeId") Long tradeId){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -177,7 +179,6 @@ public class TradeController {
     // for buying
     public void buyTradeCheckForSellMatch(CustomStock stock, Trade trade, Account account, Customer customer, double calculatedBuyPrice) {
         double stockAsk = stock.getAsk();
-        long stockAskVol = stock.getAsk_volume();
 
         double bid = trade.getBid();
 
@@ -187,7 +188,6 @@ public class TradeController {
         int quantity = trade.getQuantity();
 
         double available_balance = account.getAvailable_balance();
-        double balance = account.getBalance();
 
         // if trade's bid is higher than stock's ask -> match & buy
         if (bid >= stockAsk) {
@@ -504,7 +504,6 @@ public class TradeController {
     // for selling
     public void sellTradeCheckForBuyMatch(CustomStock stock, Trade trade, Account account, Customer customer) {
         double stockBid = stock.getBid();
-        long stockBidVol = stock.getBid_volume();
 
         double ask = trade.getAsk();
 
@@ -512,9 +511,6 @@ public class TradeController {
             ask = stockBid;
         }
         int quantity = trade.getQuantity();
-
-        double available_balance = account.getAvailable_balance();
-        double balance = account.getBalance();
 
         // if trade's ask is lower than stock's bid -> match & sell
         if (ask <= stockBid) {
@@ -704,7 +700,7 @@ public class TradeController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/trades")
+    @PostMapping("/api/trades")
     public Trade createTrade(@Valid @RequestBody Trade trade){
         // check if logged in user == customerId in trade
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -777,7 +773,7 @@ public class TradeController {
         int fivePM = 17;
         String currentDay = current.getDayOfWeek().name();
 
-        // if time is not within 9am and 5pm on weekdays, then trade not matched
+        //if time is not within 9am and 5pm on weekdays, then trade not matched
         // if (currentHour >= fivePM || currentHour <= nineAM || currentDay.equals("saturday") || currentDay.equals("sunday")) {
         //     trade.setAccount(account);
         //     trade.setStock(stock);
@@ -883,7 +879,7 @@ public class TradeController {
         return trades.save(trade);
     }
 
-    @PutMapping("/trades/{tradeId}")
+    @PutMapping("/api/trades/{tradeId}")
     public Trade updateSpecificTrade(@PathVariable (value = "tradeId") Long tradeId, @Valid @RequestBody Trade updatedTradeInfo){
         
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
