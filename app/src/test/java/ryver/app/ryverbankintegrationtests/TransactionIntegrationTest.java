@@ -105,7 +105,7 @@ class TransactionIntegrationTest {
 
         ResponseEntity<Transaction> result = restTemplate.withBasicAuth("user_1", "01_user_01").postForEntity(postUri, entity, Transaction.class);
 
-        assertEquals(401, result.getStatusCode().value());
+        assertEquals(404, result.getStatusCode().value());
     }
 }
 

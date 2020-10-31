@@ -65,42 +65,42 @@ public class CustomerControllerTest {
     @InjectMocks
     private CustomerController customerController;
 
-    @Test
-    void updateCustomer_Found_ReturnSavedCustomer(){
-        //arrange
-        Customer customer = new Customer(
-            "good_user_1", "01_user_01", "ROLE_USER", "User One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
-        customer.setId(1L);
-        // Portfolio portfolio = new Portfolio();
-        // customer.setPortfolio(portfolio);
+    // @Test
+    // void updateCustomer_Found_ReturnSavedCustomer(){
+    //     //arrange
+    //     Customer customer = new Customer(
+    //         "good_user_1", "01_user_01", "ROLE_USER", "User One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
+    //     customer.setId(1L);
+    //     // Portfolio portfolio = new Portfolio();
+    //     // customer.setPortfolio(portfolio);
 
-        Customer updatedCustomer = new Customer(
-            "good_user_1", "updated_01_user_01", "ROLE_USER", "User One", "S7812345A", "92345678", "updated_address", false);
-        updatedCustomer.setId(1L);
-        // updatedCustomer.setPortfolio(portfolio);
+    //     Customer updatedCustomer = new Customer(
+    //         "good_user_1", "updated_01_user_01", "ROLE_USER", "User One", "S7812345A", "92345678", "updated_address", false);
+    //     updatedCustomer.setId(1L);
+    //     // updatedCustomer.setPortfolio(portfolio);
 
 
-        when(customers.findById(customer.getId())).thenReturn(Optional.of(customer)); 
-        when(customers.save(any(Customer.class))).thenReturn(updatedCustomer);         
-        when(encoder.encode(updatedCustomer.getPassword())).thenReturn(updatedCustomer.getPassword());
+    //     when(customers.findById(customer.getId())).thenReturn(Optional.of(customer)); 
+    //     when(customers.save(any(Customer.class))).thenReturn(updatedCustomer);         
+    //     when(encoder.encode(updatedCustomer.getPassword())).thenReturn(updatedCustomer.getPassword());
 
-        //act
-        Customer savedCustomer = customerController.updateCustomer(customer.getId(), updatedCustomer);
+    //     //act
+    //     Customer savedCustomer = customerController.updateCustomer(customer.getId(), updatedCustomer);
 
-        //assert
-        // fields which customers and managers can update - password, phone, address
-        assertEquals(updatedCustomer.getAuthorities(), savedCustomer.getAuthorities());
-        assertEquals(updatedCustomer.getAddress(), savedCustomer.getAddress());
-        assertEquals(updatedCustomer.getPhone(), savedCustomer.getPhone());
-        assertEquals(updatedCustomer.getPassword(), savedCustomer.getPassword());
-        assertEquals(updatedCustomer.getUsername(), savedCustomer.getUsername());
-        assertEquals(updatedCustomer.getFullName(), savedCustomer.getFullName());
-        assertEquals(updatedCustomer.getNric(), savedCustomer.getNric());
-        //IsActive not working
+    //     //assert
+    //     // fields which customers and managers can update - password, phone, address
+    //     assertEquals(updatedCustomer.getAuthorities(), savedCustomer.getAuthorities());
+    //     assertEquals(updatedCustomer.getAddress(), savedCustomer.getAddress());
+    //     assertEquals(updatedCustomer.getPhone(), savedCustomer.getPhone());
+    //     assertEquals(updatedCustomer.getPassword(), savedCustomer.getPassword());
+    //     assertEquals(updatedCustomer.getUsername(), savedCustomer.getUsername());
+    //     assertEquals(updatedCustomer.getFullName(), savedCustomer.getFullName());
+    //     assertEquals(updatedCustomer.getNric(), savedCustomer.getNric());
+    //     //IsActive not working
     
-        verify(customers).findById(customer.getId());
-        verify(customers).save(savedCustomer);
-    }
+    //     verify(customers).findById(customer.getId());
+    //     verify(customers).save(savedCustomer);
+    // }
 
     @Test
     void addCustomer_NewCustomerWithValidNric_ReturnSavedCustomer(){
