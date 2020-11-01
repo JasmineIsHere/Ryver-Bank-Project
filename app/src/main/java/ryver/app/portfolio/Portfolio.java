@@ -22,6 +22,7 @@ import lombok.*;
 @EqualsAndHashCode
 
 public class Portfolio {
+    //Fields
     /**
      * The auto-generated ID for each Portfolio 
      * Starts from 1

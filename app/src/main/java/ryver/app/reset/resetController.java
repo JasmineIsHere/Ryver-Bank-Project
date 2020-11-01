@@ -10,6 +10,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @SecurityRequirement(name = "api")
 public class resetController {
 
+    /**
+     * To reset the API during testing
+     */
     @PostMapping("/api/reset")
     public void restart() {
         AppApplication.restart();

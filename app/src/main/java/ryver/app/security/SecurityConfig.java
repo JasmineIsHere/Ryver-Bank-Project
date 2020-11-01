@@ -34,12 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * Customer role: can view their own accounts; can update own phone number, password and address
-     * Manager role: can add/delete/update customers/accounts, and add customers; can view all customers/accounts
-     * 
-     * 
-     * */
-  
+     * The various authority levels for the different roles
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http

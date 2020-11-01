@@ -14,14 +14,20 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RestController
 @SecurityRequirement(name = "api")
 public class StockController {
+    // Repositories
     private StockRepository stocks;
    
     public StockController(StockRepository stocks){
         this.stocks = stocks;
     }
 
+    /**
+     * Get stock data from YahooFinance API
+     * and create the corresponding Stock objects
+     *  
+     * @return ArrayList<CustomStock>
+     */
     public ArrayList<CustomStock> initiateStocks() {
-        // true as of 12/10/2020
         String[] symbols = new String[] {"A17U.SI", "C61U.SI", "C31.SI", "C38U.SI", "C09.SI", "C52.SI", "D01.SI", "D05.SI", "G13.SI",
         "H78.SI", "C07.SI", "J36.SI", "J37.SI", "BN4.SI", "N2IU.SI", "ME8U.SI", "M44U.SI", "O39.SI", "S58.SI", "U96.SI", "S68.SI", "C6L.SI", 
         "Z74.SI", "S63.SI", "Y92.SI", "U11.SI", "U14.SI", "V03.SI", "F34.SI", "BS6.SI"};
@@ -35,7 +41,7 @@ public class StockController {
                 CustomStock stock = new CustomStock();
                 StockQuote quote = s.getQuote();
 
-                // remove the .si from the stock symbol
+                // To remove the .si from the stock symbol
                 String originalSymbol = quote.getSymbol();
                 String[] splitSymbol = originalSymbol.split("\\.");
                 
@@ -43,8 +49,8 @@ public class StockController {
                 stock.setAsk(quote.getAsk().doubleValue());
                 stock.setBid(quote.getBid().doubleValue());
                 stock.setLast_price(quote.getPreviousClose().doubleValue());
-                stock.setAsk_volume(20000); // set as 20000 volume
-                stock.setBid_volume(20000); // set as 20000 volume
+                stock.setAsk_volume(20000); // Set as 20000 volume
+                stock.setBid_volume(20000); // Set as 20000 volume
                 stockList.add(stock);
                 stocks.save(stock);
             }
@@ -57,12 +63,21 @@ public class StockController {
         return null;
     }  
 
+    /**
+     * Get the List of CustomStocks to put in the market
+     * 
+     * @return List<CustomStock>
+     */
     @GetMapping("/api/stocks")
     public List<CustomStock> getStocks() {
-        // true as of 12/10/2020
         return stocks.findAll();
     }
 
+    /**
+     * Get a CustomStock, based on the symbol
+     * @param symbol
+     * @return CustomStock
+     */
     @GetMapping("/api/stocks/{symbol}")
     public CustomStock getStockBySymbol(@PathVariable (value = "symbol") String symbol){
         return stocks.findBySymbol(symbol)
