@@ -24,7 +24,7 @@ Authorization: Basic manager_1 01_manager_01
     "nric": "S9942296C",
     "phone": "90123456",
     "address": "999 Tampines Road S999999",
-    "active": true 
+    "active": false 
 }
 
 
