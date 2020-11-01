@@ -30,6 +30,7 @@ public class AccountController {
      * If the user is a manager, get all existing accounts 
      * Valid customer - Returns 200 OK
      * Deactivated customer - Returns 403 Forbidden
+     * Returns 200 OK (if no exceptions)
      * 
      * @return List<Account>
      */
@@ -56,6 +57,7 @@ public class AccountController {
      * Get a specific Account associated with the logged Customer's ID that has the specified AccountId 
      * Valid customer - Returns 200 OK 
      * Deactivated customer - Returns 403 Forbidden
+     * Returns 200 OK (if no exceptions)
      * 
      * @param accountId
      * @return Account
@@ -76,8 +78,9 @@ public class AccountController {
 
     /**
      * Create a new Account using the JSON data 
-     * Valid customer - Returns 200 OK
+     * Valid customer - Returns 201 Created
      * Deactivated customer - Returns 403 Forbidden
+     * Returns 201 Created (if no exceptions)
      * 
      * @param account
      * @return Account

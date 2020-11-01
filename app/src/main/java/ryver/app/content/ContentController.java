@@ -25,6 +25,7 @@ public class ContentController {
      * Valid customer - Return approved Content only, 200 OK
      * Valid manager/analyst - Return all Content, 200 OK
      * Invalid User - Return 401 Unauthorized
+     * Returns 200 OK (if no exceptions)
      * 
      * @return List<Content>
      */
@@ -46,7 +47,7 @@ public class ContentController {
      * @param contentId
      * @return Content
      * If specified Content not found, 400 bad request
-     * Returns 200 OK
+     * Returns 200 OK (if no exceptions)
      */
     @GetMapping("/api/contents/{contentId}")
     public Content getSpecificContent(@PathVariable (value = "contentId") Long contentId){
@@ -63,7 +64,7 @@ public class ContentController {
     /** 
      * Create a new Content
      * Approved is false by default
-     * Returns 201 Created
+     * Returns 201 Created (if no exceptions)
      * 
      * @param content
      * @return Content
@@ -78,7 +79,7 @@ public class ContentController {
     /** 
      * Update a specific Content, based on the specified contentId
      * Based on JSON data
-     * Returns 200 OK
+     * Returns 200 OK (if no exceptions)
      * 
      * @param contentId
      * @param updatedContentInfo
@@ -107,7 +108,7 @@ public class ContentController {
     
     /** 
      * Delete a specified Content, based on the specified contentId
-     * Returns 200 OK
+     * Returns 200 OK (if no exceptions)
      * 
      * @param contentId
      */

@@ -29,8 +29,8 @@ public class TransactionController {
     }
 
     /**
-     * Get a List of Transactions based on the specified accountId Returns 200 OK
-     * (if no exceptions)
+     * Get a List of Transactions based on the specified accountId 
+     * Returns 200 OK (if no exceptions)
      * 
      * @param accountId
      * @return List<Transaction>

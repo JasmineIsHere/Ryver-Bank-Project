@@ -65,6 +65,7 @@ public class StockController {
 
     /**
      * Get the List of CustomStocks to put in the market
+     * Returns 200 OK (if no exceptions)
      * 
      * @return List<CustomStock>
      */
@@ -75,6 +76,8 @@ public class StockController {
 
     /**
      * Get a CustomStock, based on the symbol
+     * Returns 200 OK (if no exceptions)
+     * 
      * @param symbol
      * @return CustomStock
      */

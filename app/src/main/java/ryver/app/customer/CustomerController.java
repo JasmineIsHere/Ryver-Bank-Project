@@ -31,6 +31,7 @@ public class CustomerController {
 
   /**
    * Get all Customers with ROLE_USER
+   * Returns 200 OK (if no exceptions)
    * 
    * @return List<Customer>
    */
@@ -42,7 +43,7 @@ public class CustomerController {
   /**
    * Get a specific Customer, based on the specified customerId
    * If Customer not found - Returns 400 Bad Request
-   * Returns 200 OK
+   * Returns 200 OK (if no exceptions)
    * 
    * @param customerId
    * @return Customer
@@ -67,7 +68,7 @@ public class CustomerController {
    * address, password, active)
    * Active customer can update OWN information (phone, address, password)
    * Deactivated customer cannot update OWN information
-   * Returns 200 OK
+   * Returns 200 OK (if no exceptions)
    * 
    * @param customerId
    * @param updatedCustomerInfo
@@ -104,7 +105,7 @@ public class CustomerController {
    * A Portfolio for the new Customer is also created
    * Using BCrypt encoder to encrypt the password for storage
    * If ROLE_USER - Returns 403 Forbidden
-   * Returns 201 Created
+   * Returns 201 Created (if no exceptions)
    * 
    * @param customer
    * @return Customer
