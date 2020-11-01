@@ -90,6 +90,16 @@ public class CustomerController {
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/api/customers")
   public Customer addCustomer(@Valid @RequestBody Customer customer) {
+    // Check the list of existing users for a duplicate username & nric
+    // Each person can only have one user account
+    List<Customer> customerList = customers.findAll();
+
+    for (Customer existingCustomer : customerList) {
+      if (customer.getUsername().equals(existingCustomer.getUsername()) && customer.getNric().equals(existingCustomer.getNric())) {
+        throw new UserAlreadyExistsException(customer.getUsername());
+      }
+    }
+
     customer.setPassword(encoder.encode(customer.getPassword()));
     if (!validateNric(customer.getNric()))
       throw new InvalidNricException();
