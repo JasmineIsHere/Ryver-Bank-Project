@@ -49,7 +49,12 @@ public class TradeController {
         this.assetCtrl = assetCtrl;
     }
 
-    // customers can get all a list of all their trade
+    /**
+     * Get all Trades associated with the logged in Customer's ID
+     * Returns 200 OK (if no exceptions)
+     * 
+     * @return List<Trade>
+     */
     @GetMapping("/api/trades")
     public List<Trade> getAllTrades(){
 
@@ -66,7 +71,13 @@ public class TradeController {
 
     }
 
-    // customers can get their specific trade
+    /**
+     * Get specific Trade associated with the logged in Customer's ID that has the specified TradeId
+     * Returns 200 OK (if no exceptions)
+     * 
+     * @param tradeId
+     * @return Trade
+     */
     @GetMapping("/api/trades/{tradeId}")
     public Trade getSpecificTrade(@PathVariable (value = "tradeId") Long tradeId){
 
@@ -87,16 +98,25 @@ public class TradeController {
         return trade;
 
     }
-
-    // search for open & partial filled buy trades according to symbol
+    /**
+     * Get all open or partial filled buy Trades associated with the specified symbol 
+     * 
+     * @param symbol
+     * @return List<Trade>
+     */
     public List<Trade> getSpecificStockOpenAndPartialFilledBuyTrade(String symbol){ 
         List<Trade> tradeOpen = trades.findByActionAndStatusAndSymbol("buy", "open", symbol);
         List<Trade> tradePartialFilled = trades.findByActionAndStatusAndSymbol("buy", "partial-filled", symbol);
         List<Trade> trade = Stream.concat(tradeOpen.stream(), tradePartialFilled.stream()).collect(Collectors.toList());
         return trade;
     }
- 
-    // search for open & partial filled sell trades according to symbol
+
+    /**
+     * Get all open or partial filled sell Trades associated with the specified symbol 
+     * 
+     * @param symbol
+     * @return List<Trade>
+     */
     public List<Trade> getSpecificStockOpenAndPartialFilledSellTrade(String symbol){
         List<Trade> tradeOpen = trades.findByActionAndStatusAndSymbol("sell", "open", symbol);
         List<Trade> tradePartialFilled = trades.findByActionAndStatusAndSymbol("sell", "partial-filled", symbol);
@@ -104,6 +124,12 @@ public class TradeController {
         return trade;
     }
 
+    /**
+     * Update the specific Stock ask/bid and ask/bid volume if the Trade made is the best price 
+     * 
+     * @param trade
+     * @param stock
+     */
     public void updateTradeToStock(Trade trade, CustomStock stock) {
         if (trade.getSymbol().equals("buy")) {
             // if this trade's bid is lower than the stock's previous ask
@@ -128,7 +154,10 @@ public class TradeController {
         
     }
 
-    // if trade exceeds 5pm & trade is open/partial-filled -> set status to expired
+    /**
+     * Update the Trade to expire if the Trade is open or partial filled
+     * and if the current time exceeds 5pm on the same day
+     */
     public void updateStatusToExpire() {
         ZonedDateTime current = ZonedDateTime.now();
         int currentHour = current.getHour();
@@ -159,7 +188,16 @@ public class TradeController {
 
     }
 
-    // for buying
+    /**
+     * For buy orders
+     * Check if there is a sell trade that matches the current buy trade
+     * 
+     * @param stock
+     * @param trade
+     * @param account
+     * @param customer
+     * @param calculatedBuyPrice
+     */
     public void buyTradeCheckForSellMatch(CustomStock stock, Trade trade, Account account, Customer customer, double calculatedBuyPrice) {
         double stockAsk = stock.getAsk();
 
@@ -221,11 +259,21 @@ public class TradeController {
         }
     }
 
-    // for buying
+    /**
+     * For buy orders
+     * Check if the Stock's ask volume is sufficient to fill the Trade's buy quantity
+     * 
+     * @param stock
+     * @param trade
+     * @param account
+     * @param customer
+     * @param tradeSellListOfSymbol
+     * @param tradeQuantity
+     */
     public void checkTradeQuantityAgainstStockAskVol(CustomStock stock, Trade trade, Account account, Customer customer, List<Trade> tradeSellListOfSymbol, int tradeQuantity) {
         // final double prevStockAsk = stock.getAsk().doubleValue();
         double stockAsk = stock.getAsk();
-        int stockAskVol = (int)stock.getAsk_volume();
+        int stockAskVol = stock.getAsk_volume();
 
         int filledQuantity = trade.getFilled_quantity();
 
@@ -323,7 +371,7 @@ public class TradeController {
                             // set trade
                             trade.setStatus("partial-filled");
                             trade.setAvg_price(stockAsk);
-                            trade.setFilled_quantity((int)stockAskVol);
+                            trade.setFilled_quantity(stockAskVol);
     
                             createAsset(stock, trade, portfolio);
 
@@ -346,7 +394,7 @@ public class TradeController {
                             // set trade
                             trade.setStatus("partial-filled");
                             trade.setAvg_price(stockAsk);
-                            trade.setFilled_quantity((int)stockAskVol);
+                            trade.setFilled_quantity(stockAskVol);
                             
                             createAsset(stock, trade, portfolio);
     
@@ -363,7 +411,7 @@ public class TradeController {
                 // set trade
                 trade.setStatus("partial-filled");
                 trade.setAvg_price(stockAsk);
-                trade.setFilled_quantity((int)stockAskVol);
+                trade.setFilled_quantity(stockAskVol);
                 createAsset(stock, trade, portfolio);
 
                 // set account
@@ -379,8 +427,13 @@ public class TradeController {
         }
     }
 
-    
-
+    /**
+     * Create an Asset if the buy order gets filled
+     * 
+     * @param stock
+     * @param trade
+     * @param portfolio
+     */
     private void createAsset(CustomStock stock, Trade trade, Portfolio portfolio) {
         // for buying
         if (trade.getAction().equals("buy")) {
@@ -428,6 +481,13 @@ public class TradeController {
         }
     }
 
+    /**
+     * Delete the Asset if the sell order gets filled and quantity becomes 0
+     * 
+     * @param stock
+     * @param trade
+     * @param portfolio
+     */
     private void deleteAsset(CustomStock stock, Trade trade, Portfolio portfolio) {
         // for selling
         if (trade.getAction().equals("sell")) {
@@ -449,7 +509,6 @@ public class TradeController {
 
             // if trade quantity < asset quantity -> minus
             if (trade.getQuantity() < asset.getQuantity()) {
-                
 
                 Asset newAsset = asset;
                 newAsset.setQuantity(newQuantity);
@@ -471,7 +530,16 @@ public class TradeController {
             portfolioCtrl.updatePortfolio(portfolioId, updatedPortfolio);
         }   
     }
-    // for selling
+    
+    /**
+     * For sell orders
+     * Check if there is a buy trade that matches the current sell trade
+     * 
+     * @param stock
+     * @param trade
+     * @param account
+     * @param customer
+     */
     public void sellTradeCheckForBuyMatch(CustomStock stock, Trade trade, Account account, Customer customer) {
         double stockBid = stock.getBid();
 
@@ -529,13 +597,20 @@ public class TradeController {
         }
     }
 
-    // for selling
+    /**
+     * For sell orders
+     * Check if the Stock's bid volume is sufficient to fill the Trade's sell quantity
+     * 
+     * @param stock
+     * @param trade
+     * @param account
+     * @param customer
+     * @param tradeSellListOfSymbol
+     * @param tradeQuantity
+     */
     public void checkTradeQuantityAgainstStockBidVol(CustomStock stock, Trade trade, Account account, Customer customer, List<Trade> tradeBuyListOfSymbol, int tradeQuantity) {
         double stockBid = stock.getBid();
-        int stockBidVol = (int)stock.getBid_volume();
-
-        // double bid = trade.getBid();
-        // int quantity = trade.getQuantity();
+        int stockBidVol = stock.getBid_volume();
 
         int filledQuantity = trade.getFilled_quantity();
 
@@ -565,7 +640,6 @@ public class TradeController {
             if (tradeQuantity == stockBidVol) {
                 tradeBuyListOfSymbol.get(0).setStatus("filled");
                 trade.setFilled_quantity(tradeBuyListOfSymbol.get(0).getQuantity());
-                
                 
                 // remove that trade from the list if its filled
                 tradeBuyListOfSymbol.remove(0);
@@ -620,7 +694,7 @@ public class TradeController {
                 for (int j = 0; j < tradeBuyListOfSymbol.size(); j++) {
                     // set stock
                     double newStockBid = tradeBuyListOfSymbol.get(j).getBid();
-                    int newStockBidVol = (int)tradeBuyListOfSymbol.get(j).getQuantity();
+                    int newStockBidVol = tradeBuyListOfSymbol.get(j).getQuantity();
                     stock.setBid(newStockBid);
                     stock.setBid_volume(newStockBidVol);
 
@@ -634,7 +708,7 @@ public class TradeController {
                         // set trade
                         trade.setStatus("partial-filled");
                         trade.setAvg_price(stockBid);
-                        trade.setFilled_quantity((int)stockBidVol);
+                        trade.setFilled_quantity(stockBidVol);
             
                         deleteAsset(stock, trade, portfolio);
 
@@ -650,7 +724,7 @@ public class TradeController {
                 // set trade
                 trade.setStatus("partial-filled");
                 trade.setAvg_price(stockBid);
-                trade.setFilled_quantity((int)stockBidVol);
+                trade.setFilled_quantity(stockBidVol);
                 
                 deleteAsset(stock, trade, portfolio);
                 // set account
@@ -666,6 +740,13 @@ public class TradeController {
         }
     }
 
+    /**
+     * Create a new Trade using the JSON data 
+     * Returns 201 (if no exceptions)
+     * 
+     * @param trade
+     * @return Trade
+     */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/trades")
     public Trade createTrade(@Valid @RequestBody Trade trade){
@@ -785,7 +866,6 @@ public class TradeController {
         } else {
             // FOR SELLING
             double stockBid = stock.getBid();
-            long stockBidVol = stock.getBid_volume();
 
             // if it's a sell market order, change the ask value to current stock's bid price
             if (ask == 0.0) {
@@ -827,6 +907,15 @@ public class TradeController {
         return trades.save(trade);
     }
 
+    /**
+     * Cancel a specific Trade, based on JSON data
+     * Filled or partial filled Trades cannot be cancelled
+     * Returns 200 OK (if no exceptions)
+     * 
+     * @param tradeId
+     * @param updatedTradeInfo
+     * @return Trade
+     */
     @PutMapping("/api/trades/{tradeId}")
     public Trade updateSpecificTrade(@PathVariable (value = "tradeId") Long tradeId, @Valid @RequestBody Trade updatedTradeInfo){
         
