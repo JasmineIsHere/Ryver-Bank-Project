@@ -56,6 +56,10 @@ public class CustomerController {
     String authority = authorityArray[0].toString();
     Customer customer = customers.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
 
+    if (!customer.isActive()) {
+      throw new InactiveCustomerException();
+    }
+
     if (!customer.getUsername().equals(authorisedUser) && authority.equals("ROLE_USER")) {
       throw new CustomerMismatchException();
     }
@@ -83,6 +87,10 @@ public class CustomerController {
         .toArray();
     String authority = authorityArray[0].toString();
     Customer customer = customers.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
+
+    if (!customer.isActive()) {
+      throw new InactiveCustomerException();
+    }
 
     if (!customer.getUsername().equals(authorisedUser) && authority.equals("ROLE_USER")) {
       throw new CustomerMismatchException();
@@ -135,8 +143,7 @@ public class CustomerController {
   }
 
   /**
-   * Create a Portfolio for a specified Customer
-   * Called in addCustomer
+   * Create a Portfolio for a specified Customer Called in addCustomer
    * 
    * @param customer
    * @return Portfolio

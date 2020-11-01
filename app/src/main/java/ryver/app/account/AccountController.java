@@ -26,9 +26,8 @@ public class AccountController {
     }
 
     /**
-     * Get a list of all Accounts associated with the logged in Customer's ID 
-     * If the user is a manager, get all existing accounts 
-     * Valid customer - Returns 200 OK
+     * Get a list of all Accounts associated with the logged in Customer's ID If the
+     * user is a manager, get all existing accounts Valid customer - Returns 200 OK
      * Deactivated customer - Returns 403 Forbidden
      * Returns 200 OK (if no exceptions)
      * 
@@ -42,6 +41,10 @@ public class AccountController {
         Customer customer = customers.findByUsername(customerUsername)
                 .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
 
+        if (!customer.isActive()) {
+            throw new InactiveCustomerException();
+        }
+        
         long customerId = customer.getId();
 
         // If ROLE_MANAGER -> get all the accounts
@@ -71,6 +74,10 @@ public class AccountController {
         Customer customer = customers.findByUsername(customerUsername)
                 .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
 
+        if (!customer.isActive()) {
+            throw new InactiveCustomerException();
+        }
+
         long customerId = customer.getId();
 
         return accounts.findByIdAndCustomerId(accountId, customerId).orElseThrow(() -> new AccountMismatchException());
@@ -93,7 +100,7 @@ public class AccountController {
 
         // If customer is deactivated, return 403 forbidden
         if (!customer.isActive()) {
-            throw new AccessDeniedException("403 returned");
+            throw new InactiveCustomerException();
         }
 
         account.setCustomer(customer);

@@ -45,6 +45,10 @@ public class TransactionController {
         // User that was authenticated
         Customer customer = customers.findByUsername(customerUsername)
                 .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
+                
+        if (!customer.isActive()) {
+            throw new InactiveCustomerException();
+        }
 
         Long customerId = customer.getId();
 
@@ -92,7 +96,10 @@ public class TransactionController {
         Customer customer = customers.findByUsername(customerUsername) // User that is logged in and the sender
                 .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
 
-        // Sender
+        if (!customer.isActive()) {
+            throw new InactiveCustomerException();
+        }
+        // sender
         Long customerId = customer.getId();
 
         Account senderAccount = accounts.findByIdAndCustomerId(accountId, customerId)
