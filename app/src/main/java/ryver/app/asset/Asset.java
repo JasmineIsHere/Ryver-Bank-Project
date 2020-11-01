@@ -27,34 +27,40 @@ public class Asset {
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
     /**
      * The symbol of the stock eg. A17U
+     * From trade - symbol
      */
     private String code;
 
     /**
      * The quantity of stocks owned
+     * From trade - quantity
      */
     private int quantity;
 
     /**
      * The average price of the stocks owned
+     * From trade - avg price
      */
     @JsonSerialize(using = jsonDoubleSerializer.class)
     private double avg_price;
 
     /**
      * The current price of the stocks owned
+     * From trade - bid price
      */
     @JsonSerialize(using = jsonDoubleSerializer.class)
     private double current_price;
 
     /**
-     * The value of the stocks owned value = current_price * quantity
+     * The value of the stocks owned 
+     * value = current_price * quantity
      */
     @JsonSerialize(using = jsonDoubleSerializer.class)
     private double value;
 
     /**
-     * The gain/loss of the stocks owned gain_loss = value - (avg_price * quantity)
+     * The gain/loss of the stocks owned 
+     * gain_loss = value - (avg_price * quantity)
      */
     @JsonSerialize(using = jsonDoubleSerializer.class)
     private double gain_loss;

@@ -100,22 +100,32 @@ public class Customer implements UserDetails {
 
     // Mappings
     /**
-     * The associated List of Accounts
+     * The List of Accounts associated with the Customer
      */
     @OneToMany(mappedBy = "customer", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Account> accounts;
 
     /**
-     * The associated Portfolio
+     * The Portfolio associated with the Customer
      */
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     @JsonIgnore
     private Portfolio portfolio;
 
     // Constructors
+
     /**
      * Create a Customer with the specified parameters
+     *
+     * @param username
+     * @param password
+     * @param authorities
+     * @param fullName
+     * @param nric
+     * @param phone
+     * @param address
+     * @param active
      */
     public Customer(String username, String password, String authorities, String fullName, String nric, String phone,
             String address, boolean active) {
