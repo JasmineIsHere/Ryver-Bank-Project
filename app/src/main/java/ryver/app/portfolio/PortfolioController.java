@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RestController
 @SecurityRequirement(name = "api")
 public class PortfolioController {
+    // Repositories and controllers
     private PortfolioRepository portfolios;
     private AssetController assetsCtrl;
     private CustomerRepository customers;
@@ -24,6 +25,13 @@ public class PortfolioController {
         this.customers = customers;
     }
 
+    /**
+     * Get the Portfolio of the currently logged in Customer
+     * If Customer not found - Returns 400 Bad Request
+     * Returns 200 OK (If no exceptions)
+     * 
+     * @return Portfolio
+     */
     @GetMapping("/api/portfolio")
     public Portfolio getPortfolio() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -50,6 +58,16 @@ public class PortfolioController {
         return portfolios.save(portfolio);
     }
 
+    /**
+     * Update the Portfolio with the specified ID
+     * Based on JSON data
+     * If Portfolio not found - Returns 404 Not Found
+     * Returns 200 OK (If no exceptions)
+     * 
+     * @param portfolioId
+     * @param updatedPortfolio
+     * @return Portfolio
+     */
     public Portfolio updatePortfolio(long portfolioId, Portfolio updatedPortfolio) {
         if(!portfolios.existsById(portfolioId)) {
             throw new PortfolioNotFoundException(portfolioId);

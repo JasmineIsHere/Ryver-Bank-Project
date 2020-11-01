@@ -1,14 +1,12 @@
 package ryver.app.customer;
 
-import ryver.app.portfolio.*;
 import ryver.app.asset.*;
+import ryver.app.portfolio.*;
 
 import java.util.*;
-
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,6 +17,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RestController
 @SecurityRequirement(name = "api")
 public class CustomerController {
+  // Repositories and the encoder
   private CustomerRepository customers;
   private PortfolioRepository portfolios;
   private BCryptPasswordEncoder encoder;
@@ -30,18 +29,30 @@ public class CustomerController {
     this.encoder = encoder;
   }
 
+  /**
+   * Get all Customers with ROLE_USER
+   * 
+   * @return List<Customer>
+   */
   @GetMapping("/api/customers")
   public List<Customer> getCustomers() {
     return customers.findByAuthorities("ROLE_USER");
   }
 
+  /**
+   * Get a specific Customer, based on the specified customerId
+   * If Customer not found - Returns 400 Bad Request
+   * Returns 200 OK
+   * 
+   * @param customerId
+   * @return Customer
+   */
   @GetMapping("/api/customers/{customerId}")
   public Customer getSpecificCustomer(@PathVariable(value = "customerId") Long customerId) {
     String authorisedUser = SecurityContextHolder.getContext().getAuthentication().getName();
     Object[] authorityArray = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
         .toArray();
     String authority = authorityArray[0].toString();
-
     Customer customer = customers.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
 
     if (!customer.getUsername().equals(authorisedUser) && authority.equals("ROLE_USER")) {
@@ -50,9 +61,18 @@ public class CustomerController {
     return customer;
   }
 
-  // Managers can update (active or not active) customers information (phone, address, password, active)
-  // Active customer can update OWN information (phone, address, password)
-  // Deactivated customer cannot update OWN information
+  /**
+   * Update a Customer, based on JSON data
+   * Managers can update (active or not active) customers information (phone,
+   * address, password, active)
+   * Active customer can update OWN information (phone, address, password)
+   * Deactivated customer cannot update OWN information
+   * Returns 200 OK
+   * 
+   * @param customerId
+   * @param updatedCustomerInfo
+   * @return Customer
+   */
   @PutMapping("/api/customers/{customerId}")
   public Customer updateCustomer(@PathVariable(value = "customerId") Long customerId,
       @Valid @RequestBody Customer updatedCustomerInfo) {
@@ -61,18 +81,17 @@ public class CustomerController {
     Object[] authorityArray = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
         .toArray();
     String authority = authorityArray[0].toString();
-
     Customer customer = customers.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
 
     if (!customer.getUsername().equals(authorisedUser) && authority.equals("ROLE_USER")) {
       throw new CustomerMismatchException();
     }
-    // fields which customers and managers can update - password, phone, address
+    // Fields which customers and managers can update - password, phone, address
     customer.setPassword(encoder.encode(updatedCustomerInfo.getPassword()));
     customer.setPhone(updatedCustomerInfo.getPhone());
     customer.setAddress(updatedCustomerInfo.getAddress());
 
-    // fields which only managers can update - active
+    // Fields which only managers can update - active
     if (authority.equals("ROLE_MANAGER")) {
       customer.setActive(updatedCustomerInfo.isActive());
     }
@@ -81,10 +100,14 @@ public class CustomerController {
   }
 
   /**
+   * Create a new Customer, based on JSON data
+   * A Portfolio for the new Customer is also created
    * Using BCrypt encoder to encrypt the password for storage
+   * If ROLE_USER - Returns 403 Forbidden
+   * Returns 201 Created
    * 
    * @param customer
-   * @return
+   * @return Customer
    */
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/api/customers")
@@ -94,7 +117,8 @@ public class CustomerController {
     List<Customer> customerList = customers.findAll();
 
     for (Customer existingCustomer : customerList) {
-      if (customer.getUsername().equals(existingCustomer.getUsername()) && customer.getNric().equals(existingCustomer.getNric())) {
+      if (customer.getUsername().equals(existingCustomer.getUsername())
+          && customer.getNric().equals(existingCustomer.getNric())) {
         throw new UserAlreadyExistsException(customer.getUsername());
       }
     }
@@ -109,6 +133,13 @@ public class CustomerController {
 
   }
 
+  /**
+   * Create a Portfolio for a specified Customer
+   * Called in addCustomer
+   * 
+   * @param customer
+   * @return Portfolio
+   */
   public Portfolio addPortfolio(Customer customer) {
     // Only customers have portfolios
     ArrayList<SimpleGrantedAuthority> a = new ArrayList(customer.getAuthorities());
@@ -126,6 +157,12 @@ public class CustomerController {
       return null;
   }
 
+  /**
+   * Checks if the specified NRIC is valid
+   * 
+   * @param nric
+   * @return boolean
+   */
   public static boolean validateNric(String nric) {
     int total = 0;
     int arr[] = { 2, 7, 6, 5, 4, 3, 2 };

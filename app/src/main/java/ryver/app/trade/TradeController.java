@@ -741,9 +741,9 @@ public class TradeController {
         String currentDay = current.getDayOfWeek().name();
 
         // if day is saturday or sunday
-        // if time is not between 9am and 5pm
+        // if hour is before 9am and after 5pm
         // then trade not matched
-        if ((!(currentDay.equals("saturday") || currentDay.equals("sunday"))) || !(currentHour < fivePM && currentHour > nineAM)) {
+        if ((currentDay.equals("SATURDAY") || currentDay.equals("SUNDAY")) || (currentHour < nineAM || currentHour >= fivePM)) {
             trade.setAccount(account);
             trade.setStock(stock);
             trade.setPortfolio(portfolio);
