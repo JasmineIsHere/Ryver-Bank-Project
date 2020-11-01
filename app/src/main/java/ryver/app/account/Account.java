@@ -25,12 +25,13 @@ import lombok.*;
 public class Account {
     // Fields
     /**
-     * The auto-generated ID for each account Starts from 1
+     * The auto-generated ID for each Account 
+     * Starts from 1
      */
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 
     /**
-     * The amount of money in the account
+     * The amount of money in the Account
      */
     @JsonSerialize(using = jsonDoubleSerializer.class)
     private double balance;
@@ -42,7 +43,7 @@ public class Account {
     private double available_balance;
 
     /**
-     * The ID of the Customer that the account is associated with
+     * The ID of the Customer that the Account is associated with
      */
     private long customer_id;
 

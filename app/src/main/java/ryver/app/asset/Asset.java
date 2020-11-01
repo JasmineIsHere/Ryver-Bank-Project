@@ -21,7 +21,8 @@ import lombok.*;
 public class Asset {
     // Fields
     /**
-     * The auto-generated ID for each account Starts from 1
+     * The auto-generated ID for each Asset 
+     * Starts from 1
      */
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
     /**
