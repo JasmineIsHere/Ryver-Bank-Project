@@ -64,7 +64,7 @@ public class StockController {
     }  
 
     /**
-     * Get the List of CustomStocks to put in the market
+     * Get the List of CustomStocks from the market
      * 
      * @return List<CustomStock>
      */

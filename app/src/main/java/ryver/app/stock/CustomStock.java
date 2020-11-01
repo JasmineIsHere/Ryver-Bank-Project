@@ -35,7 +35,7 @@ public class CustomStock {
     private double last_price; 
     
     /**
-     * The bid of the CustomStock
+     * The bid price of the CustomStock
      */
     @JsonSerialize(using = jsonDoubleSerializer.class)
     private double bid; 
