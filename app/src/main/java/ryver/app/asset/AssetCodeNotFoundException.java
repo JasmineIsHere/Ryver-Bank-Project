@@ -4,11 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND) // 404 Error
-public class AssetCodeNotFoundException extends RuntimeException{
+public class AssetCodeNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     public AssetCodeNotFoundException(String code) {
         super("Could not find asset " + code);
     }
-    
+
 }
