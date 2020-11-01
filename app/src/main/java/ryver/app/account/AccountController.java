@@ -3,7 +3,6 @@ package ryver.app.account;
 import ryver.app.customer.*;
 
 import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -16,6 +15,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RestController
 @SecurityRequirement(name = "api")
 public class AccountController {
+    // Repositories
     private AccountRepository accounts;
     private CustomerRepository customers;
 
@@ -23,8 +23,14 @@ public class AccountController {
         this.accounts = accounts;
         this.customers = customers;
     }
-  
-    // Deactivated customer returns 403 forbidden
+    
+    /** 
+     * Get a list of all Accounts associated with the logged in Customer's ID
+     * If the user is a manager, get all existing accounts
+     * Valid customer - Returns 200 OK
+     * Deactivated customer - Returns 403 Forbidden
+     * @return List<Account>
+     */
     @GetMapping("/api/accounts")
     public List<Account> getAllAccountsByCustomerId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -34,9 +40,9 @@ public class AccountController {
             .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
         
         long customerId = customer.getId();
-
-        // if role is manager -> get all the accounts
-        // else -> get OWN accounts
+        
+        // If ROLE_MANAGER -> get all the accounts
+        // Else -> get own accounts
         if (customer.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"))) {
             return accounts.findAll();
         } else {
@@ -44,10 +50,17 @@ public class AccountController {
         }
     }
 
-    // Deactivated customer returns 403 forbidden
+    
+    /** 
+     * Get a specific Account associated with the logged Customer's ID that has the given AccountId
+     * Valid customer - Returns 200 OK
+     * Deactivated customer - Returns 403 Forbidden
+     * @param accountId
+     * @return Account
+     */
     @GetMapping("/api/accounts/{accountId}")
     public Account getAccountByAccountIdAndCustomerId(@PathVariable (value = "accountId") Long accountId) {
-        //source:https://www.baeldung.com/get-user-in-spring-security
+        // source: https://www.baeldung.com/get-user-in-spring-security
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String customerUsername = authentication.getName();
 
@@ -59,13 +72,21 @@ public class AccountController {
         return accounts.findByIdAndCustomerId(accountId, customerId).orElseThrow(() -> new AccountMismatchException());
     }
 
+    
+    /** 
+     * Add a new Account using the JSON data
+     * Valid customer - Returns 200 OK
+     * Deactivated customer - Returns 403 Forbidden
+     * @param account
+     * @return Account
+     */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/accounts")
     public Account addAccount (@Valid @RequestBody Account account) {
         Customer customer = customers.findById(account.getCustomer_id())
             .orElseThrow(() -> new CustomerNotFoundException(account.getCustomer_id()));
         
-        //if customer is deactivated, return 403 forbidden
+        // If customer is deactivated, return 403 forbidden
         if (!customer.isActive()) {
             throw new AccessDeniedException("403 returned");
         }
@@ -74,5 +95,5 @@ public class AccountController {
         account.setAvailable_balance(account.getBalance());
         return accounts.save(account);        
     }
-
+    
 }
