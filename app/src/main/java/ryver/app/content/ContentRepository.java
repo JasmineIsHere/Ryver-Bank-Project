@@ -11,7 +11,7 @@ public interface ContentRepository extends JpaRepository<Content, Long> {
      * Get a List of Contents, filtered by the approval status
      * 
      * @param approved
-     * @return
+     * @return List<Content>
      */
     List<Content> findByApproved(boolean approved);
 }
