@@ -741,15 +741,15 @@ public class TradeController {
         String currentDay = current.getDayOfWeek().name();
 
         //if time is not within 9am and 5pm on weekdays, then trade not matched
-        // if (currentHour >= fivePM || currentHour <= nineAM || currentDay.equals("saturday") || currentDay.equals("sunday")) {
-        //     trade.setAccount(account);
-        //     trade.setStock(stock);
-        //     trade.setPortfolio(portfolio);
-        //     trade.setStatus("open");
-        //     updateTradeToStock(trade, stock);
-        //     System.out.println("AFTER 5PM ALREADY");
-        //     return trades.save(trade);
-        // }
+        if (currentHour >= fivePM || currentHour <= nineAM || currentDay.equals("saturday") || currentDay.equals("sunday")) {
+            trade.setAccount(account);
+            trade.setStock(stock);
+            trade.setPortfolio(portfolio);
+            trade.setStatus("open");
+            updateTradeToStock(trade, stock);
+            System.out.println("AFTER 5PM ALREADY");
+            return trades.save(trade);
+        }
 
         if (action.equals("buy")) {
             // FOR BUYING
