@@ -754,7 +754,7 @@ public class TradeController {
 
         if (action.equals("buy")) {
             // FOR BUYING
-    
+
             // if it's a buy market order, change the bid value to current stock's ask price
             if (bid == 0.0) {
                 bid = stock.getAsk();
