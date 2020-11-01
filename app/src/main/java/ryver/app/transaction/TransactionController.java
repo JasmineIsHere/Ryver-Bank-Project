@@ -29,8 +29,8 @@ public class TransactionController {
     }
 
     /**
-     * Get a List of Transactions based on the specified accountId Returns 200 OK
-     * (if no exceptions)
+     * Get a List of Transactions based on the specified accountId 
+     * Returns 200 OK (if no exceptions)
      * 
      * @param accountId
      * @return List<Transaction>
@@ -59,7 +59,6 @@ public class TransactionController {
         // Case 2
         accounts.findByIdAndCustomerId(accountId, customerId).orElseThrow(() -> new AccountMismatchException());
 
-        // Return transactions.findByAccountId(accountId);
         return transactions.findByToOrFrom(accountId, accountId);
 
     }
@@ -80,7 +79,6 @@ public class TransactionController {
         String customerUsername = authentication.getName();
 
         // Account accessed in the URL should be the same as the account used to sent
-        // money
         if (accountId != transaction.getFrom()) {
             throw new AccountMismatchException();
         }

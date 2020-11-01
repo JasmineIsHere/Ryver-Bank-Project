@@ -742,7 +742,7 @@ public class TradeController {
 
     /**
      * Create a new Trade using the JSON data 
-     * Returns 201 (if no exceptions)
+     * Returns 201 Created (if no exceptions)
      * 
      * @param trade
      * @return Trade
