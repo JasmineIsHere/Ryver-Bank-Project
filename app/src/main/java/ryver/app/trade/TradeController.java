@@ -1,38 +1,22 @@
 package ryver.app.trade;
 
-import java.sql.Timestamp;
-import java.time.*;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.validation.Valid;
-
-import ryver.app.customer.Customer;
-import ryver.app.customer.CustomerRepository;
-import ryver.app.customer.CustomerNotFoundException;
-import ryver.app.customer.CustomerMismatchException;
-
-import ryver.app.account.Account;
-import ryver.app.account.AccountRepository;
-import ryver.app.account.AccountNotFoundException;
-import ryver.app.account.AccountMismatchException;
-
-import ryver.app.transaction.InsufficientBalanceException;
-
-import ryver.app.stock.CustomStock;
-import ryver.app.stock.StockRepository;
-import ryver.app.stock.InvalidStockException;
-
+import ryver.app.customer.*;
+import ryver.app.account.*;
+import ryver.app.transaction.*;
+import ryver.app.stock.*;
 import ryver.app.asset.Asset;
 import ryver.app.asset.AssetCodeNotFoundException;
 import ryver.app.asset.AssetController;
 import ryver.app.asset.AssetRepository;
+import ryver.app.portfolio.*;
 
-import ryver.app.portfolio.Portfolio;
-import ryver.app.portfolio.PortfolioController;
-import ryver.app.portfolio.PortfolioNotFoundException;
-import ryver.app.portfolio.PortfolioRepository;
+import java.sql.Timestamp;
+import java.time.*;
+import java.util.*;
+import java.util.stream.*;
+
+import javax.validation.Valid;
+
 
 import org.springframework.web.bind.annotation.*;
 
@@ -63,7 +47,6 @@ public class TradeController {
         this.assets = assets;
         this.portfolioCtrl = portfolioCtrl;
         this.assetCtrl = assetCtrl;
-        
     }
 
     // customers can get all a list of all their trade
@@ -216,7 +199,6 @@ public class TradeController {
 
             if (tradeSellListOfSymbol.isEmpty()) {
                 // no more stock in the market 
-                stock.setAsk(0);
                 stock.setAsk_volume(0);
 
                 return;
@@ -244,9 +226,6 @@ public class TradeController {
         // final double prevStockAsk = stock.getAsk().doubleValue();
         double stockAsk = stock.getAsk();
         int stockAskVol = (int)stock.getAsk_volume();
-
-        // double bid = trade.getBid();
-        // int quantity = trade.getQuantity();
 
         int filledQuantity = trade.getFilled_quantity();
 
@@ -379,9 +358,6 @@ public class TradeController {
                             break;
                         }
                     }
-
-
-                    
                 }
             } else {
                 // set trade
@@ -397,13 +373,9 @@ public class TradeController {
 
                 // set stock
                 // no more stock in the market 
-                stock.setAsk(0);
                 stock.setAsk_volume(0);
             
             }
-
-            
-
         }
     }
 
@@ -688,7 +660,6 @@ public class TradeController {
 
                 // set stock
                 // no more stock in the market 
-                stock.setAsk(0);
                 stock.setAsk_volume(0);
 
             }
@@ -843,26 +814,6 @@ public class TradeController {
                 updateTradeToStock(trade, stock);
             }
         }
-        // limit order -> customer specify price (sell -> ask price, buy -> bid price) (expire at 5)
-        // market order -> market price (ask and bid -> 0.0) (done immediately)
-
-        // better price match first
-        // if same price, then match earliest trade
-        
-        // FOR BUYING
-        // DONE check if symbol exist in stock
-        // DONE check if enough amount in account balance when submitting the order (must be sufficient, if not error 400)
-        // check if amount is enough in balance when filling the order bc bid/ ask price will change (if not enough, partial filled)
-        // add to portfolio
-
-            // buy at market price -> market ask price
-            // buy at limit bid price
-
-        // FOR SELLING
-        // check if symbol exist in portfolio (quantity selling > quantity own)
-
-            // sell at market price -> market bid price
-            // sell at limit ask price
 
         // set current timestamp to date
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());

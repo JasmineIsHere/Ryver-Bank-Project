@@ -75,7 +75,7 @@ public class AppApplication {
         System.out.println("[Add portfolio to test user]: " + portfolios.save(portfolio));
 		customer.setPortfolio(portfolio);
 		
-		//manipulate the market
+		// manipulate the market
 		for (CustomStock stock: stockList){
 			
 			// initial stocks
@@ -107,11 +107,8 @@ public class AppApplication {
 			
 			// limit buy order
 			if (quantity1 != 0) {
-				// milliseconds
+				// timestamp in milliseconds
 				long timestamp = new Timestamp(System.currentTimeMillis()).getTime();
-				// datetime
-				LocalDateTime datetime = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime();
-				System.out.println(datetime);
 				
 				Trade trade = new Trade("buy", stock.getSymbol(), quantity1, formattedRandBid, 0.0, timestamp, "open", 1L, 3L);
 				trade.setAccount(account);
@@ -135,13 +132,9 @@ public class AppApplication {
 			
 			// limit sell order
 			if (quantity2 != 0) {
-				// milliseconds
+				// timestamp in milliseconds
 				long timestamp = new Timestamp(System.currentTimeMillis()).getTime();
-				// datetime
-				LocalDateTime datetime = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime();
-				System.out.println(datetime);
-				
-				// Trade trade = new Trade("sell", symbol, quantity2, 0.0, 3.2, timestamp, "open", 1L, 3L);
+
 				Trade trade = new Trade("sell", stock.getSymbol(), quantity2, 0.0, formattedRandAsk, timestamp, "open", 1L, 3L);
 				trade.setAccount(account);
 				trade.setStock(stock);

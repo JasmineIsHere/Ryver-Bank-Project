@@ -23,14 +23,14 @@ public class Trade {
     private  @Id @GeneratedValue (strategy = GenerationType.IDENTITY) Long id;
 
     @NotNull(message = "Action should not be null")
-    private String action; //buy or sell
+    private String action; // buy or sell
 
     @NotNull(message = "Symbol should not be null")
-    private String symbol; //symbol of stock - stock.getSymbol()
+    private String symbol; // symbol of stock - stock.getSymbol()
 
 
     @NotNull(message = "Symbol should not be null. ")
-    private int quantity; //in multiples of 100
+    private int quantity; // in multiples of 100
 
     @JsonSerialize(using = jsonDoubleSerializer.class)
     private double bid; //for buying
@@ -44,7 +44,6 @@ public class Trade {
 
     private long date; //Unix timestamp 
 
-    // @NotNull(message = "Status should not be null. ")
     private String status; //open/filled/partial-filled/cancelled/expired
 
     @NotNull(message = "Account ID should not be null. ")

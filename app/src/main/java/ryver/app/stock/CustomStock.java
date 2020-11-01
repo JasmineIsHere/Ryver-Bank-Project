@@ -19,28 +19,22 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class CustomStock {
-    // only keeps the best open trade
-    // if the trade gets filled then revert back to the next best priced open trade
-    // best price - lowest ask, highest bid. if same price -> get the earlier submitted trade
 
     private @Id String symbol; //symbol of stock eg. A17U
 
     @JsonSerialize(using = jsonDoubleSerializer.class)
-    private double last_price; //$$
+    private double last_price; 
     
 
     @JsonSerialize(using = jsonDoubleSerializer.class)
-    private double bid; //$$
-    private int bid_volume; //qty
+    private double bid; 
+    private int bid_volume; 
 
     @JsonSerialize(using = jsonDoubleSerializer.class)
     private double ask; //$$
-    private int ask_volume; //qty
-
-    private long timestamp;
+    private int ask_volume; 
 
     @OneToMany(mappedBy = "stock",
-    // orphanRemoval = true,
     cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Trade> trades;

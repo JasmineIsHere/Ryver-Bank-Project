@@ -50,8 +50,7 @@ public class CustomerController {
     return customer;
   }
 
-  // Managers can update (active or not active) customers information (phone,
-  // address, password, active)
+  // Managers can update (active or not active) customers information (phone, address, password, active)
   // Active customer can update OWN information (phone, address, password)
   // Deactivated customer cannot update OWN information
   @PutMapping("/api/customers/{customerId}")
