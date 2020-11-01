@@ -7,7 +7,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
-    // define a derived query to find user by username
-    Optional<Portfolio> findByCustomerId(Long customer_id);
-    
+    /**
+     * Get a Portfolio, filtered by the specified customerId - can return null
+     * 
+     * @param customerId
+     * @return
+     */
+    Optional<Portfolio> findByCustomerId(Long customerId);
+
 }
