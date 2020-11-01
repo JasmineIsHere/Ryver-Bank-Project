@@ -23,24 +23,24 @@ public class AccountController {
         this.accounts = accounts;
         this.customers = customers;
     }
-    
-    /** 
-     * Get a list of all Accounts associated with the logged in Customer's ID
-     * If the user is a manager, get all existing accounts
-     * Valid customer - Returns 200 OK
+
+    /**
+     * Get a list of all Accounts associated with the logged in Customer's ID If the
+     * user is a manager, get all existing accounts Valid customer - Returns 200 OK
      * Deactivated customer - Returns 403 Forbidden
+     * 
      * @return List<Account>
      */
     @GetMapping("/api/accounts")
     public List<Account> getAllAccountsByCustomerId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String customerUsername = authentication.getName();
-        
+
         Customer customer = customers.findByUsername(customerUsername)
-            .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
-        
+                .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
+
         long customerId = customer.getId();
-        
+
         // If ROLE_MANAGER -> get all the accounts
         // Else -> get own accounts
         if (customer.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"))) {
@@ -50,42 +50,41 @@ public class AccountController {
         }
     }
 
-    
-    /** 
-     * Get a specific Account associated with the logged Customer's ID that has the given AccountId
-     * Valid customer - Returns 200 OK
-     * Deactivated customer - Returns 403 Forbidden
+    /**
+     * Get a specific Account associated with the logged Customer's ID that has the
+     * given AccountId Valid customer - Returns 200 OK Deactivated customer -
+     * Returns 403 Forbidden
+     * 
      * @param accountId
      * @return Account
      */
     @GetMapping("/api/accounts/{accountId}")
-    public Account getAccountByAccountIdAndCustomerId(@PathVariable (value = "accountId") Long accountId) {
+    public Account getAccountByAccountIdAndCustomerId(@PathVariable(value = "accountId") Long accountId) {
         // source: https://www.baeldung.com/get-user-in-spring-security
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String customerUsername = authentication.getName();
 
         Customer customer = customers.findByUsername(customerUsername)
-            .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
+                .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
 
         long customerId = customer.getId();
-        
+
         return accounts.findByIdAndCustomerId(accountId, customerId).orElseThrow(() -> new AccountMismatchException());
     }
 
-    
-    /** 
-     * Add a new Account using the JSON data
-     * Valid customer - Returns 200 OK
+    /**
+     * Add a new Account using the JSON data Valid customer - Returns 200 OK
      * Deactivated customer - Returns 403 Forbidden
+     * 
      * @param account
      * @return Account
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/accounts")
-    public Account addAccount (@Valid @RequestBody Account account) {
+    public Account addAccount(@Valid @RequestBody Account account) {
         Customer customer = customers.findById(account.getCustomer_id())
-            .orElseThrow(() -> new CustomerNotFoundException(account.getCustomer_id()));
-        
+                .orElseThrow(() -> new CustomerNotFoundException(account.getCustomer_id()));
+
         // If customer is deactivated, return 403 forbidden
         if (!customer.isActive()) {
             throw new AccessDeniedException("403 returned");
@@ -93,7 +92,7 @@ public class AccountController {
 
         account.setCustomer(customer);
         account.setAvailable_balance(account.getBalance());
-        return accounts.save(account);        
+        return accounts.save(account);
     }
-    
+
 }

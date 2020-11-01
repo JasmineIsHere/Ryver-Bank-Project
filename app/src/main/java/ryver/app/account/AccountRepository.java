@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface AccountRepository extends JpaRepository<Account, Long> {
     /**
      * Get a List of Accounts, filtered by the given customerId
+     * 
      * @param customerId
      * @return List<Account>
      */
@@ -16,6 +17,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     /**
      * Get an Account, filtered by the given accountId, can return null
+     * 
      * @param accountId
      * @return Optional<Account>
      */
@@ -23,6 +25,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     /**
      * Get an Account, filtered by the given accountId, can return null
+     * 
      * @param accountId
      * @param customerId
      * @return Optional<Account>
