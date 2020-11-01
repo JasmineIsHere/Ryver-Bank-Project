@@ -24,7 +24,7 @@ Authorization: Basic manager_1 01_manager_01
     "nric": "S9942296C",
     "phone": "90123456",
     "address": "999 Tampines Road S999999",
-    "active": false 
+    "active": true 
 }
 
 
@@ -631,9 +631,11 @@ Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 
 ###
-# A customer cancel a trade (status) if the trade is still open, other fields will be ignored
+# A customer can cancel a trade (status) 
+# if the trade is still open, other fields will be ignored
 # tradeId must change according to the trade created
-# Returns: 400 bad request because trade has already been filled 
+# Returns: 200 OK if trade is open
+# Returns: 400 bad request if trade has already been filled 
 PUT http://localhost:8080/api/trades/122
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01

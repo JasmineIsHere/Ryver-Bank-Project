@@ -49,8 +49,9 @@ public class TransactionController {
         Long customerId = customer.getId();
 
         /*
-         * Try to find an account that has match specified account and user that was
-         * authenticated If there is no match, either 
+         * Try to find an Account that matches the specified Account and User that was
+         * authenticated 
+         * If there is no match, either 
          * (1) the account does not exist or
          * (2) the account does not belong to the authenticated user
          */
@@ -59,7 +60,6 @@ public class TransactionController {
         // Case 2
         accounts.findByIdAndCustomerId(accountId, customerId).orElseThrow(() -> new AccountMismatchException());
 
-        // Return transactions.findByAccountId(accountId);
         return transactions.findByToOrFrom(accountId, accountId);
 
     }
@@ -80,7 +80,6 @@ public class TransactionController {
         String customerUsername = authentication.getName();
 
         // Account accessed in the URL should be the same as the account used to sent
-        // money
         if (accountId != transaction.getFrom()) {
             throw new AccountMismatchException();
         }
