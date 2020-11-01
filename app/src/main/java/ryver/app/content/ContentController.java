@@ -45,6 +45,8 @@ public class ContentController {
      * 
      * @param contentId
      * @return Content
+     * If specified Content not found, 400 bad request
+     * Returns 200 OK
      */
     @GetMapping("/api/contents/{contentId}")
     public Content getSpecificContent(@PathVariable (value = "contentId") Long contentId){
@@ -61,6 +63,7 @@ public class ContentController {
     /** 
      * Create a new Content
      * Approved is false by default
+     * Returns 201 Created
      * 
      * @param content
      * @return Content
@@ -75,6 +78,7 @@ public class ContentController {
     /** 
      * Update a specific Content, based on the specified contentId
      * Based on JSON data
+     * Returns 200 OK
      * 
      * @param contentId
      * @param updatedContentInfo
@@ -103,6 +107,7 @@ public class ContentController {
     
     /** 
      * Delete a specified Content, based on the specified contentId
+     * Returns 200 OK
      * 
      * @param contentId
      */
