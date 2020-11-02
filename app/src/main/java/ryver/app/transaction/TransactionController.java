@@ -102,8 +102,13 @@ public class TransactionController {
         // sender
         Long customerId = customer.getId();
 
-        Account senderAccount = accounts.findByIdAndCustomerId(accountId, customerId)
+        //two cases: senderAccount does not belong to customer or senderAccount does not exist
+        Account senderAccount = accounts.findById(accountId) 
                 .orElseThrow(() -> new AccountNotFoundException(accountId));
+        //check if the sender Account belongs to sender
+        if (!Long.valueOf(senderAccount.getCustomer_id()).equals(customerId)){
+            throw new AccountMismatchException();
+        }
 
         // Receiver
         Long receiverAccountId = transaction.getTo();
