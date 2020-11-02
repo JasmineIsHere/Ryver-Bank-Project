@@ -88,10 +88,6 @@ public class CustomerController {
     String authority = authorityArray[0].toString();
     Customer customer = customers.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
 
-    if (!customer.isActive()) {
-      throw new InactiveCustomerException();
-    }
-
     if (!customer.getUsername().equals(authorisedUser) && authority.equals("ROLE_USER")) {
       throw new CustomerMismatchException();
     }
@@ -101,8 +97,10 @@ public class CustomerController {
     customer.setAddress(updatedCustomerInfo.getAddress());
 
     // Fields which only managers can update - active
-    if (authority.equals("ROLE_MANAGER")) {
+    if (authority.equals("ROLE_MANAGER")) { //if customer is active/inactive, manager can change
       customer.setActive(updatedCustomerInfo.isActive());
+    } else if (!customer.isActive()) { //if customer already not active, and non-manager trying to change details, throw exception
+      throw new InactiveCustomerException();
     }
     customers.save(customer);
     return customer;
@@ -127,7 +125,7 @@ public class CustomerController {
 
     for (Customer existingCustomer : customerList) {
       if (customer.getUsername().equals(existingCustomer.getUsername())
-          && customer.getNric().equals(existingCustomer.getNric())) {
+          || customer.getNric().equals(existingCustomer.getNric())) {
         throw new UserAlreadyExistsException(customer.getUsername());
       }
     }

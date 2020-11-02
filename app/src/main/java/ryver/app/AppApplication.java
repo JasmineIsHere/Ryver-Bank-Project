@@ -60,6 +60,9 @@ public class AppApplication {
 		System.out
 				.println("[Add analyst1]: " + customers.save(new Customer("analyst_1", encoder.encode("01_analyst_01"),
 						"ROLE_ANALYST", "Analyst One", "S8098765B", "99876543", "456 Clementi Road S987456", true)));
+		System.out
+				.println("[Add analyst2]: " + customers.save(new Customer("analyst_2", encoder.encode("02_analyst_02"),
+						"ROLE_ANALYST", "Analyst Two", "S9752354A", "99876552", "678 Orchard Road S987456", true)));
 
 		// Initialize stocks and store into db as per requirement
 		System.out.println("\n[Grabbin stocks]: ");
