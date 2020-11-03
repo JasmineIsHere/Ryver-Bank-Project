@@ -92,7 +92,7 @@ public class AppApplication {
 
 			// Initial stocks
 			Trade trade1 = new Trade("sell", stock.getSymbol(), (int) stock.getAsk_volume(), 0.0, stock.getAsk(), 0,
-					"open", 1L, 3L);
+					"open", 1L, 4L);
 			trade1.setAccount(account);
 			trade1.setStock(stock);
 			trades.save(trade1);
@@ -101,7 +101,7 @@ public class AppApplication {
 			System.out.println("[Add Inital Stocks]: " + trades.save(trade1));
 
 			Trade trade2 = new Trade("buy", stock.getSymbol(), (int) stock.getBid_volume(), stock.getBid(), 0.0, 0,
-					"open", 1L, 3L);
+					"open", 1L, 4L);
 			trade2.setAccount(account);
 			trade2.setStock(stock);
 			System.out.println("[Add Inital Stocks]: " + trades.save(trade2));
@@ -123,7 +123,7 @@ public class AppApplication {
 				long timestamp = new Timestamp(System.currentTimeMillis()).getTime();
 
 				Trade trade = new Trade("buy", stock.getSymbol(), quantity1, formattedRandBid, 0.0, timestamp, "open",
-						1L, 3L);
+						1L, 4L);
 				trade.setAccount(account);
 				trade.setStock(stock);
 				System.out.println("[Add market maker's trades]: " + trades.save(trade));
@@ -149,7 +149,7 @@ public class AppApplication {
 				long timestamp = new Timestamp(System.currentTimeMillis()).getTime();
 
 				Trade trade = new Trade("sell", stock.getSymbol(), quantity2, 0.0, formattedRandAsk, timestamp, "open",
-						1L, 3L);
+						1L, 4L);
 				trade.setAccount(account);
 				trade.setStock(stock);
 				System.out.println("[Add market maker's trades]: " + trades.save(trade));

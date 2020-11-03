@@ -573,6 +573,22 @@ Authorization: Basic good_user_1 01_user_01
 }
 
 ###
+POST http://localhost:8080/api/trades
+Content-Type: application/json
+Authorization: Basic good_user_1 01_user_01
+
+{
+    "action": "buy", 
+    "symbol": "S58", 
+    "quantity": 2000, 
+    "bid": 6.22,
+    "ask": 0, 
+    "account_id": 2, 
+    "customer_id": 5,
+    "status": ""
+}
+
+###
 
 # A customer can buy stocks
 # Returns: 201 with trade information 
@@ -679,7 +695,7 @@ Authorization: Basic good_user_1 01_user_01
 # Returns: 200 OK
 GET http://localhost:8080/api/portfolio
 Accept: application/json
-Authorization: Basic good_user_1 01_user_01
+Authorization: Basic testuser_01 01_testuser_01
 
 ################### End Portfolio Testing #########################################
 
