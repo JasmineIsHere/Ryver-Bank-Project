@@ -139,23 +139,37 @@ public class TradeController {
      */
     public void updateTradeToStock(Trade trade, CustomStock stock) {
         if (trade.getSymbol().equals("buy")) {
-            // if this trade's bid is lower than the stock's previous ask
-            // if this trade's bid is higher than the stock's previous bid
-            // -> save new bid price and quantity into the stocks database
-            if ((trade.getBid() < stock.getAsk()) && (trade.getBid() > stock.getBid())) {
+            // if bid volume is 0
+            if (stock.getBid_volume() == 0) {
                 stock.setBid(trade.getBid());
                 stock.setBid_volume(trade.getQuantity());
                 stocks.save(stock);
+            } else {
+                // if this trade's bid is lower than the stock's previous ask
+                // if this trade's bid is higher than the stock's previous bid
+                // -> save new bid price and quantity into the stocks database
+                if ((trade.getBid() < stock.getAsk()) && (trade.getBid() > stock.getBid())) {
+                    stock.setBid(trade.getBid());
+                    stock.setBid_volume(trade.getQuantity());
+                    stocks.save(stock);
+                }
             }
 
         } else {
-            // if this trade's ask is higher than the stock's previous bid
-            // if this trade's ask is lower than the stock's previous ask
-            // -> save new ask price and quantity into the stocks database
-            if ((trade.getAsk() > stock.getBid()) && (trade.getAsk() < stock.getAsk())) {
+            // if ask volume is 0
+            if (stock.getAsk_volume() == 0) {
                 stock.setAsk(trade.getAsk());
                 stock.setAsk_volume(trade.getQuantity());
                 stocks.save(stock);
+            } else {
+                // if this trade's ask is higher than the stock's previous bid
+                // if this trade's ask is lower than the stock's previous ask
+                // -> save new ask price and quantity into the stocks database
+                if ((trade.getAsk() > stock.getBid()) && (trade.getAsk() < stock.getAsk())) {
+                    stock.setAsk(trade.getAsk());
+                    stock.setAsk_volume(trade.getQuantity());
+                    stocks.save(stock);
+                }
             }
         }
 
@@ -278,7 +292,6 @@ public class TradeController {
      * @param tradeQuantity
      */
     public void checkTradeQuantityAgainstStockAskVol(CustomStock stock, Trade trade, Account account, Customer customer, List<Trade> tradeSellListOfSymbol, int tradeQuantity) {
-        // final double prevStockAsk = stock.getAsk().doubleValue();
         double stockAsk = stock.getAsk();
         int stockAskVol = stock.getAsk_volume();
 
@@ -314,9 +327,15 @@ public class TradeController {
 
                 // remove that trade from the list if its filled
                 tradeSellListOfSymbol.remove(0);
-
-                stock.setAsk(tradeSellListOfSymbol.get(0).getAsk());
-                stock.setAsk_volume(tradeSellListOfSymbol.get(0).getQuantity());
+                
+                // if list is empty, set volume to 0
+                // else, set as next best trade
+                if (tradeSellListOfSymbol.isEmpty()) {
+                    stock.setAsk_volume(0);
+                } else {
+                    stock.setAsk(tradeSellListOfSymbol.get(0).getAsk());
+                    stock.setAsk_volume(tradeSellListOfSymbol.get(0).getQuantity());
+                }
 
             } else {
                 // if there's still quantity leftover in stock
@@ -522,7 +541,7 @@ public class TradeController {
             int newQuantity = prevQuantity - trade.getFilled_quantity();
 
             // if trade quantity < asset quantity -> minus
-            if (trade.getQuantity() < asset.getQuantity()) {
+            if (trade.getFilled_quantity() < asset.getQuantity()) {
 
                 Asset newAsset = asset;
                 newAsset.setQuantity(newQuantity);
@@ -636,6 +655,7 @@ public class TradeController {
             trade.setStatus("filled");
             trade.setFilled_quantity(trade.getQuantity());
             trade.setAvg_price(stockBid);
+            stock.setLast_price(stockBid);
 
             account.setAvailable_balance(available_balance + (stockBid * tradeQuantity));
             account.setBalance(balance + (stockBid * tradeQuantity));
@@ -659,10 +679,16 @@ public class TradeController {
                 // remove that trade from the list if its filled
                 tradeBuyListOfSymbol.remove(0);
 
-                double newStockBid = tradeBuyListOfSymbol.get(0).getBid();
-                int newStockBidVol = tradeBuyListOfSymbol.get(0).getQuantity();
-                stock.setBid(newStockBid);
-                stock.setBid_volume(newStockBidVol);
+                // if list is empty, set volume to 0
+                // else, set as next best trade
+                if (tradeBuyListOfSymbol.isEmpty()) {
+                    stock.setBid_volume(0);
+                } else {
+                    double newStockBid = tradeBuyListOfSymbol.get(0).getBid();
+                    int newStockBidVol = tradeBuyListOfSymbol.get(0).getQuantity();
+                    stock.setBid(newStockBid);
+                    stock.setBid_volume(newStockBidVol);
+                }
 
             } else {
                 // if there's still quantity leftover in stock
@@ -842,21 +868,22 @@ public class TradeController {
         // if day is saturday or sunday
         // if hour is before 9am and after 5pm
         // then trade not matched
-        if ((currentDay.equals("SATURDAY") || currentDay.equals("SUNDAY"))
-                || (currentHour < nineAM || currentHour >= fivePM)) {
-            trade.setAccount(account);
-            trade.setStock(stock);
-            trade.setPortfolio(portfolio);
-            trade.setStatus("open");
-            updateTradeToStock(trade, stock);
-            return trades.save(trade);
-        }
+        // if ((currentDay.equals("SATURDAY") || currentDay.equals("SUNDAY"))
+        //         || (currentHour < nineAM || currentHour >= fivePM)) {
+        //     trade.setAccount(account);
+        //     trade.setStock(stock);
+        //     trade.setPortfolio(portfolio);
+        //     trade.setStatus("open");
+        //     updateTradeToStock(trade, stock);
+        //     return trades.save(trade);
+        // }
 
         if (action.equals("buy")) {
             // FOR BUYING
 
-            // if it's a buy market order, change the bid value to current stock's ask price
-            if (bid == 0.0) {
+            // if it's a buy market order or bid price is higher than stock's ask price
+            // change the bid value to current stock's ask price
+            if (bid == 0.0 || bid > stock.getAsk()) {
                 bid = stock.getAsk();
             }
 

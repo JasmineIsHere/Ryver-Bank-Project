@@ -106,61 +106,61 @@ public class AppApplication {
 			trade2.setStock(stock);
 			System.out.println("[Add Inital Stocks]: " + trades.save(trade2));
 
-			DecimalFormat df = new DecimalFormat("#.#");
-			// Random -> 0 to 1
-			double rand1 = Math.random();
-			double formattedRand1 = Double.parseDouble(df.format(rand1));
-			int quantity1 = (int) (formattedRand1 * 10000);
+			// DecimalFormat df = new DecimalFormat("#.#");
+			// // Random -> 0 to 1
+			// double rand1 = Math.random();
+			// double formattedRand1 = Double.parseDouble(df.format(rand1));
+			// int quantity1 = (int) (formattedRand1 * 10000);
 
-			double stockBid = stock.getBid();
-			// Get random bid price -> (Math.random() * (max - min)) + min
-			double randBid = (Math.random() * ((stockBid - 0.1) - (stockBid - 0.3))) + (stockBid - 0.3);
-			double formattedRandBid = Double.parseDouble(df.format(randBid));
+			// double stockBid = stock.getBid();
+			// // Get random bid price -> (Math.random() * (max - min)) + min
+			// double randBid = (Math.random() * ((stockBid - 0.1) - (stockBid - 0.3))) + (stockBid - 0.3);
+			// double formattedRandBid = Double.parseDouble(df.format(randBid));
 
-			// Limit buy order
-			if (quantity1 != 0) {
-				// Timestamp in milliseconds
-				long timestamp = new Timestamp(System.currentTimeMillis()).getTime();
+			// // Limit buy order
+			// if (quantity1 != 0) {
+			// 	// Timestamp in milliseconds
+			// 	long timestamp = new Timestamp(System.currentTimeMillis()).getTime();
 
-				Trade trade = new Trade("buy", stock.getSymbol(), quantity1, formattedRandBid, 0.0, timestamp, "open",
-						1L, 4L);
-				trade.setAccount(account);
-				trade.setStock(stock);
-				System.out.println("[Add market maker's trades]: " + trades.save(trade));
+			// 	Trade trade = new Trade("buy", stock.getSymbol(), quantity1, formattedRandBid, 0.0, timestamp, "open",
+			// 			1L, 4L);
+			// 	trade.setAccount(account);
+			// 	trade.setStock(stock);
+			// 	System.out.println("[Add market maker's trades]: " + trades.save(trade));
 
-				// If this trade's bid is lower than the stock's previous ask
-				// If this trade's bid is higher than the stock's previous bid
-				// -> save new bid price and quantity into the stocks database
-				tradesCtrl.updateTradeToStock(trade, stock);
-			}
+			// 	// If this trade's bid is lower than the stock's previous ask
+			// 	// If this trade's bid is higher than the stock's previous bid
+			// 	// -> save new bid price and quantity into the stocks database
+			// 	tradesCtrl.updateTradeToStock(trade, stock);
+			// }
 
-			double rand2 = Math.random();
-			double formattedRand2 = Double.parseDouble(df.format(rand2));
-			int quantity2 = (int) (formattedRand2 * 10000);
+			// double rand2 = Math.random();
+			// double formattedRand2 = Double.parseDouble(df.format(rand2));
+			// int quantity2 = (int) (formattedRand2 * 10000);
 
-			double stockAsk = stock.getAsk();
-			// Get random ask price -> (Math.random() * (max - min)) + min
-			double randAsk = (Math.random() * ((stockAsk + 0.3) - (stockAsk + 0.1))) + (stockAsk + 0.1);
-			double formattedRandAsk = Double.parseDouble(df.format(randAsk));
+			// double stockAsk = stock.getAsk();
+			// // Get random ask price -> (Math.random() * (max - min)) + min
+			// double randAsk = (Math.random() * ((stockAsk + 0.3) - (stockAsk + 0.1))) + (stockAsk + 0.1);
+			// double formattedRandAsk = Double.parseDouble(df.format(randAsk));
 
-			// Limit sell order
-			if (quantity2 != 0) {
-				// ztimestamp in milliseconds
-				long timestamp = new Timestamp(System.currentTimeMillis()).getTime();
+			// // Limit sell order
+			// if (quantity2 != 0) {
+			// 	// timestamp in milliseconds
+			// 	long timestamp = new Timestamp(System.currentTimeMillis()).getTime();
 
-				Trade trade = new Trade("sell", stock.getSymbol(), quantity2, 0.0, formattedRandAsk, timestamp, "open",
-						1L, 4L);
-				trade.setAccount(account);
-				trade.setStock(stock);
-				System.out.println("[Add market maker's trades]: " + trades.save(trade));
+			// 	Trade trade = new Trade("sell", stock.getSymbol(), quantity2, 0.0, formattedRandAsk, timestamp, "open",
+			// 			1L, 4L);
+			// 	trade.setAccount(account);
+			// 	trade.setStock(stock);
+			// 	System.out.println("[Add market maker's trades]: " + trades.save(trade));
 
-				assetCtrl.createAssetForAppApplication(stock, trade, portfolio);
+			// 	assetCtrl.createAssetForAppApplication(stock, trade, portfolio);
 
-				// If this trade's ask is higher than the stock's previous bid
-				// If this trade's ask is lower than the stock's previous ask
-				// -> save new ask price and quantity into the stocks database
-				tradesCtrl.updateTradeToStock(trade, stock);
-			}
+			// 	// If this trade's ask is higher than the stock's previous bid
+			// 	// If this trade's ask is lower than the stock's previous ask
+			// 	// -> save new ask price and quantity into the stocks database
+			// 	tradesCtrl.updateTradeToStock(trade, stock);
+			// }
 
 		}
 	}

@@ -546,7 +546,7 @@ Authorization: Basic good_user_1 01_user_01
 # A customer can view a Single stock
 # Returns: 200 OK with a17u stock
 # note: Authentication is required to prevent excessive stress I.e. no permit all
-GET http://localhost:8080/api/stocks/A17U
+GET http://localhost:8080/api/stocks/S58
 Accept: application/json
 Authorization: Basic good_user_1 01_user_01
 
@@ -573,6 +573,25 @@ Authorization: Basic good_user_1 01_user_01
 }
 
 ###
+# TRADE TEST 1
+POST http://localhost:8080/api/trades
+Content-Type: application/json
+Authorization: Basic good_user_1 01_user_01
+
+{
+    "action": "buy", 
+    "symbol": "S58", 
+    "quantity": 2000, 
+    "bid": 0,
+    "ask": 0, 
+    "account_id": 2, 
+    "customer_id": 5,
+    "status": ""
+}
+
+
+###
+# TRADE TEST 2
 POST http://localhost:8080/api/trades
 Content-Type: application/json
 Authorization: Basic good_user_1 01_user_01
@@ -587,6 +606,144 @@ Authorization: Basic good_user_1 01_user_01
     "customer_id": 5,
     "status": ""
 }
+
+###
+# TRADE TEST 3
+POST http://localhost:8080/api/trades
+Content-Type: application/json
+Authorization: Basic good_user_1 01_user_01
+
+{
+    "action": "buy", 
+    "symbol": "S58", 
+    "quantity": 16000, 
+    "bid": 0,
+    "ask": 0, 
+    "account_id": 2, 
+    "customer_id": 5,
+    "status": ""
+}
+
+
+###
+# TRADE TEST 4
+POST http://localhost:8080/api/trades
+Content-Type: application/json
+Authorization: Basic good_user_1 01_user_01
+
+{
+    "action": "sell", 
+    "symbol": "S58", 
+    "quantity": 1000, 
+    "bid": 0,
+    "ask": 0, 
+    "account_id": 2, 
+    "customer_id": 5,
+    "status": ""
+}
+
+###
+# TRADE TEST 5
+POST http://localhost:8080/api/trades
+Content-Type: application/json
+Authorization: Basic good_user_1 01_user_01
+
+{
+    "action": "sell", 
+    "symbol": "S58", 
+    "quantity": 1000, 
+    "bid": 0,
+    "ask": 2.1, 
+    "account_id": 2, 
+    "customer_id": 5,
+    "status": ""
+}
+
+###
+# TRADE TEST 6.1
+POST http://localhost:8080/api/trades
+Content-Type: application/json
+Authorization: Basic good_user_1 01_user_01
+
+{
+    "action": "sell", 
+    "symbol": "S58", 
+    "quantity": 1000, 
+    "bid": 0,
+    "ask": 50, 
+    "account_id": 2, 
+    "customer_id": 5,
+    "status": ""
+}
+
+###
+# TRADE TEST 6.2
+POST http://localhost:8080/api/trades
+Content-Type: application/json
+Authorization: Basic good_user_2 02_user_02
+
+{
+    "action": "buy", 
+    "symbol": "S58", 
+    "quantity": 2000, 
+    "bid": 0.5,
+    "ask": 0, 
+    "account_id": 3, 
+    "customer_id": 6,
+    "status": ""
+}
+
+###
+# TRADE TEST 6.3
+POST http://localhost:8080/api/trades
+Content-Type: application/json
+Authorization: Basic good_user_2 02_user_02
+
+{
+    "action": "buy", 
+    "symbol": "S58", 
+    "quantity": 2000, 
+    "bid": 0.5,
+    "ask": 0, 
+    "account_id": 3, 
+    "customer_id": 6,
+    "status": "cancelled"
+}
+
+###
+# TRADE TEST 7.1
+POST http://localhost:8080/api/trades
+Content-Type: application/json
+Authorization: Basic good_user_1 01_user_01
+
+{
+    "action": "sell", 
+    "symbol": "S58", 
+    "quantity": 1000, 
+    "bid": 0,
+    "ask": 5, 
+    "account_id": 2, 
+    "customer_id": 5,
+    "status": ""
+}
+
+###
+# TRADE TEST 7.2
+POST http://localhost:8080/api/trades
+Content-Type: application/json
+Authorization: Basic good_user_2 02_user_02
+
+{
+    "action": "buy", 
+    "symbol": "S58", 
+    "quantity": 2000, 
+    "bid": 0,
+    "ask": 0, 
+    "account_id": 3, 
+    "customer_id": 6,
+    "status": ""
+}
+
 
 ###
 
