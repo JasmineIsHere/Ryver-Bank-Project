@@ -20,6 +20,7 @@ import javax.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 
@@ -100,8 +101,6 @@ public class TradeController {
         Trade trade = trades.findByIdAndCustomerId(tradeId, customerId)
                 .orElseThrow(() -> new TradeNotFoundException(tradeId));
 
-        // if current time exceeds 5pm, update all trade status to expire
-        updateStatusToExpire();
         return trade;
 
     }
@@ -179,16 +178,13 @@ public class TradeController {
      * Update the Trade to expire if the Trade is open or partial filled
      * and if the current time exceeds 5pm on the same day
      */
+    // second, minute, hour, day of month, month, day(s) of week
+    @Scheduled(cron = "0 0 17 * * MON-FRI", zone = "GMT+8")
     public void updateStatusToExpire() {
-        ZonedDateTime current = ZonedDateTime.now();
-        int currentHour = current.getHour();
-        int fivePM = 17;
-
         List<Trade> allTradeList = trades.findAll();
         for (Trade trade : allTradeList) {
             // date with the 0 value is for the 20k inital stocks
-            if (trade.getDate() != 0 && currentHour >= fivePM
-                    && (trade.getStatus().equals("open") || trade.getStatus().equals("partial-filled"))) {
+            if (trade.getDate() != 0 && (trade.getStatus().equals("open") || trade.getStatus().equals("partial-filled"))) {
                 trade.setStatus("expired");
             }
 

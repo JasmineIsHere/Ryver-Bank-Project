@@ -757,10 +757,10 @@ Authorization: Basic good_user_2 02_user_02
     "action": "buy", 
     "symbol": "A17U", 
     "quantity": 2000, 
-    "bid": 0.0,
+    "bid": 1,
     "ask": 0, 
     "account_id": 3,
-    "customer_id": 5
+    "customer_id": 6
 }
 
 ###
@@ -785,7 +785,7 @@ Authorization: Basic good_user_1 01_user_01
 # Returns: 200 OK with Trade Information 
 GET http://localhost:8080/api/trades
 Accept: application/json
-Authorization: Basic good_user_1 01_user_01
+Authorization: Basic good_user_2 02_user_02
 
 ###
 # get trades of customer
