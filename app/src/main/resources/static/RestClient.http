@@ -695,7 +695,7 @@ Authorization: Basic good_user_2 02_user_02
 
 ###
 # TRADE TEST 6.3
-POST http://localhost:8080/api/trades
+PUT http://localhost:8080/api/trades/67
 Content-Type: application/json
 Authorization: Basic good_user_2 02_user_02
 
