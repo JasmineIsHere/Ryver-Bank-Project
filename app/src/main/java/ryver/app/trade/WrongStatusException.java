@@ -7,7 +7,7 @@ public class WrongStatusException extends RuntimeException{
     private static final long serialVersionUID = 1L;
 
     public WrongStatusException() {
-        super("Your trade has already been filled/ partial-filled and you are not allowed to cancel it. ");
+        super("You can only cancel a trade that is open. ");
     }
     
 }
