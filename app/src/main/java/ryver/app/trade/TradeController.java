@@ -256,7 +256,7 @@ public class TradeController {
             String code = trade.getSymbol();
 
             Asset asset = assets.findByCodeAndPortfolioId(code, portfolioId)
-                    .orElseThrow(() -> new AssetCodeNotFoundException(code));
+                .orElseThrow(() -> new AssetCodeNotFoundException(code));
 
             long assetId = asset.getId();
 
@@ -352,28 +352,10 @@ public class TradeController {
         // return trades.save(trade);
         // }
 
-        // double tradeBid = trade.getBid();
-        // double tradeAsk = trade.getAsk();
-        // double calculatedBuyPrice;
-
         if (action.equals("buy")) {
-            // buying(trade, customer, account, quantity, tradeBid, symbol, stock);
-            // market buy order
-            // if (tradeBid == 0) {
-                buy(trade, customer, account, stock);
-            // } else {
-            //     // limit buy order
-            //     limitBuy(trade, customer, account, stock);
-            // }
+            buy(trade, customer, account, stock);
         } else {
-            // market sell order
-            // if (tradeAsk == 0) {
-                sell(trade, customer, account, stock);
-            // } else {
-            //     // limit sell order
-            //     limitSell(trade, customer, account, stock);
-            // }
-            // selling(trade, customer, account, tradeAsk, symbol, stock, portfolio);
+            sell(trade, customer, account, stock);
         }
 
         // set current timestamp to date
@@ -663,7 +645,7 @@ public class TradeController {
         account.setBalance(balance + (stockBid * quantityLeftToFill));
 
         Portfolio portfolio = customer.getPortfolio();
-        createAsset(stock, trade, portfolio);
+        deleteAsset(stock, trade, portfolio);
     }
 
     public void fillStockBuyTrade(Trade buyTrade, CustomStock stock, List<Trade> buyList) {
@@ -687,7 +669,7 @@ public class TradeController {
         stock.setLast_price(stockAsk);
 
         Portfolio portfolio = buyTradeCustomer.getPortfolio();
-        deleteAsset(stock, buyTrade, portfolio);
+        createAsset(stock, buyTrade, portfolio);
         
         // remove the first trade because it's filled
         buyList.remove(0);
