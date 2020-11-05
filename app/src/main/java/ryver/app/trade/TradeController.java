@@ -51,410 +51,137 @@ public class TradeController {
         this.assetCtrl = assetCtrl;
     }
 
+    
+    /***************************************************************************
+    *   CHECKING METHODS
+    ***************************************************************************/
+
     /**
-     * Get all Trades associated with the logged in Customer's ID
-     * Returns 200 OK (if no exceptions)
+     * Get the Customer who is currently logged in
+     * 
+     * @return Customer
+     */
+    public Customer getLoggedinUser() {
+        String authorisedUserName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Customer customer = customers.findByUsername(authorisedUserName)
+            .orElseThrow(() -> new CustomerNotFoundException(authorisedUserName));
+
+        checkCustomerActive(customer);
+        return customer;
+    }
+
+    /**
+     * Check if the customer is active
+     * If deactivated - return 404
+     * 
+     * @param Customer
+     */
+    private void checkCustomerActive(Customer customer) {
+        if (!customer.isActive()) {
+            throw new InactiveCustomerException();
+        }
+    }
+
+    /**
+     * Check if the accountId specified by the Customer
+     * belongs to the Customer
+     * 
+     * @return Account
+     */
+    public Account getAccountIfMatch(Trade trade) {
+        Customer loggedInCustomer = getLoggedinUser();
+        long loggedInCustomerId = loggedInCustomer.getId();
+
+        // check if account belongs to customer
+        long accountId = trade.getAccountId();
+        // 1. check if account exists
+        accounts.findById(accountId).orElseThrow(() -> new AccountNotFoundException(accountId));
+        // 2. if account exists, check if customer owns the account
+        Account account = accounts.findByIdAndCustomerId(accountId, loggedInCustomerId)
+            .orElseThrow(() -> new AccountMismatchException());
+
+        return account;
+    }
+
+    /***************************************************************************
+    *   GET TRADE
+    ***************************************************************************/
+
+    /**
+     * Get all Trades associated with the logged in Customer's ID Returns 200 OK (if
+     * no exceptions)
      * 
      * @return List<Trade>
      */
     @GetMapping("/api/trades")
     public List<Trade> getAllTrades() {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String customerUsername = authentication.getName();
-
-        // trades will be returned based on the user that was authenticated
-        Customer customer = customers.findByUsername(customerUsername)
-                .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
-        if (!customer.isActive()) {
-            throw new InactiveCustomerException();
-        }
-
+        Customer customer = getLoggedinUser();
         long customerId = customer.getId();
-
         return trades.findByCustomerId(customerId);
-
     }
 
     /**
-     * Get specific Trade associated with the logged in Customer's ID that has the specified TradeId
-     * Returns 200 OK (if no exceptions)
+     * Get specific Trade associated with the logged in Customer's ID that has the
+     * specified TradeId Returns 200 OK (if no exceptions)
      * 
      * @param tradeId
      * @return Trade
      */
     @GetMapping("/api/trades/{tradeId}")
     public Trade getSpecificTrade(@PathVariable(value = "tradeId") Long tradeId) {
+        Customer customer = getLoggedinUser();
+        long customerId = customer.getId();
+        Trade trade = trades.findByIdAndCustomerId(tradeId, customerId)
+                .orElseThrow(() -> new TradeNotFoundException(tradeId));
+        return trade;
+    }
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String customerUsername = authentication.getName();
+    /***************************************************************************
+    *   CANCEL TRADE
+    ***************************************************************************/
 
-        // trade will be returned based on the user that was authenticated
-        Customer customer = customers.findByUsername(customerUsername)
-                .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
-        if (!customer.isActive()) {
-            throw new InactiveCustomerException();
-        }
+    /**
+     * Cancel a specific Trade, based on JSON data Filled or partial filled Trades
+     * cannot be cancelled Returns 200 OK (if no exceptions)
+     * 
+     * @param tradeId
+     * @param updatedTradeInfo
+     * @return Trade
+     */
+    @PutMapping("/api/trades/{tradeId}")
+    public Trade cancelTrade(@PathVariable(value = "tradeId") Long tradeId,
+            @Valid @RequestBody Trade updatedTradeInfo) {
 
+        Customer customer = getLoggedinUser();
         long customerId = customer.getId();
 
+        // check if the trade has been made by the authenticated user before
         Trade trade = trades.findByIdAndCustomerId(tradeId, customerId)
                 .orElseThrow(() -> new TradeNotFoundException(tradeId));
 
-        return trade;
+        // customer can cancel a trade if its open
+        if (trade.getStatus().equals("open") && updatedTradeInfo.getStatus().equals("cancelled")) {
+            trade.setStatus("cancelled");
+        } else {
+            // if trade is already filled or partial filled
+            throw new WrongStatusException();
+        }
 
-    }
-    /**
-     * Get all open or partial filled buy Trades associated with the specified symbol 
-     * 
-     * @param symbol
-     * @return List<Trade>
-     */
-    public List<Trade> getSpecificStockOpenAndPartialFilledBuyTrade(String symbol){ 
-        List<Trade> tradeOpen = trades.findByActionAndStatusAndSymbol("buy", "open", symbol);
-        List<Trade> tradePartialFilled = trades.findByActionAndStatusAndSymbol("buy", "partial-filled", symbol);
-        List<Trade> trade = Stream.concat(tradeOpen.stream(), tradePartialFilled.stream()).collect(Collectors.toList());
-        return trade;
-    }
+        Account account = getAccountIfMatch(updatedTradeInfo);
 
-    /**
-     * Get all open or partial filled sell Trades associated with the specified symbol 
-     * 
-     * @param symbol
-     * @return List<Trade>
-     */
-    public List<Trade> getSpecificStockOpenAndPartialFilledSellTrade(String symbol){
-        List<Trade> tradeOpen = trades.findByActionAndStatusAndSymbol("sell", "open", symbol);
-        List<Trade> tradePartialFilled = trades.findByActionAndStatusAndSymbol("sell", "partial-filled", symbol);
-        List<Trade> trade = Stream.concat(tradeOpen.stream(), tradePartialFilled.stream()).collect(Collectors.toList());
+        // set back the available balance if its a buy order
+        if (trade.getAction().equals("buy")) {
+            account.setAvailable_balance(account.getBalance());
+        }
+
+        trades.save(trade);
+        accounts.save(account);
         return trade;
     }
 
-    /**
-     * Update the specific Stock ask/bid and ask/bid volume if the Trade made is the best price 
-     * 
-     * @param trade
-     * @param stock
-     */
-    public void updateTradeToStock(Trade trade, CustomStock stock) {
-        if (trade.getSymbol().equals("buy")) {
-            // if bid volume is 0
-            if (stock.getBid_volume() == 0) {
-                stock.setBid(trade.getBid());
-                stock.setBid_volume(trade.getQuantity());
-                stocks.save(stock);
-            } else {
-                // if this trade's bid is lower than the stock's previous ask
-                // if this trade's bid is higher than the stock's previous bid
-                // -> save new bid price and quantity into the stocks database
-                if ((trade.getBid() < stock.getAsk()) && (trade.getBid() > stock.getBid())) {
-                    stock.setBid(trade.getBid());
-                    stock.setBid_volume(trade.getQuantity());
-                    stocks.save(stock);
-                }
-            }
-
-        } else {
-            // if ask volume is 0
-            if (stock.getAsk_volume() == 0) {
-                stock.setAsk(trade.getAsk());
-                stock.setAsk_volume(trade.getQuantity());
-                stocks.save(stock);
-            } else {
-                // if this trade's ask is higher than the stock's previous bid
-                // if this trade's ask is lower than the stock's previous ask
-                // -> save new ask price and quantity into the stocks database
-                if ((trade.getAsk() > stock.getBid()) && (trade.getAsk() < stock.getAsk())) {
-                    stock.setAsk(trade.getAsk());
-                    stock.setAsk_volume(trade.getQuantity());
-                    stocks.save(stock);
-                }
-            }
-        }
-
-    }
-
-    /**
-     * Update the Trade to expire if the Trade is open or partial filled
-     * and if the current time exceeds 5pm on the same day
-     */
-    // second, minute, hour, day of month, month, day(s) of week
-    @Scheduled(cron = "0 0 17 * * MON-FRI", zone = "GMT+8")
-    public void updateStatusToExpire() {
-        List<Trade> allTradeList = trades.findAll();
-        for (Trade trade : allTradeList) {
-            // date with the 0 value is for the 20k inital stocks
-            if (trade.getDate() != 0 && (trade.getStatus().equals("open") || trade.getStatus().equals("partial-filled"))) {
-                trade.setStatus("expired");
-            }
-
-            long accountId = trade.getAccountId();
-
-            Account account = accounts.findById(accountId).orElseThrow(() -> new AccountNotFoundException(accountId));
-
-            // calculate price according to the stocks that did not get filled
-            if (trade.getAction().equals("buy")) {
-                double price = (trade.getQuantity() - trade.getFilled_quantity()) * trade.getBid();
-
-                account.setBalance(account.getBalance() + price);
-                account.setAvailable_balance(account.getAvailable_balance() + price);
-            }
-
-            trades.save(trade);
-        }
-
-    }
-
-    /**
-     * For buy orders
-     * Check if there is a sell trade that matches the current buy trade
-     * 
-     * @param stock
-     * @param trade
-     * @param account
-     * @param customer
-     * @param calculatedBuyPrice
-     */
-    public void buyTradeCheckForSellMatch(CustomStock stock, Trade trade, Account account, Customer customer, double calculatedBuyPrice) {
-        double stockAsk = stock.getAsk();
-
-        double bid = trade.getBid();
-
-        if (bid == 0.0) {
-            bid = stock.getAsk();
-        }
-        int quantity = trade.getQuantity();
-
-        double available_balance = account.getAvailable_balance();
-
-        // if trade's bid is higher than stock's ask -> match & buy
-        if (bid >= stockAsk) {
-            // if trade was not previously filled
-            if (trade.getAvg_price() == 0.0) {
-                trade.setAvg_price(stockAsk);
-            } else {
-                // if trade was previously filled
-                double previousPrice = trade.getAvg_price() * trade.getFilled_quantity();
-                double newAvgPrice = previousPrice + (stockAsk * quantity);
-                trade.setAvg_price(newAvgPrice);
-                trade.setFilled_quantity(trade.getFilled_quantity() + quantity);
-            }
-
-            // sort the trade list according to ask and date (lowest ask and lowest date)
-            List<Trade> tradeSellListOfSymbol = stock.getTrades();
-
-            // remove the buy and filled trades
-            Iterator<Trade> i = tradeSellListOfSymbol.iterator();
-            while (i.hasNext()) {
-                Trade t = i.next();
-                if (t.getAction().equals("buy") || t.getStatus().equals("filled")) {
-                    i.remove();
-                }
-            }
-
-            if (tradeSellListOfSymbol.isEmpty()) {
-                // no more stock in the market
-                stock.setAsk_volume(0);
-
-                return;
-            }
-
-            Comparator<Trade> compareByAsk = Comparator.comparing(Trade::getAsk);
-            Comparator<Trade> compareByDate = Comparator.comparing(Trade::getDate);
-            Comparator<Trade> compareByAskAndDate = compareByAsk.thenComparing(compareByDate);
-
-            Collections.sort(tradeSellListOfSymbol, compareByAskAndDate);
-
-            int tradeQuantity = quantity;
-            checkTradeQuantityAgainstStockAskVol(stock, trade, account, customer, tradeSellListOfSymbol, tradeQuantity);
-        } else {
-            // if trade's bid is lower than stock's ask -> not matched
-            trade.setStatus("open");
-            updateTradeToStock(trade, stock);
-            // if there's sufficient balance, set available balance to new balance
-            account.setAvailable_balance(available_balance - calculatedBuyPrice);
-        }
-    }
-
-    /**
-     * For buy orders
-     * Check if the Stock's ask volume is sufficient to fill the Trade's buy quantity
-     * 
-     * @param stock
-     * @param trade
-     * @param account
-     * @param customer
-     * @param tradeSellListOfSymbol
-     * @param tradeQuantity
-     */
-    public void checkTradeQuantityAgainstStockAskVol(CustomStock stock, Trade trade, Account account, Customer customer, List<Trade> tradeSellListOfSymbol, int tradeQuantity) {
-        double stockAsk = stock.getAsk();
-        int stockAskVol = stock.getAsk_volume();
-
-        int filledQuantity = trade.getFilled_quantity();
-
-        double available_balance = account.getAvailable_balance();
-        double balance = account.getBalance();
-
-        // if stock's volume is enough to fill trade's quantity
-        if (tradeQuantity <= (stockAskVol - filledQuantity)) {
-            trade.setStatus("filled");
-            trade.setFilled_quantity(trade.getQuantity());
-            trade.setAvg_price(stockAsk);
-            stock.setLast_price(stockAsk);
-
-            account.setAvailable_balance(available_balance - (stockAsk * tradeQuantity));
-            account.setBalance(balance - (stockAsk * tradeQuantity));
-
-            Portfolio portfolio = customer.getPortfolio();
-            createAsset(stock, trade, portfolio);
-
-            long tradeSellCustomerId = tradeSellListOfSymbol.get(0).getCustomerId();
-            Portfolio tradeSellPortfolio = portfolios.findByCustomerId(tradeSellCustomerId)
-                    .orElseThrow(() -> new PortfolioNotFoundException(tradeSellCustomerId));
-
-            // if the stock fills the trade just nice, revert the stock back to the previous
-            // stock
-            if (tradeQuantity == stockAskVol) {
-                tradeSellListOfSymbol.get(0).setStatus("filled");
-                tradeSellListOfSymbol.get(0).setFilled_quantity(tradeSellListOfSymbol.get(0).getQuantity());
-
-                deleteAsset(stock, tradeSellListOfSymbol.get(0), tradeSellPortfolio);
-
-                // remove that trade from the list if its filled
-                tradeSellListOfSymbol.remove(0);
-                
-                // if list is empty, set volume to 0
-                // else, set as next best trade
-                if (tradeSellListOfSymbol.isEmpty()) {
-                    stock.setAsk_volume(0);
-                } else {
-                    stock.setAsk(tradeSellListOfSymbol.get(0).getAsk());
-                    stock.setAsk_volume(tradeSellListOfSymbol.get(0).getQuantity());
-                }
-
-            } else {
-                // if there's still quantity leftover in stock
-                stock.setAsk_volume(stockAskVol - tradeQuantity);
-
-                tradeSellListOfSymbol.get(0).setStatus("partial-filled");
-                tradeSellListOfSymbol.get(0).setFilled_quantity(tradeQuantity);
-                tradeSellListOfSymbol.get(0).setAvg_price(stockAsk);
-
-                deleteAsset(stock, tradeSellListOfSymbol.get(0), tradeSellPortfolio);
-            }
-        } else {
-            // if the quantity in the stocks is not enough to fill the trade
-
-            // set the current best trade (stock) to filled
-            // remove the buy and filled trades
-            Iterator<Trade> i = tradeSellListOfSymbol.iterator();
-            while (i.hasNext()) {
-                Trade t = i.next();
-                if (t.getAction().equals("buy") || t.getStatus().equals("filled")) {
-                    i.remove();
-                }
-            }
-
-            Portfolio portfolio = customer.getPortfolio();
-
-            tradeSellListOfSymbol.get(0).setStatus("filled");
-            trade.setFilled_quantity(tradeSellListOfSymbol.get(0).getQuantity());
-
-            long tradeSellCustomerId = tradeSellListOfSymbol.get(0).getCustomerId();
-            Portfolio tradeSellPortfolio = portfolios.findByCustomerId(tradeSellCustomerId)
-                    .orElseThrow(() -> new PortfolioNotFoundException(tradeSellCustomerId));
-
-            deleteAsset(stock, tradeSellListOfSymbol.get(0), tradeSellPortfolio);
-
-            // remove that trade from the list if its filled
-            tradeSellListOfSymbol.remove(0);
-
-            // if list is not empty
-            if (!(tradeSellListOfSymbol.isEmpty())) {
-                // loop the trade sell list of the same symbol
-                // to see if there's any other trade with the same ask price
-                // if yes, then fill the current trade also
-                // if no, change the stock information to the next higher ask price
-                for (int j = 0; j < tradeSellListOfSymbol.size(); j++) {
-                    // set stock
-                    stock.setAsk(tradeSellListOfSymbol.get(j).getAsk());
-                    stock.setAsk_volume(tradeSellListOfSymbol.get(j).getQuantity());
-
-                    // market order
-                    if (trade.getBid() == 0.0) {
-                        if (stockAsk == tradeSellListOfSymbol.get(j).getAsk()) {
-                            tradeQuantity -= stockAskVol;
-                            // check for quantity.
-                            checkTradeQuantityAgainstStockAskVol(stock, trade, account, customer, tradeSellListOfSymbol,
-                                    tradeQuantity);
-                        } else {
-                            // if the current stock's ask price is not the same as the next ask price then
-                            // break
-
-                            // set trade
-                            trade.setStatus("partial-filled");
-                            trade.setAvg_price(stockAsk);
-                            trade.setFilled_quantity(stockAskVol);
-    
-                            createAsset(stock, trade, portfolio);
-
-                            // set account
-                            // available balance - stock bought - leftover open stocks
-                            account.setAvailable_balance(available_balance - (stockAsk * stockAskVol)
-                                    - (stockAsk * (tradeQuantity - stockAskVol)));
-                            account.setBalance(balance - (stockAsk * stockAskVol));
-
-                            break;
-                        }
-                    } else {
-                        // limit order
-                        if (trade.getBid() >= tradeSellListOfSymbol.get(j).getAsk()) {
-                            tradeQuantity -= stockAskVol;
-                            // check for quantity.
-                            checkTradeQuantityAgainstStockAskVol(stock, trade, account, customer, tradeSellListOfSymbol,
-                                    tradeQuantity);
-                        } else {
-                            // if the current stock's ask price is not the same as the next ask price then
-                            // break
-
-                            // set trade
-                            trade.setStatus("partial-filled");
-                            trade.setAvg_price(stockAsk);
-                            trade.setFilled_quantity(stockAskVol);
-                            
-                            createAsset(stock, trade, portfolio);
-
-                            // set account
-                            // available balance - stock bought - leftover open stocks
-                            account.setAvailable_balance(available_balance - (stockAsk * stockAskVol)
-                                    - (stockAsk * (tradeQuantity - stockAskVol)));
-                            account.setBalance(balance - (stockAsk * stockAskVol));
-
-                            break;
-                        }
-                    }
-                }
-            } else {
-                // set trade
-                trade.setStatus("partial-filled");
-                trade.setAvg_price(stockAsk);
-                trade.setFilled_quantity(stockAskVol);
-                createAsset(stock, trade, portfolio);
-
-                // set account
-                // available balance - stock bought - leftover open stocks
-                account.setAvailable_balance(
-                        available_balance - (stockAsk * stockAskVol) - (stockAsk * (tradeQuantity - stockAskVol)));
-                account.setBalance(balance - (stockAsk * stockAskVol));
-
-                // set stock
-                // no more stock in the market
-                stock.setAsk_volume(0);
-
-            }
-        }
-    }
+    /***************************************************************************
+    *   ASSET
+    ***************************************************************************/
 
     /**
      * Create an Asset if the buy order gets filled
@@ -509,7 +236,7 @@ public class TradeController {
             portfolioCtrl.updatePortfolio(portfolioId, updatedPortfolio);
         }
     }
-
+    
     /**
      * Delete the Asset if the sell order gets filled and quantity becomes 0
      * 
@@ -559,228 +286,13 @@ public class TradeController {
             portfolioCtrl.updatePortfolio(portfolioId, updatedPortfolio);
         }
     }
-    
-    /**
-     * For sell orders
-     * Check if there is a buy trade that matches the current sell trade
-     * 
-     * @param stock
-     * @param trade
-     * @param account
-     * @param customer
-     */
-    public void sellTradeCheckForBuyMatch(CustomStock stock, Trade trade, Account account, Customer customer) {
-        double stockBid = stock.getBid();
 
-        double ask = trade.getAsk();
-
-        if (ask == 0.0) {
-            ask = stockBid;
-        }
-        int quantity = trade.getQuantity();
-
-        // if trade's ask is lower than stock's bid -> match & sell
-        if (ask <= stockBid) {
-            // if trade was not previously filled
-            if (trade.getAvg_price() == 0.0) {
-                trade.setAvg_price(stockBid);
-            } else {
-                // if trade was previously filled
-                double previousPrice = trade.getAvg_price() * trade.getFilled_quantity();
-                double newAvgPrice = previousPrice + (stockBid * quantity);
-                trade.setAvg_price(newAvgPrice);
-                trade.setFilled_quantity(trade.getFilled_quantity() + quantity);
-            }
-
-            List<Trade> tradeBuyListOfSymbol = stock.getTrades();
-
-            // remove the sell and filled trades
-            Iterator<Trade> i = tradeBuyListOfSymbol.iterator();
-            while (i.hasNext()) {
-                Trade t = i.next();
-                if (t.getAction().equals("sell") || t.getStatus().equals("filled")) {
-                    i.remove();
-                }
-            }
-
-            if (tradeBuyListOfSymbol.isEmpty()) {
-                // no more stock in the market
-                stock.setBid(0);
-                stock.setBid_volume(0);
-
-                return;
-            }
-
-            Comparator<Trade> compareByBid = Comparator.comparing(Trade::getBid);
-            Comparator<Trade> compareByDate = Comparator.comparing(Trade::getDate);
-            Comparator<Trade> compareByBidAndDate = compareByBid.thenComparing(compareByDate);
-
-            Collections.sort(tradeBuyListOfSymbol, compareByBidAndDate);
-
-            int tradeQuantity = quantity;
-            checkTradeQuantityAgainstStockBidVol(stock, trade, account, customer, tradeBuyListOfSymbol, tradeQuantity);
-        } else {
-            // if trade's ask is higher than stock's bid -> not matched
-            trade.setStatus("open");
-            updateTradeToStock(trade, stock);
-        }
-    }
+    /***************************************************************************
+    *   CREATE TRADE
+    ***************************************************************************/
 
     /**
-     * For sell orders
-     * Check if the Stock's bid volume is sufficient to fill the Trade's sell quantity
-     * 
-     * @param stock
-     * @param trade
-     * @param account
-     * @param customer
-     * @param tradeSellListOfSymbol
-     * @param tradeQuantity
-     */
-    public void checkTradeQuantityAgainstStockBidVol(CustomStock stock, Trade trade, Account account, Customer customer, List<Trade> tradeBuyListOfSymbol, int tradeQuantity) {
-        double stockBid = stock.getBid();
-        int stockBidVol = stock.getBid_volume();
-
-        int filledQuantity = trade.getFilled_quantity();
-
-        double available_balance = account.getAvailable_balance();
-        double balance = account.getBalance();
-
-        // if stock's volume is enough to fill trade's quantity
-        if (tradeQuantity <= (stockBidVol - filledQuantity)) {
-            trade.setStatus("filled");
-            trade.setFilled_quantity(trade.getQuantity());
-            trade.setAvg_price(stockBid);
-            stock.setLast_price(stockBid);
-
-            account.setAvailable_balance(available_balance + (stockBid * tradeQuantity));
-            account.setBalance(balance + (stockBid * tradeQuantity));
-
-            // delete entry from portfolio
-            Portfolio portfolio = customer.getPortfolio();
-            deleteAsset(stock, trade, portfolio);
-
-            long tradeBuyCustomerId = tradeBuyListOfSymbol.get(0).getCustomerId();
-            Portfolio tradeBuyPortfolio = portfolios.findByCustomerId(tradeBuyCustomerId)
-                    .orElseThrow(() -> new PortfolioNotFoundException(tradeBuyCustomerId));
-
-            createAsset(stock, tradeBuyListOfSymbol.get(0), tradeBuyPortfolio);
-
-            // if the stock fills the trade just nice, revert the stock back to the previous
-            // stock
-            if (tradeQuantity == stockBidVol) {
-                tradeBuyListOfSymbol.get(0).setStatus("filled");
-                trade.setFilled_quantity(tradeBuyListOfSymbol.get(0).getQuantity());
-                
-                // remove that trade from the list if its filled
-                tradeBuyListOfSymbol.remove(0);
-
-                // if list is empty, set volume to 0
-                // else, set as next best trade
-                if (tradeBuyListOfSymbol.isEmpty()) {
-                    stock.setBid_volume(0);
-                } else {
-                    double newStockBid = tradeBuyListOfSymbol.get(0).getBid();
-                    int newStockBidVol = tradeBuyListOfSymbol.get(0).getQuantity();
-                    stock.setBid(newStockBid);
-                    stock.setBid_volume(newStockBidVol);
-                }
-
-            } else {
-                // if there's still quantity leftover in stock
-                stock.setBid_volume(stockBidVol - tradeQuantity);
-                // minus from assets
-
-                tradeBuyListOfSymbol.get(0).setStatus("partial-filled");
-                tradeBuyListOfSymbol.get(0).setFilled_quantity(tradeQuantity);
-                tradeBuyListOfSymbol.get(0).setAvg_price(stockBid);
-
-            }
-        } else {
-            // if the quantity in the stocks is not enough to fill the trade
-
-            // set the current best trade (stock) to filled
-            // remove the sell and filled trades
-            Iterator<Trade> i = tradeBuyListOfSymbol.iterator();
-            while (i.hasNext()) {
-                Trade t = i.next();
-                if (t.getAction().equals("sell") || t.getStatus().equals("filled")) {
-                    i.remove();
-                }
-            }
-
-            Portfolio portfolio = customer.getPortfolio();
-
-            tradeBuyListOfSymbol.get(0).setStatus("filled");
-            trade.setFilled_quantity(tradeBuyListOfSymbol.get(0).getQuantity());
-
-            long tradeBuyCustomerId = tradeBuyListOfSymbol.get(0).getCustomerId();
-            Portfolio tradeBuyPortfolio = portfolios.findByCustomerId(tradeBuyCustomerId)
-                    .orElseThrow(() -> new PortfolioNotFoundException(tradeBuyCustomerId));
-
-            createAsset(stock, tradeBuyListOfSymbol.get(0), tradeBuyPortfolio);
-            // remove that trade from the list if its filled
-            tradeBuyListOfSymbol.remove(0);
-
-            // if list is not empty
-            if (!(tradeBuyListOfSymbol.isEmpty())) {
-                // loop the trade sell list of the same symbol
-                // to see if there's any other trade with the same bid price
-                // if yes, then fill the current trade also
-                // if no, change the stock information to the next higher bid price
-                for (int j = 0; j < tradeBuyListOfSymbol.size(); j++) {
-                    // set stock
-                    double newStockBid = tradeBuyListOfSymbol.get(j).getBid();
-                    int newStockBidVol = tradeBuyListOfSymbol.get(j).getQuantity();
-                    stock.setBid(newStockBid);
-                    stock.setBid_volume(newStockBidVol);
-
-                    if (stockBid == tradeBuyListOfSymbol.get(j).getBid()) {
-                        tradeQuantity -= stockBidVol;
-                        // check for quantity.
-                        checkTradeQuantityAgainstStockBidVol(stock, trade, account, customer, tradeBuyListOfSymbol,
-                                tradeQuantity);
-                    } else {
-                        // if the current stock's bid price is not the same as the next bid price then
-                        // break
-                        // set trade
-                        trade.setStatus("partial-filled");
-                        trade.setAvg_price(stockBid);
-                        trade.setFilled_quantity(stockBidVol);
-            
-                        deleteAsset(stock, trade, portfolio);
-
-                        // set account
-                        // balance + stock sold
-                        account.setAvailable_balance(available_balance + (stockBid * stockBidVol));
-                        account.setBalance(balance + (stockBid * stockBidVol));
-
-                        break;
-                    }
-                }
-            } else {
-                // set trade
-                trade.setStatus("partial-filled");
-                trade.setAvg_price(stockBid);
-                trade.setFilled_quantity(stockBidVol);
-                
-                deleteAsset(stock, trade, portfolio);
-                // set account
-                // available balance + stock sold
-                account.setAvailable_balance(available_balance + (stockBid * stockBidVol));
-                account.setBalance(balance + (stockBid * stockBidVol));
-
-                // set stock
-                // no more stock in the market
-                stock.setAsk_volume(0);
-
-            }
-        }
-    }
-
-    /**
-     * Create a new Trade using the JSON data 
-     * Returns 201 Created (if no exceptions)
+     * Create a new Trade using the JSON data Returns 201 Created (if no exceptions)
      * 
      * @param trade
      * @return Trade
@@ -789,15 +301,7 @@ public class TradeController {
     @PostMapping("/api/trades")
     public Trade createTrade(@Valid @RequestBody Trade trade) {
         // check if logged in user == customerId in trade
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String customerUsername = authentication.getName();
-
-        Customer customer = customers.findByUsername(customerUsername)
-                .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
-        if (!customer.isActive()) {
-            throw new InactiveCustomerException();
-        }
-
+        Customer customer = getLoggedinUser();
         long loggedInCustomerId = customer.getId();
 
         if (loggedInCustomerId != trade.getCustomerId()) {
@@ -805,37 +309,12 @@ public class TradeController {
         }
 
         // check if account belongs to customer
-        long accountId = trade.getAccountId();
-
-        List<Account> loggedInAccountList = accounts.findByCustomerId(loggedInCustomerId);
-
-        if (loggedInAccountList.isEmpty()) {
-            throw new AccountNotFoundException(accountId);
-        }
-
-        boolean accountMatched = false;
-        Account account = null;
-        for (Account loggedInAcc : loggedInAccountList) {
-            if (loggedInAcc.getId() == accountId) {
-                account = loggedInAcc;
-                accountMatched = true;
-            }
-        }
-
-        if (!accountMatched) {
-            throw new AccountMismatchException();
-        }
+        Account account = getAccountIfMatch(trade);
 
         // check if quantity % 100 == 0 (if not bad request)
         int quantity = trade.getQuantity();
         if (quantity % 100 != 0) {
             throw new InvalidQuantityException();
-        }
-
-        // check if symbol exist in database
-        String symbol = trade.getSymbol();
-        if (stocks.findBySymbol(symbol) == null) {
-            throw new InvalidStockException(symbol);
         }
 
         // check if action has the correct input
@@ -844,101 +323,57 @@ public class TradeController {
             throw new InvalidTradeException();
         }
 
-        double bid = trade.getBid();
-        double ask = trade.getAsk();
-        double calculatedBuyPrice;
+        // check if symbol exist in database
+        String symbol = trade.getSymbol();
+        CustomStock stock = stocks.findBySymbol(symbol)
+            .orElseThrow(() -> new InvalidStockException(symbol));
 
-        CustomStock stock = stocks.findBySymbol(symbol).orElseThrow(() -> new InvalidStockException(symbol));
-
-        // if customer does not have a portfolio
+        // check if customer have a portfolio
         Portfolio portfolio = portfolios.findByCustomerId(customer.getId())
-                .orElseThrow(() -> new PortfolioNotFoundException(customer.getId()));
+            .orElseThrow(() -> new PortfolioNotFoundException(customer.getId()));
 
         // check current time
         ZonedDateTime current = ZonedDateTime.now();
         int currentHour = current.getHour();
-        int nineAM = 9;
-        int fivePM = 17;
+        final int nineAM = 9;
+        final int fivePM = 17;
         String currentDay = current.getDayOfWeek().name();
 
         // if day is saturday or sunday
         // if hour is before 9am and after 5pm
         // then trade not matched
         // if ((currentDay.equals("SATURDAY") || currentDay.equals("SUNDAY"))
-        //         || (currentHour < nineAM || currentHour >= fivePM)) {
-        //     trade.setAccount(account);
-        //     trade.setStock(stock);
-        //     trade.setPortfolio(portfolio);
-        //     trade.setStatus("open");
-        //     updateTradeToStock(trade, stock);
-        //     return trades.save(trade);
+        // || (currentHour < nineAM || currentHour >= fivePM)) {
+        // trade.setAccount(account);
+        // trade.setStock(stock);
+        // trade.setPortfolio(portfolio);
+        // trade.setStatus("open");
+        // updateTradeToStock(trade, stock);
+        // return trades.save(trade);
         // }
 
+        // double tradeBid = trade.getBid();
+        // double tradeAsk = trade.getAsk();
+        // double calculatedBuyPrice;
+
         if (action.equals("buy")) {
-            // FOR BUYING
-
-            // if it's a buy market order or bid price is higher than stock's ask price
-            // change the bid value to current stock's ask price
-            if (bid == 0.0 || bid > stock.getAsk()) {
-                bid = stock.getAsk();
-            }
-
-            calculatedBuyPrice = bid * quantity;
-
-            // check if account has sufficient balance
-            double available_balance = account.getAvailable_balance();
-
-            if (calculatedBuyPrice > available_balance) {
-                throw new InsufficientBalanceException();
-            }
-
-            List<Trade> specificStockOpenAndPartialFilledSellTrade = getSpecificStockOpenAndPartialFilledSellTrade(
-                    symbol);
-            // check if the market has the stocks the customer is buying
-            if (!(specificStockOpenAndPartialFilledSellTrade.isEmpty())) {
-                // check price in previous trades (better price match first)
-                buyTradeCheckForSellMatch(stock, trade, account, customer, calculatedBuyPrice);
-            } else {
-                // if stocks not matched and the customer's trade is the best price
-                // then update the stock with the customer's trade
-                trade.setStatus("open");
-                updateTradeToStock(trade, stock);
-                // if there's sufficient balance, set available balance to new balance
-                account.setAvailable_balance(available_balance - calculatedBuyPrice);
-            }
+            // buying(trade, customer, account, quantity, tradeBid, symbol, stock);
+            // market buy order
+            // if (tradeBid == 0) {
+                buy(trade, customer, account, stock);
+            // } else {
+            //     // limit buy order
+            //     limitBuy(trade, customer, account, stock);
+            // }
         } else {
-            // FOR SELLING
-            double stockBid = stock.getBid();
-
-            // if it's a sell market order, change the ask value to current stock's bid
-            // price
-            if (ask == 0.0) {
-                ask = stockBid;
-            }
-            long portfolioId = portfolio.getId();
-
-            // if customer does not have the same stock in portofolio
-            Asset asset = assets.findByCodeAndPortfolioId(symbol, portfolioId)
-                    .orElseThrow(() -> new InsufficientStockException());
-
-            // if quantity in portfolio is lesser than trade quantity, then throw exception
-            if (trade.getQuantity() > asset.getQuantity()) {
-                throw new InsufficientStockException();
-            }
-
-            List<Trade> specificStockOpenAndPartialFilledBuyTrade = getSpecificStockOpenAndPartialFilledBuyTrade(
-                    symbol);
-
-            // check if the market has the buying stocks the customer is selling
-            if (!(specificStockOpenAndPartialFilledBuyTrade.isEmpty())) {
-                // check price in previous trades (better price match first)
-                sellTradeCheckForBuyMatch(stock, trade, account, customer);
-            } else {
-                // if stocks not matched and the customer's trade is the best price
-                // then update the stock with the customer's trade
-                trade.setStatus("open");
-                updateTradeToStock(trade, stock);
-            }
+            // market sell order
+            // if (tradeAsk == 0) {
+                sell(trade, customer, account, stock);
+            // } else {
+            //     // limit sell order
+            //     limitSell(trade, customer, account, stock);
+            // }
+            // selling(trade, customer, account, tradeAsk, symbol, stock, portfolio);
         }
 
         // set current timestamp to date
@@ -952,54 +387,504 @@ public class TradeController {
         return trades.save(trade);
     }
 
+    /***************************************************************************
+    *   BUY ORDERS
+    ***************************************************************************/
+
     /**
-     * Cancel a specific Trade, based on JSON data
-     * Filled or partial filled Trades cannot be cancelled
-     * Returns 200 OK (if no exceptions)
+     * Get all open or partial filled sell Trades associated with the specified
+     * symbol
      * 
-     * @param tradeId
-     * @param updatedTradeInfo
-     * @return Trade
+     * @param symbol
+     * @return List<Trade>
      */
-    @PutMapping("/api/trades/{tradeId}")
-    public Trade updateSpecificTrade(@PathVariable(value = "tradeId") Long tradeId,
-            @Valid @RequestBody Trade updatedTradeInfo) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String customerUsername = authentication.getName();
-
-        // user that was authenticated
-        Customer customer = customers.findByUsername(customerUsername)
-                .orElseThrow(() -> new CustomerNotFoundException(customerUsername));
+    public List<Trade> getOpenAndPartialFilledSellTradeList(String symbol) {
+        List<Trade> tradeOpen = trades.findByActionAndStatusAndSymbol("sell", "open", symbol);
+        List<Trade> tradePartialFilled = trades.findByActionAndStatusAndSymbol("sell", "partial-filled", symbol);
+        List<Trade> tradeList = Stream.concat(tradeOpen.stream(), tradePartialFilled.stream()).collect(Collectors.toList());
         
-        if (!customer.isActive()) {
-            throw new InactiveCustomerException();
-        }
+        sortTradeList(tradeList);
+        return tradeList;
+    }
 
-        long customerId = customer.getId();
+    public void fillMyBuyTrade(Trade trade, Customer customer, Account account, CustomStock stock, int quantityLeftToFill) {
+        double stockAsk = stock.getAsk();
+        double available_balance = account.getAvailable_balance();
+        double balance = account.getBalance();
 
-        // check if the trade has been made by the authenticated user before
-        Trade trade = trades.findByIdAndCustomerId(tradeId, customerId)
-                .orElseThrow(() -> new TradeNotFoundException(tradeId));
+        trade.setStatus("filled");
+        trade.setFilled_quantity(trade.getQuantity());
+        stock.setLast_price(stockAsk);
 
-        // customer can cancel a trade if its open
-        if (trade.getStatus().equals("open") && updatedTradeInfo.getStatus().equals("cancelled")) {
-            trade.setStatus("cancelled");
+        account.setAvailable_balance(available_balance - (stockAsk * quantityLeftToFill));
+        account.setBalance(balance - (stockAsk * quantityLeftToFill));
+
+        Portfolio portfolio = customer.getPortfolio();
+        createAsset(stock, trade, portfolio);
+    }
+
+    public void fillStockSellTrade(Trade sellTrade, CustomStock stock, List<Trade> sellList) {
+        double stockAsk = stock.getAsk();
+        int quantity = sellTrade.getQuantity();
+
+        Account sellTradeAccount = sellTrade.getAccount();
+        double available_balance = sellTradeAccount.getAvailable_balance();
+        double balance = sellTradeAccount.getBalance();
+
+        sellTradeAccount.setAvailable_balance(available_balance + (stockAsk * quantity));
+        sellTradeAccount.setBalance(balance + (stockAsk * quantity));
+
+        sellTrade.setStatus("filled");
+        sellTrade.setFilled_quantity(quantity);
+        stock.setLast_price(stockAsk);
+
+        long sellTradeCustomerId = sellTrade.getCustomerId();
+        Customer sellTradeCustomer = customers.findById(sellTradeCustomerId).orElse(null);
+        Portfolio portfolio = sellTradeCustomer.getPortfolio();
+        deleteAsset(stock, sellTrade, portfolio);
+        
+        // remove the first trade because it's filled
+        sellList.remove(0);
+
+        if (sellList.isEmpty()) {
+            stock.setAsk_volume(0);
         } else {
-            // if trade is already filled or partial filled
-            throw new WrongStatusException();
+            stock.setAsk(sellList.get(0).getAsk());
+            stock.setAsk_volume(sellList.get(0).getQuantity());
+        }
+    }
+
+    /**
+     * For buy orders Check if there is a sell trade that matches the current buy
+     * trade
+     * 
+     * @param stock
+     * @param trade
+     * @param account
+     * @param customer
+     * @param calculatedBuyPrice
+     */
+    public void buyMatch(CustomStock stock, Trade trade, Account account, Customer customer,
+            double tradeBid, int quantityLeftToFill, int afterFilledQuantity, double prevTotalPrice, List<Trade> sellList) {
+        
+        trade.setStatus("open");
+        double stockAsk = stock.getAsk();
+        int quantity = trade.getQuantity();
+        int prevFilledQuantity = trade.getFilled_quantity();
+
+        double available_balance = account.getAvailable_balance();
+        
+        // if trade was not previously filled
+        if (trade.getAvg_price() == 0.0) {
+            trade.setAvg_price(stockAsk);
+        } else {
+            // if trade was previously filled
+            // calculate new average price
+            double previousPrice = trade.getAvg_price() * prevFilledQuantity;
+            double newAvgPrice = previousPrice + (stockAsk * quantity);
+            trade.setAvg_price(newAvgPrice);
+            trade.setFilled_quantity(prevFilledQuantity + quantity);
         }
 
-        long accountId = trade.getAccountId();
-
-        Account account = accounts.findById(accountId).orElseThrow(() -> new AccountNotFoundException(accountId));
-
-        // set back the available balance if its a buy order
-        if (trade.getAction().equals("buy")) {
-            account.setAvailable_balance(account.getBalance());
+        if (sellList.isEmpty()) {
+            // no more stock in the market
+            stock.setAsk_volume(0);
+            return;
         }
 
-        trades.save(trade);
-        return trade;
+        double balance = account.getBalance();
+        int stockAskVol = stock.getAsk_volume();
+        
+        // check for quantity
+        // if my trade == stock vol -> stock trade filled, my trade filled
+        // else if my trade > stock vol -> stock trade filled
+        // else if my trade < stock vol -> my trade filled
+            // loop again
+        
+        Trade sellTrade = sellList.get(0);
+        Portfolio tradeSellPortfolio = customers.findById(sellTrade.getCustomerId()).orElse(null).getPortfolio();
+        double price = stockAsk * quantityLeftToFill;
+
+        // if have enough balance to buy
+        if (available_balance >= price) {
+            if (quantityLeftToFill == (stockAskVol - prevFilledQuantity)) {
+                // buy trade is filled
+                fillMyBuyTrade(trade, customer, account, stock, quantityLeftToFill);
+    
+                // stock trade is filled and removed from list
+                fillStockSellTrade(sellTrade, stock, sellList);
+    
+            } else if (quantityLeftToFill > (stockAskVol - prevFilledQuantity)) {
+                // stock trade is filled and removed from list
+                
+                fillStockSellTrade(sellTrade, stock, sellList);
+    
+                // buy trade is partial filled
+                trade.setFilled_quantity(stockAskVol);
+                afterFilledQuantity = trade.getFilled_quantity();
+                quantityLeftToFill = quantity - afterFilledQuantity;
+                prevTotalPrice = (afterFilledQuantity - prevFilledQuantity) * stockAsk;
+                account.setAvailable_balance(account.getAvailable_balance() - prevTotalPrice);
+                account.setBalance(account.getBalance() - prevTotalPrice);
+
+                buyMatch(stock, trade, account, customer, tradeBid, quantityLeftToFill, afterFilledQuantity, prevTotalPrice, sellList);
+    
+            } else if (quantityLeftToFill < (stockAskVol - prevFilledQuantity)) {
+                // buy trade is filled
+                fillMyBuyTrade(trade, customer, account, stock, quantityLeftToFill);
+    
+                // stock trade is partial filled
+                stock.setAsk_volume(stockAskVol - quantityLeftToFill);
+    
+                Account sellTradeAccount = sellTrade.getAccount();
+                sellTradeAccount.setAvailable_balance(available_balance + price);
+                sellTradeAccount.setBalance(balance + price);
+    
+                sellTrade.setStatus("partial-filled");
+                sellTrade.setFilled_quantity(quantityLeftToFill);
+                sellTrade.setAvg_price(stockAsk);
+    
+                deleteAsset(stock, sellTrade, tradeSellPortfolio);
+            }
+        } else {
+            // if dont have enough balance to buy
+            trade.setStatus("partial-filled");
+            double new_available_balance = account.getAvailable_balance();
+            double new_balance = account.getBalance();
+
+            int quantityCanBuy = (int)(new_available_balance / stockAsk);
+            // convert to an integer in 100s
+            quantityCanBuy = quantityCanBuy / 100 * 100;
+            double currentPrice = quantityCanBuy * stockAsk;
+
+            if (quantityCanBuy == 0) {
+                return;
+            } else {
+                int totalFilledQuantity = afterFilledQuantity + quantityCanBuy;
+                trade.setFilled_quantity(totalFilledQuantity);
+                double avg_price = (prevTotalPrice + quantityCanBuy * stockAsk) / (totalFilledQuantity);
+                trade.setAvg_price(avg_price);
+
+                account.setAvailable_balance(new_available_balance - currentPrice);
+                account.setBalance(new_balance - currentPrice);
+
+                Portfolio portfolio = customer.getPortfolio();
+                createAsset(stock, trade, portfolio);
+            }
+
+            sellTrade = sellList.get(0);
+            sellTrade.setFilled_quantity(sellTrade.getFilled_quantity() + quantityCanBuy);
+            Account sellTradeAccount = sellTrade.getAccount();
+
+            sellTradeAccount.setAvailable_balance(sellTradeAccount.getAvailable_balance() + currentPrice);
+            sellTradeAccount.setBalance(sellTradeAccount.getBalance() + currentPrice);
+
+            Customer sellTradeCustomer = sellTradeAccount.getCustomer();
+            Portfolio sellTradePortfolio = sellTradeCustomer.getPortfolio();
+
+            deleteAsset(stock, sellTrade, sellTradePortfolio);
+        }
+    }
+
+    public void buy(Trade trade, Customer customer, Account account, CustomStock stock) {
+        double tradeBid = trade.getBid();
+        int quantity = trade.getQuantity();
+        double stockAsk = stock.getAsk();
+
+        // if order is market buy OR
+        // if order is limit buy but tradeBid is higher than market's ask
+        if (tradeBid == 0 || tradeBid > stockAsk)
+            tradeBid = stockAsk;
+
+        double calculatedBuyPrice = tradeBid * quantity;
+        // check if account has sufficient balance
+        double available_balance = account.getAvailable_balance();
+        if (calculatedBuyPrice > available_balance) {
+            throw new InsufficientBalanceException();
+        }
+
+        // get sell list
+        List<Trade> sortedOpenAndPartialFilledSellTradeList = getOpenAndPartialFilledSellTradeList(trade.getSymbol());
+        
+        // if sell list is not empty
+        if (!(sortedOpenAndPartialFilledSellTradeList.isEmpty())) {
+            if (tradeBid >= stockAsk) {
+                int quantityLeftToFill = quantity;
+                buyMatch(stock, trade, account, customer, tradeBid, quantityLeftToFill, 0, 0, sortedOpenAndPartialFilledSellTradeList);
+            } else {
+                // if stocks not matched and the customer's trade is the best price
+                // then update the stock with the customer's trade
+                trade.setStatus("open");
+                updateTradeToStock(trade, stock);
+            }
+        } else {
+            // if sell list is empty -> trade not matched -> return
+
+            // update market best price (stock)
+            updateTradeToStock(trade, stock);
+            trade.setStatus("open");
+            // set new available balance
+            account.setAvailable_balance(available_balance - calculatedBuyPrice);
+            return;
+        }
+    
+    }
+    
+    /***************************************************************************
+    *   SELL ORDERS
+    ***************************************************************************/
+
+    /**
+     * Get all open or partial filled buy Trades associated with the specified
+     * symbol
+     * 
+     * @param symbol
+     * @return List<Trade>
+     */
+    public List<Trade> getOpenAndPartialFilledBuyTradeList(String symbol) {
+        List<Trade> tradeOpen = trades.findByActionAndStatusAndSymbol("buy", "open", symbol);
+        List<Trade> tradePartialFilled = trades.findByActionAndStatusAndSymbol("buy", "partial-filled", symbol);
+        List<Trade> tradeList = Stream.concat(tradeOpen.stream(), tradePartialFilled.stream()).collect(Collectors.toList());
+        
+        sortTradeList(tradeList);
+        return tradeList;
+    }
+
+    public void fillMySellTrade(Trade trade, Customer customer, Account account, CustomStock stock, int quantityLeftToFill) {
+        double stockBid = stock.getBid();
+        double available_balance = account.getAvailable_balance();
+        double balance = account.getBalance();
+
+        trade.setStatus("filled");
+        trade.setFilled_quantity(trade.getQuantity());
+        stock.setLast_price(stockBid);
+
+        account.setAvailable_balance(available_balance + (stockBid * quantityLeftToFill));
+        account.setBalance(balance + (stockBid * quantityLeftToFill));
+
+        Portfolio portfolio = customer.getPortfolio();
+        createAsset(stock, trade, portfolio);
+    }
+
+    public void fillStockBuyTrade(Trade buyTrade, CustomStock stock, List<Trade> buyList) {
+
+
+        long buyTradeCustomerId = buyTrade.getCustomerId();
+        Customer buyTradeCustomer = customers.findById(buyTradeCustomerId).orElse(null);
+        
+        double stockAsk = stock.getAsk();
+        int quantity = buyTrade.getQuantity();
+        
+        Account buyTradeAccount = buyTrade.getAccount();
+        double available_balance = buyTradeAccount.getAvailable_balance();
+        double balance = buyTradeAccount.getBalance();
+
+        buyTradeAccount.setAvailable_balance(available_balance - (stockAsk * quantity));
+        buyTradeAccount.setBalance(balance - (stockAsk * quantity));
+
+        buyTrade.setStatus("filled");
+        buyTrade.setFilled_quantity(buyTrade.getQuantity());
+        stock.setLast_price(stockAsk);
+
+        Portfolio portfolio = buyTradeCustomer.getPortfolio();
+        deleteAsset(stock, buyTrade, portfolio);
+        
+        // remove the first trade because it's filled
+        buyList.remove(0);
+
+        if (buyList.isEmpty()) {
+            stock.setAsk_volume(0);
+        } else {
+            stock.setAsk(buyList.get(0).getAsk());
+            stock.setAsk_volume(buyList.get(0).getQuantity());
+        }
+    }
+
+    public void sellMatch(CustomStock stock, Trade trade, Account account, Customer customer, 
+        double tradeAsk, int quantityLeftToFill, List<Trade> buyList) {
+
+        int quantity = trade.getQuantity();
+        int prevFilledQuantity = trade.getFilled_quantity();
+        double stockBid = stock.getBid();
+
+        // if trade was not previously filled
+        if (trade.getAvg_price() == 0.0) {
+            trade.setAvg_price(stockBid);
+        } else {
+            // if trade was previously filled
+            double previousPrice = trade.getAvg_price() * trade.getFilled_quantity();
+            double newAvgPrice = previousPrice + (stockBid * quantity);
+            trade.setAvg_price(newAvgPrice);
+            trade.setFilled_quantity(trade.getFilled_quantity() + quantity);
+        }
+
+        List<Trade> sortedOpenAndPartialFilledBuyTradeList = getOpenAndPartialFilledBuyTradeList(trade.getSymbol());
+
+        if (sortedOpenAndPartialFilledBuyTradeList.isEmpty()) {
+            // no more stock in the market
+            stock.setBid_volume(0);
+            return;
+        }
+
+        int stockBidVol = stock.getBid_volume();
+
+        // check for quantity
+        // if my trade == stock vol -> stock trade filled, my trade filled
+        // else if my trade > stock vol -> stock trade filled
+        // else if my trade < stock vol -> my trade filled
+            // loop again
+
+        Trade buyTrade = buyList.get(0);
+        Portfolio tradeBuyPortfolio = customers.findById(buyTrade.getCustomerId()).orElse(null).getPortfolio();
+
+        if (quantityLeftToFill == (stockBidVol - prevFilledQuantity)) {
+            // buy trade is filled
+            fillMySellTrade(trade, customer, account, stock, quantityLeftToFill);
+
+            // stock trade is filled and removed from list
+            fillStockBuyTrade(buyTrade, stock, buyList);
+
+        } else if (quantityLeftToFill > (stockBidVol - prevFilledQuantity)) {
+            // stock trade is filled and removed from list
+            fillStockBuyTrade(buyTrade, stock, buyList);
+
+            // buy trade is partial filled
+            int afterFilledQuantity = trade.getFilled_quantity();
+            quantityLeftToFill = quantity - afterFilledQuantity;
+            sellMatch(stock, trade, account, customer, tradeAsk, quantityLeftToFill, buyList);
+        } else if (quantityLeftToFill < (stockBidVol - prevFilledQuantity)) {
+            // buy trade is filled
+            fillMySellTrade(trade, customer, account, stock, quantityLeftToFill);
+
+            // stock trade is partial filled
+            stock.setBid_volume(stockBidVol - quantityLeftToFill);
+
+            buyTrade.setStatus("partial-filled");
+            buyTrade.setFilled_quantity(quantityLeftToFill);
+            buyTrade.setAvg_price(stockBid);
+
+            Account buyTradeAccount = buyTrade.getAccount();
+            double available_balance = buyTradeAccount.getAvailable_balance();
+            double balance = buyTradeAccount.getBalance();
+
+            buyTradeAccount.setAvailable_balance(available_balance - (stockBid * quantityLeftToFill));
+            buyTradeAccount.setBalance(balance - (stockBid * quantityLeftToFill));
+
+            deleteAsset(stock, buyTrade, tradeBuyPortfolio);
+        }
+        
+    
+    }
+
+
+    public void sell(Trade trade, Customer customer, Account account, CustomStock stock) {
+        double tradeAsk = trade.getAsk();
+        double stockBid = stock.getBid();
+        String symbol = trade.getSymbol();
+        int quantity = trade.getQuantity();
+
+        // if order is market sell
+        if (tradeAsk == 0)
+            tradeAsk = stock.getBid();
+
+        Portfolio portfolio = customer.getPortfolio();
+        long portfolioId = portfolio.getId();
+
+        // if customer does not have the same stock in portofolio
+        Asset asset = assets.findByCodeAndPortfolioId(symbol, portfolioId)
+            .orElseThrow(() -> new InsufficientStockException());
+
+        // if quantity in portfolio is lesser than trade quantity, then throw exception
+        if (quantity > asset.getQuantity()) {
+            throw new InsufficientStockException();
+        }
+
+        List<Trade> sortedOpenAndPartialFilledBuyTrade = getOpenAndPartialFilledBuyTradeList(symbol);
+
+        // check if the market has the buying stocks the customer is selling
+        if (!(sortedOpenAndPartialFilledBuyTrade.isEmpty())) {
+            // if trade's ask is lower than stock's bid -> match & sell
+            if (tradeAsk <= stockBid) {
+                int quantityLeftToFill = quantity;
+                // check price in previous trades (better price match first)
+                sellMatch(stock, trade, account, customer, tradeAsk, quantityLeftToFill, sortedOpenAndPartialFilledBuyTrade);
+            } else {
+                // if stocks not matched and the customer's trade is the best price
+                // then update the stock with the customer's trade
+                trade.setStatus("open");
+                updateTradeToStock(trade, stock);
+            }
+        } else {
+            // if stocks not matched and the customer's trade is the best price
+            // then update the stock with the customer's trade
+            trade.setStatus("open");
+            updateTradeToStock(trade, stock);
+        }
+
+    }
+    
+    
+    /***************************************************************************
+    *   OTHERS
+    ***************************************************************************/
+
+    /**
+     * sort the open and partial filled Trade list according to
+     * the ask price and the time the Trade was made
+     * 
+     * @param tradeList
+     */
+    public void sortTradeList(List<Trade> tradeList) {
+        Comparator<Trade> compareByAsk = Comparator.comparing(Trade::getAsk);
+        Comparator<Trade> compareByDate = Comparator.comparing(Trade::getDate);
+        Comparator<Trade> compareByAskAndDate = compareByAsk.thenComparing(compareByDate);
+
+        Collections.sort(tradeList, compareByAskAndDate);
+    }
+    
+    /**
+     * Update the specific Stock ask/bid and ask/bid volume if the Trade made is the
+     * best price
+     * 
+     * @param trade
+     * @param stock
+     */
+    public void updateTradeToStock(Trade trade, CustomStock stock) {
+        // if buy order
+        if (trade.getSymbol().equals("buy")) {
+            // if bid volume is 0
+            if (stock.getBid_volume() == 0) {
+                stock.setBid(trade.getBid());
+                stock.setBid_volume(trade.getQuantity());
+                stocks.save(stock);
+            } else {
+                // if this trade's bid is lower than the stock's previous ask
+                // if this trade's bid is higher than the stock's previous bid
+                // -> save new bid price and quantity into the stocks database
+                if ((trade.getBid() < stock.getAsk()) && (trade.getBid() > stock.getBid())) {
+                    stock.setBid(trade.getBid());
+                    stock.setBid_volume(trade.getQuantity());
+                    stocks.save(stock);
+                }
+            }
+        // if sell order
+        } else {
+            // if ask volume is 0
+            if (stock.getAsk_volume() == 0) {
+                stock.setAsk(trade.getAsk());
+                stock.setAsk_volume(trade.getQuantity());
+                stocks.save(stock);
+            } else {
+                // if this trade's ask is higher than the stock's previous bid
+                // if this trade's ask is lower than the stock's previous ask
+                // -> save new ask price and quantity into the stocks database
+                if ((trade.getAsk() > stock.getBid()) && (trade.getAsk() < stock.getAsk())) {
+                    stock.setAsk(trade.getAsk());
+                    stock.setAsk_volume(trade.getQuantity());
+                    stocks.save(stock);
+                }
+            }
+        }
+
     }
 }

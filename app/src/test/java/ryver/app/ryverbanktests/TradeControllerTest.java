@@ -52,7 +52,7 @@ public class TradeControllerTest {
     private TradeController tradeController;
 
     @Test
-    void getSpecificStockOpenAndPartialFilledBuyTrade_Found_ReturnListOfTrades(){
+    void getOpenAndPartialFilledBuyTradeList_Found_ReturnListOfTrades(){
         //arrange
         Customer customer = new Customer(
             "good_user_1", "01_user_01", "ROLE_USER", "User One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
@@ -76,7 +76,7 @@ public class TradeControllerTest {
         when(trades.findByActionAndStatusAndSymbol("buy", "partial-filled", stock.getSymbol())).thenReturn(mockListOfTrades);
 
         //act
-        List<Trade> listOfTrades = tradeController.getSpecificStockOpenAndPartialFilledBuyTrade(stock.getSymbol());
+        List<Trade> listOfTrades = tradeController.getOpenAndPartialFilledBuyTradeList(stock.getSymbol());
 
         //assert
         assertNotNull(listOfTrades);
@@ -85,7 +85,7 @@ public class TradeControllerTest {
     }
 
     @Test
-    void getSpecificStockOpenAndPartialFilledSellTrade_Found_ReturnListOfTrades(){
+    void getOpenAndPartialFilledSellTradeList_Found_ReturnListOfTrades(){
         //arrange
         Customer customer = new Customer(
             "good_user_1", "01_user_01", "ROLE_USER", "User One", "S7812345A", "91234567", "123 Ang Mo Kio Road S456123", true);
@@ -109,7 +109,7 @@ public class TradeControllerTest {
         when(trades.findByActionAndStatusAndSymbol("sell", "partial-filled", stock.getSymbol())).thenReturn(mockListOfTrades);
 
         //act
-        List<Trade> listOfTrades = tradeController.getSpecificStockOpenAndPartialFilledSellTrade(stock.getSymbol());
+        List<Trade> listOfTrades = tradeController.getOpenAndPartialFilledSellTradeList(stock.getSymbol());
 
         //assert
         assertNotNull(listOfTrades);
