@@ -919,7 +919,7 @@ public class TradeController {
 
             // if customer does not have the same stock in portofolio
             Asset asset = assets.findByCodeAndPortfolioId(symbol, portfolioId)
-                    .orElseThrow(() -> new InvalidStockException(symbol));
+                    .orElseThrow(() -> new InsufficientStockException());
 
             // if quantity in portfolio is lesser than trade quantity, then throw exception
             if (trade.getQuantity() > asset.getQuantity()) {
