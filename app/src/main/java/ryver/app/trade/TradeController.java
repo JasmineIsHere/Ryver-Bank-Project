@@ -509,6 +509,9 @@ public class TradeController {
                 account.setAvailable_balance(account.getAvailable_balance() - prevTotalPrice);
                 account.setBalance(account.getBalance() - prevTotalPrice);
 
+                Portfolio portfolio = customer.getPortfolio();
+                createAsset(stock, trade, portfolio);
+
                 buyMatch(stock, trade, account, customer, tradeBid, quantityLeftToFill, afterFilledQuantity, prevTotalPrice, sellList);
     
             } else if (quantityLeftToFill < (stockAskVol - prevFilledQuantity)) {
@@ -720,7 +723,7 @@ public class TradeController {
         Portfolio tradeBuyPortfolio = customers.findById(buyTrade.getCustomerId()).orElse(null).getPortfolio();
 
         if (quantityLeftToFill == (stockBidVol - prevFilledQuantity)) {
-            // buy trade is filled
+            // sell trade is filled
             fillMySellTrade(trade, customer, account, stock, quantityLeftToFill);
 
             // stock trade is filled and removed from list
@@ -730,12 +733,16 @@ public class TradeController {
             // stock trade is filled and removed from list
             fillStockBuyTrade(buyTrade, stock, buyList);
 
-            // buy trade is partial filled
+            // sell trade is partial filled
             int afterFilledQuantity = trade.getFilled_quantity();
             quantityLeftToFill = quantity - afterFilledQuantity;
+
+            Portfolio portfolio = customer.getPortfolio();
+            deleteAsset(stock, trade, portfolio);
+
             sellMatch(stock, trade, account, customer, tradeAsk, quantityLeftToFill, buyList);
         } else if (quantityLeftToFill < (stockBidVol - prevFilledQuantity)) {
-            // buy trade is filled
+            // sell trade is filled
             fillMySellTrade(trade, customer, account, stock, quantityLeftToFill);
 
             // stock trade is partial filled
