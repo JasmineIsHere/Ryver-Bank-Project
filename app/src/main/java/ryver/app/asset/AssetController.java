@@ -127,7 +127,7 @@ public class AssetController {
             asset.setQuantity(newAsset.getQuantity());
             asset.setAvg_price(newAsset.getAvg_price());
             asset.setCurrent_price(newAsset.getCurrent_price());
-            asset.setValue(asset.getCurrent_price() * asset.getQuantity());
+            asset.setValue(newAsset.getValue());
             asset.setGain_loss(newAsset.getGain_loss());
             return assets.save(asset);
         }).orElseThrow(() -> new AssetIdNotFoundException(assetId));

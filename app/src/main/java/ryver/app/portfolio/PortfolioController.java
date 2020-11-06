@@ -45,17 +45,7 @@ public class PortfolioController {
         Portfolio portfolio = portfolios.findByCustomerId(customerId)
             .orElseThrow(() -> new CustomerNotFoundException(customerId));
         
-        // Calculate unrealized gain/loss
-        double unrealized_gain_loss = 0.0;
-        List<Asset> assetList = assetsCtrl.getAssetsByPortfolioId(portfolio.getId());
-
-        for (Asset asset : assetList) {
-            asset.setGain_loss((asset.getCurrent_price() * asset.getQuantity()) - (asset.getAvg_price() * asset.getQuantity()));
-            unrealized_gain_loss += asset.getGain_loss();
-        }
-        portfolio.setUnrealized_gain_loss(unrealized_gain_loss);
-        
-        return portfolios.save(portfolio);
+        return portfolio;
     }
 
     /**
@@ -83,6 +73,7 @@ public class PortfolioController {
             }
 
             portfolio.setUnrealized_gain_loss(unrealized_gain_loss);
+            portfolio.setTotal_gain_loss(updatedPortfolio.getRealized_gain_loss() + unrealized_gain_loss);
             return portfolios.save(portfolio);
         }).orElseThrow(() -> new ryver.app.asset.PortfolioNotFoundException(portfolioId));
     }

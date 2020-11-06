@@ -41,9 +41,18 @@ public class Portfolio {
     @JsonSerialize(using = jsonDoubleSerializer.class)
     private double unrealized_gain_loss; 
 
+        /**
+     * The realized gain/loss of all the Assets in the Portfolio
+     * After an asset is sold
+     */
+    @JsonSerialize(using = jsonDoubleSerializer.class)
+    @JsonIgnore
+    private double realized_gain_loss; 
+
     /**
      * The total gain/loss of all the Assets in the Portfolio
      * For all the Trades made so far
+     * unrealized_gain_loss + realized_gain_loss
      */
     @JsonSerialize(using = jsonDoubleSerializer.class)
     private double total_gain_loss; 
