@@ -18,12 +18,11 @@ import java.util.stream.*;
 
 import javax.validation.Valid;
 
-import org.springframework.web.bind.annotation.*;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
@@ -73,7 +72,7 @@ public class TradeController {
     /**
      * Check if the customer is active If deactivated - return 404
      * 
-     * @param Customer
+     * @param customer
      */
     private void checkCustomerActive(Customer customer) {
         if (!customer.isActive()) {
@@ -206,12 +205,11 @@ public class TradeController {
             // after buying more
             long assetId = asset.getId();
             Asset newAsset;
-            if (from.equals("fromBuy")){
+            if (from.equals("fromBuy")) {
                 newAsset = updatedAsset(stock, trade, stock.getAsk(), code, asset, amountTraded);
             } else {
                 newAsset = updatedAsset(stock, trade, trade.getBid(), code, asset, amountTraded);
             }
-             
 
             assetCtrl.updateAsset(portfolioId, assetId, newAsset);
         } else {
@@ -219,9 +217,9 @@ public class TradeController {
             int quantity = trade.getFilled_quantity();
             double avg_price;
 
-            if (from.equals("fromBuy")){
+            if (from.equals("fromBuy")) {
                 avg_price = stock.getAsk();
-            } else{
+            } else {
                 avg_price = trade.getBid();
             }
             double current_price = stock.getLast_price();
@@ -238,6 +236,17 @@ public class TradeController {
 
     }
 
+    /**
+     * Update existing assets with the new information
+     * 
+     * @param stock
+     * @param trade
+     * @param price
+     * @param code
+     * @param asset
+     * @param amountTraded
+     * @return Asset
+     */
     private Asset updatedAsset(CustomStock stock, Trade trade, double price, String code, Asset asset,
             int amountTraded) {
         int prevQuantity = asset.getQuantity();
@@ -255,7 +264,7 @@ public class TradeController {
         }
 
         double newAvg_price = Math.round((newTotalPrice / newQuantity) * 100.0) / 100.0;
-        //double newAvg_price = (newTotalPrice / newQuantity);
+        // double newAvg_price = (newTotalPrice / newQuantity);
 
         double currentPrice = stock.getLast_price();
 
@@ -285,11 +294,11 @@ public class TradeController {
 
         Asset asset = assets.findByCodeAndPortfolioId(code, portfolioId)
                 .orElseThrow(() -> new AssetCodeNotFoundException(code));
-        
+
         double realizedGainLoss;
-        if (from.equals("fromSell")){
+        if (from.equals("fromSell")) {
             realizedGainLoss = (amountTraded * stock.getBid()) - (asset.getAvg_price() * amountTraded);
-        } else { //"fromBuy"
+        } else { // "fromBuy"
             realizedGainLoss = (amountTraded * ask) - (asset.getAvg_price() * amountTraded);
         }
 
@@ -303,7 +312,7 @@ public class TradeController {
             assetCtrl.updateAsset(portfolioId, assetId, updatedAsset);
 
         } else {
-            // if trade quantity == asset quantity -> delete 
+            // if trade quantity == asset quantity -> delete
             assetCtrl.deleteAsset(portfolioId, assetId);
         }
 
@@ -415,6 +424,17 @@ public class TradeController {
         return tradeList;
     }
 
+
+    
+    /** 
+     * Fill the buy order and add the asset
+     * 
+     * @param trade
+     * @param customer
+     * @param account
+     * @param stock
+     * @param quantityLeftToFill
+     */
     public void fillMyBuyTrade(Trade trade, Customer customer, Account account, CustomStock stock,
             int quantityLeftToFill) {
         double stockAsk = stock.getAsk();
@@ -432,6 +452,14 @@ public class TradeController {
         createAsset(stock, trade, portfolio, quantityLeftToFill, "fromBuy");
     }
 
+    
+    /** 
+     * Fill the sell order and remove the asset
+     * 
+     * @param sellTrade
+     * @param stock
+     * @param sellList
+     */
     public void fillStockSellTrade(Trade sellTrade, CustomStock stock, List<Trade> sellList) {
         double stockAsk = stock.getAsk();
         int quantity = sellTrade.getQuantity();
@@ -524,7 +552,6 @@ public class TradeController {
                 fillStockSellTrade(sellTrade, stock, sellList);
 
             } else if (quantityLeftToFill > (stockAskVol - prevFilledQuantity)) {
-                
 
                 // buy trade is partial filled
                 trade.setFilled_quantity(stockAskVol);
@@ -533,7 +560,7 @@ public class TradeController {
                 prevTotalPrice = (afterFilledQuantity - prevFilledQuantity) * stockAsk;
                 account.setAvailable_balance(account.getAvailable_balance() - prevTotalPrice);
                 account.setBalance(account.getBalance() - prevTotalPrice);
-                
+
                 Portfolio portfolio = customer.getPortfolio();
                 createAsset(stock, trade, portfolio, stockAskVol, "fromBuy");
                 // stock trade is filled and removed from list
@@ -575,8 +602,10 @@ public class TradeController {
             } else {
                 int totalFilledQuantity = afterFilledQuantity + quantityCanBuy;
                 trade.setFilled_quantity(totalFilledQuantity);
-                double avg_price = Math.round((prevTotalPrice + quantityCanBuy * stockAsk) / (totalFilledQuantity) * 100.0) / 100.0;
-                //double avg_price = (prevTotalPrice + quantityCanBuy * stockAsk) / (totalFilledQuantity);
+                double avg_price = Math
+                        .round((prevTotalPrice + quantityCanBuy * stockAsk) / (totalFilledQuantity) * 100.0) / 100.0;
+                // double avg_price = (prevTotalPrice + quantityCanBuy * stockAsk) /
+                // (totalFilledQuantity);
 
                 trade.setAvg_price(avg_price);
 
@@ -601,6 +630,14 @@ public class TradeController {
         }
     }
 
+    /**
+     * Create a new buy trade
+     * 
+     * @param trade
+     * @param customer
+     * @param account
+     * @param stock
+     */
     public void buy(Trade trade, Customer customer, Account account, CustomStock stock) {
         double tradeBid = trade.getBid();
         int quantity = trade.getQuantity();
@@ -667,6 +704,15 @@ public class TradeController {
         return tradeList;
     }
 
+    /**
+     * Fill a sell trade
+     * 
+     * @param trade
+     * @param customer
+     * @param account
+     * @param stock
+     * @param quantityLeftToFill
+     */
     public void fillMySellTrade(Trade trade, Customer customer, Account account, CustomStock stock,
             int quantityLeftToFill) {
         double stockBid = stock.getBid();
@@ -684,6 +730,13 @@ public class TradeController {
         deleteAsset(stock, trade, portfolio, quantityLeftToFill, "fromSell");
     }
 
+    /**
+     * Fill the corresponding buy trade
+     * 
+     * @param buyTrade
+     * @param stock
+     * @param buyList
+     */
     public void fillStockBuyTrade(Trade buyTrade, CustomStock stock, List<Trade> buyList) {
 
         long buyTradeCustomerId = buyTrade.getCustomerId();
@@ -716,6 +769,18 @@ public class TradeController {
         }
     }
 
+    /**
+     * For sell orders Check if there is a buy trade that matches the current sell
+     * trade
+     * 
+     * @param stock
+     * @param trade
+     * @param account
+     * @param customer
+     * @param tradeAsk
+     * @param quantityLeftToFill
+     * @param buyList
+     */
     public void sellMatch(CustomStock stock, Trade trade, Account account, Customer customer, double tradeAsk,
             int quantityLeftToFill, List<Trade> buyList) {
 
@@ -761,13 +826,13 @@ public class TradeController {
             fillStockBuyTrade(buyTrade, stock, buyList);
 
         } else if (quantityLeftToFill > (stockBidVol - prevFilledQuantity)) {
-            
+
             // stock trade is filled and removed from list
             fillStockBuyTrade(buyTrade, stock, buyList);
-            
-           Portfolio portfolio = customer.getPortfolio();
+
+            Portfolio portfolio = customer.getPortfolio();
             deleteAsset(stock, trade, portfolio, (stockBidVol - prevFilledQuantity), "FromSell");
-            
+
             // sell trade is partial filled
             int afterFilledQuantity = trade.getFilled_quantity();
             quantityLeftToFill = quantity - afterFilledQuantity;
@@ -796,6 +861,14 @@ public class TradeController {
 
     }
 
+    /**
+     * Create a new sell trade
+     * 
+     * @param trade
+     * @param customer
+     * @param account
+     * @param stock
+     */
     public void sell(Trade trade, Customer customer, Account account, CustomStock stock) {
         double tradeAsk = trade.getAsk();
         double stockBid = stock.getBid();
@@ -848,7 +921,7 @@ public class TradeController {
      ***************************************************************************/
 
     /**
-     * sort the open and partial filled Trade list according to the ask price and
+     * Sort the open and partial filled Trade list according to the ask price and
      * the time the Trade was made
      * 
      * @param tradeList
