@@ -166,9 +166,15 @@ public class TradeController {
 
         Account account = getAccountIfMatch(updatedTradeInfo);
 
+        CustomStock stock = stocks.findBySymbol(trade.getSymbol()).orElse(null);
+
         // set back the available balance if its a buy order
         if (trade.getAction().equals("buy")) {
-            account.setAvailable_balance(account.getBalance());
+            if (trade.getBid() == 0) {
+                account.setAvailable_balance(account.getAvailable_balance() + trade.getQuantity() * stock.getAsk());
+            } else {
+                account.setAvailable_balance(account.getAvailable_balance() + trade.getQuantity() * trade.getBid());
+            }
         }
 
         trades.save(trade);
@@ -186,6 +192,8 @@ public class TradeController {
      * @param stock
      * @param trade
      * @param portfolio
+     * @param amountTraded
+     * @param from
      */
     private void createAsset(CustomStock stock, Trade trade, Portfolio portfolio, int amountTraded, String from) {
         // for buying
@@ -264,7 +272,6 @@ public class TradeController {
         }
 
         double newAvg_price = Math.round((newTotalPrice / newQuantity) * 100.0) / 100.0;
-        // double newAvg_price = (newTotalPrice / newQuantity);
 
         double currentPrice = stock.getLast_price();
 
@@ -281,6 +288,8 @@ public class TradeController {
      * @param stock
      * @param trade
      * @param portfolio
+     * @param amountTraded
+     * @param from
      */
     private void deleteAsset(CustomStock stock, Trade trade, Portfolio portfolio, int amountTraded, String from) {
         // for selling
@@ -423,8 +432,6 @@ public class TradeController {
         sortTradeList(tradeList);
         return tradeList;
     }
-
-
     
     /** 
      * Fill the buy order and add the asset
@@ -499,7 +506,11 @@ public class TradeController {
      * @param trade
      * @param account
      * @param customer
-     * @param calculatedBuyPrice
+     * @param tradeBid
+     * @param quantityLeftToFill
+     * @param afterFilledQuantity
+     * @param prevTotalPrice
+     * @param sellList
      */
     public void buyMatch(CustomStock stock, Trade trade, Account account, Customer customer, double tradeBid,
             int quantityLeftToFill, int afterFilledQuantity, double prevTotalPrice, List<Trade> sellList) {
@@ -569,7 +580,7 @@ public class TradeController {
                 buyMatch(stock, trade, account, customer, tradeBid, quantityLeftToFill, afterFilledQuantity,
                         prevTotalPrice, sellList);
 
-            } else if (quantityLeftToFill < (stockAskVol - prevFilledQuantity)) {
+            } else {
                 // buy trade is filled
                 fillMyBuyTrade(trade, customer, account, stock, quantityLeftToFill);
 
@@ -809,12 +820,6 @@ public class TradeController {
 
         int stockBidVol = stock.getBid_volume();
 
-        // check for quantity
-        // if my trade == stock vol -> stock trade filled, my trade filled
-        // else if my trade > stock vol -> stock trade filled
-        // else if my trade < stock vol -> my trade filled
-        // loop again
-
         Trade buyTrade = buyList.get(0);
         Portfolio tradeBuyPortfolio = customers.findById(buyTrade.getCustomerId()).orElse(null).getPortfolio();
 
@@ -838,7 +843,7 @@ public class TradeController {
             quantityLeftToFill = quantity - afterFilledQuantity;
 
             sellMatch(stock, trade, account, customer, tradeAsk, quantityLeftToFill, buyList);
-        } else if (quantityLeftToFill < (stockBidVol - prevFilledQuantity)) {
+        } else {
             // sell trade is filled
             fillMySellTrade(trade, customer, account, stock, quantityLeftToFill);
 
@@ -984,7 +989,6 @@ public class TradeController {
      * Update the Trade to expire if the Trade is open or partial filled and if the
      * current time exceeds 5pm on the same day
      **/
-    // second, minute, hour, day of month, month, day(s) of week
     @Scheduled(cron = "0 0 17 * * MON-FRI", zone = "GMT+8")
     public void updateStatusToExpire() {
         List<Trade> allTradeList = trades.findAll();
@@ -996,7 +1000,6 @@ public class TradeController {
             }
 
             long accountId = trade.getAccountId();
-
             Account account = accounts.findById(accountId).orElseThrow(() -> new AccountNotFoundException(accountId));
 
             // calculate price according to the stocks that did not get filled
