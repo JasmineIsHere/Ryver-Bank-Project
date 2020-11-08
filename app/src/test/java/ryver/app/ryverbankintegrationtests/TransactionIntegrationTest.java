@@ -84,26 +84,5 @@ class TransactionIntegrationTest {
         //201 succesful addition of transaction
         assertEquals(201, result.getStatusCode().value());
     }
-
-    @Test
-    public void addTransaction_InvalidUser_Failure() throws Exception{
-        Customer customer1 = customers.save(new Customer("user_1", encoder.encode("01_user_01"), "ROLE_USER", "Jerry Loh","T0046822Z", "82345678", "address", true)); 
-        Account account1 = accounts.save(new Account(10000.0, 10000.0, 1L, customer1));
-
-        JSONObject requestParams = new JSONObject();
-        requestParams.put("from", account1.getId()); 
-        requestParams.put("to", 4L); //4L is a fake id
-        requestParams.put("amount", 100.0);
-        requestParams.put("account",  account1);
-
-		HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> entity = new HttpEntity<>(requestParams.toJSONString(), headers);
-        URI postUri = new URI(baseUrl + port + "/api/accounts/"+ account1.getId() +"/transactions");
-
-        ResponseEntity<Transaction> result = restTemplate.withBasicAuth("user_1", "01_user_01").postForEntity(postUri, entity, Transaction.class);
-
-        assertEquals(404, result.getStatusCode().value());
-    }
 }
 
