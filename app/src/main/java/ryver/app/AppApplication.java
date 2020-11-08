@@ -4,6 +4,7 @@ import ryver.app.customer.*;
 import ryver.app.stock.*;
 import ryver.app.account.*;
 import ryver.app.asset.*;
+import ryver.app.content.ContentRepository;
 import ryver.app.trade.*;
 import ryver.app.portfolio.*;
 
@@ -75,13 +76,15 @@ public class AppApplication {
 		Customer customer = customers.save(new Customer("testuser_01", encoder.encode("01_testuser_01"), "ROLE_USER",
 				"Test One", "S8098765B", "99876543", "673 Pasir Ris Road S987673", true));
 		System.out.println("[Add test customer]: " + customer);
+		Long customerId = customer.getId();
 
-		Account account = new Account(100000.0, 100000.0, 3);
+		Account account = new Account(100000.0, 100000.0, customerId);
 		account.setCustomer(customer);
 		System.out.println("[Add test account for test user]: " + accounts.save(account));
+		Long accountId = account.getId();
 
 		Portfolio portfolio = new Portfolio();
-		portfolio.setCustomer_id(customer.getId());
+		portfolio.setCustomer_id(customerId);
 		portfolio.setAssets(new ArrayList<Asset>());
 		portfolio.setTotal_gain_loss(0.0);
 		portfolio.setUnrealized_gain_loss(0.0);
@@ -94,7 +97,7 @@ public class AppApplication {
 
 			// Initial stocks
 			Trade trade1 = new Trade("sell", stock.getSymbol(), (int) stock.getAsk_volume(), 0.0, stock.getAsk(), 0,
-					"open", 1L, 4L);
+					"open", accountId, customerId);
 			trade1.setAccount(account);
 			trade1.setStock(stock);
 			trades.save(trade1);
@@ -103,7 +106,7 @@ public class AppApplication {
 			System.out.println("[Add Inital Stocks]: " + trades.save(trade1));
 
 			Trade trade2 = new Trade("buy", stock.getSymbol(), (int) stock.getBid_volume(), stock.getBid(), 0.0, 0,
-					"open", 1L, 4L);
+					"open", accountId, customerId);
 			trade2.setAccount(account);
 			trade2.setStock(stock);
 			System.out.println("[Add Inital Stocks]: " + trades.save(trade2));
@@ -118,6 +121,7 @@ public class AppApplication {
 		CustomerRepository customers = ctx.getBean(CustomerRepository.class);
 		AccountRepository accounts = ctx.getBean(AccountRepository.class);
 		StockRepository stocks = ctx.getBean(StockRepository.class);
+		ContentRepository contents = ctx.getBean(ContentRepository.class);
 
 		PortfolioRepository portfolios = ctx.getBean(PortfolioRepository.class);
 
@@ -125,6 +129,7 @@ public class AppApplication {
 		TradeRepository trades = ctx.getBean(TradeRepository.class);
 		customers.deleteAll();
 		accounts.deleteAll();
+		contents.deleteAll();
 		stocks.deleteAll();
 		portfolios.deleteAll();
 		assets.deleteAll();
